@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.repository.GuestClassromRepository;
 
@@ -17,14 +18,14 @@ public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
 	private GuestClassromRepository repository;
 	
 	@Autowired
-	GuestClassromService guestClassromService;
+	private GuestClassromService guestClassromService;
 	
 	@Test
 	public void getAllwithClassroomReturnNotEmptyList() {
 		int expected = 1;
 		Classroom classroom = new Classroom("Matematicas");
 		repository.save(classroom);
-		List<Classroom> result = guestClassromService.getAll();
+		List<ClassroomDTO> result = guestClassromService.getAll();
 		assertEquals(expected, result.size());
 	}
 }
