@@ -1,10 +1,13 @@
 package ar.edu.unq.virtuaula.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
@@ -14,7 +17,7 @@ import ar.edu.unq.virtuaula.repository.GuestClassromRepository;
 
 public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
 
-	@Autowired
+	@Mock
 	private GuestClassromRepository repository;
 	
 	@Autowired
@@ -24,7 +27,9 @@ public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
 	public void getAllwithClassroomReturnNotEmptyList() {
 		int expected = 1;
 		Classroom classroom = new Classroom("Matematicas");
-		repository.save(classroom);
+		List<Classroom> listClassrooms = new ArrayList<>();
+		listClassrooms.add(classroom);
+		when(repository.findAll()).thenReturn(listClassrooms);
 		List<ClassroomDTO> result = guestClassromService.getAll();
 		assertEquals(expected, result.size());
 	}
