@@ -4,4 +4,6 @@ jdk:
   - openjdk8
 
 before_install:
+  - mysql -e 'CREATE DATABASE virtuaula;'
+  - mysql -e 'USE virtuaula;'
   - chmod +x gradlew
