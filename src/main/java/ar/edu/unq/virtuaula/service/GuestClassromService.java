@@ -22,6 +22,6 @@ public class GuestClassromService {
 	
 	public List<ClassroomDTO> getAll() {
         List<Classroom> classrooms =  repository.findAll();
-        return Arrays.asList(mapperUtil.getMapper().map(classrooms, ClassroomDTO.class));
+        return Arrays.asList(mapperUtil.getMapper().map(classrooms, ClassroomDTO[].class));
 	}
 }

@@ -17,7 +17,7 @@ public class GuestClassromRestController {
 	@Autowired
 	private GuestClassromService service;
 	
-	@GetMapping("/classroom")
+	@GetMapping("/classrooms")
 	public List<ClassroomDTO> getAll(){
 		return service.getAll();
 	}
