@@ -2,16 +2,16 @@ package ar.edu.unq.virtuaula.dto;
 
 import java.io.Serializable;
 
-public class ClassroomDTO implements Serializable {
+public class LessonDTO implements Serializable {
 
     private static final long serialVersionUID = -225949991242303086L;
     private Long id;
     private String name;
 
-    public ClassroomDTO() {
+    public LessonDTO() {
     }
 
-    public ClassroomDTO(Long id, String name) {
+    public LessonDTO(Long id, String name) {
         super();
         this.id = id;
         this.name = name;
@@ -32,4 +32,5 @@ public class ClassroomDTO implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
 }

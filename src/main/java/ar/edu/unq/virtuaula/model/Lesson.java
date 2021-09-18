@@ -2,23 +2,18 @@ package ar.edu.unq.virtuaula.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.CascadeType;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-
+import javax.persistence.OneToOne;
 import lombok.Data;
 
 @Data
 @Entity
-public class Classroom implements Serializable {
+public class Lesson implements Serializable {
 
     private static final long serialVersionUID = 768575911005782319L;
 
@@ -27,16 +22,16 @@ public class Classroom implements Serializable {
     private Long id;
 
     private String name;
-    
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "classroom_id")
-    @JsonIgnoreProperties("classroom")
-    private List<Lesson> lessons = new ArrayList<>();
 
-    public Classroom() {
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "classroom_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("lessons")
+    private Classroom classroom;
+
+    public Lesson() {
     }
 
-    public Classroom(String name) {
+    public Lesson(String name) {
         this.name = name;
     }
 
@@ -52,11 +47,16 @@ public class Classroom implements Serializable {
         return name;
     }
 
+    public Classroom getClassroom() {
+        return this.classroom;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-    
-    public void addLesson(Lesson lesson) {
-        this.lessons.add(lesson);
+
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
+
 }
