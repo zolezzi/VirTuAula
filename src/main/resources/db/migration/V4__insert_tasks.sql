@@ -1,0 +1,1 @@
+INSERT INTO task (statement, lesson_id) values ('hallar la derivada de una funcion f(x) = 2 + 1 ', 1);

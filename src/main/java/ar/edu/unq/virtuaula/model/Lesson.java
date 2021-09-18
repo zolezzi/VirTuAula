@@ -2,12 +2,17 @@ package ar.edu.unq.virtuaula.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Data;
 
@@ -27,6 +32,11 @@ public class Lesson implements Serializable {
     @JoinColumn(name = "classroom_id", referencedColumnName = "id")
     @JsonIgnoreProperties("lessons")
     private Classroom classroom;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id")
+    @JsonIgnoreProperties("lesson")
+    private List<Task> tasks = new ArrayList<>();
 
     public Lesson() {
     }
@@ -34,5 +44,10 @@ public class Lesson implements Serializable {
     public Lesson(String name) {
         this.name = name;
     }
+
+	public void addTask(Task task) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
