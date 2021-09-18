@@ -1,49 +1,59 @@
 package ar.edu.unq.virtuaula.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-
-import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.repository.GuestClassromRepository;
-import ar.edu.unq.virtuaula.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-@ExtendWith(MockitoExtension.class)
-public class GuestClassromServiceTest {
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
 
-	@Mock
-	private GuestClassromRepository repository;
-	
-	@Mock
-	private MapperUtil mapperUtil;
-	
-	@InjectMocks
-	private GuestClassromService guestClassromService = new GuestClassromService();
-	
-	@Test
-	public void getAllwithClassroomReturnNotEmptyList() {
-		int expected = 1;
-		ModelMapper mapper = Mockito.mock(ModelMapper.class);
-		Classroom classroom = new Classroom("Matematicas");
-		List<Classroom> listClassrooms = new ArrayList<>();
-		ClassroomDTO [] listClassroomDTOs = new ClassroomDTO[1];
-		ClassroomDTO dto = new ClassroomDTO();
-		listClassroomDTOs[0] = dto;
-		listClassrooms.add(classroom);
-		Mockito.when(mapper.map(listClassrooms, ClassroomDTO[].class)).thenReturn(listClassroomDTOs);
-		Mockito.when(mapperUtil.getMapper()).thenReturn(mapper);
-		Mockito.when(repository.findAll()).thenReturn(listClassrooms);
-		List<ClassroomDTO> result = guestClassromService.getAll();
-		assertEquals(expected, result.size());
-	}
+    @Autowired
+    private GuestClassromService guestClassromService;
+    @Autowired
+    private GuestClassromRepository guestClassroomRepository;
+
+    @Test
+    public void getAllWithClassroomReturnNotEmptyList() {
+        int expected = 1;
+        Classroom classroom = new Classroom("Matematicas");
+        guestClassroomRepository.save(classroom);
+
+        List<ClassroomDTO> result = guestClassromService.getAll();
+        assertEquals(expected, result.size());
+    }
+
+    @Test
+    public void getAllWithClassroomReturnClassroomWithId() {
+        Classroom classroom = new Classroom("Matematicas");
+        guestClassroomRepository.save(classroom);
+
+        List<ClassroomDTO> result = guestClassromService.getAll();
+        assertNotNull(result.get(0).getId());
+    }
+
+    @Test
+    public void getAllWithClassroomReturnMathClassroomName() {
+        String name = "Matematicas";
+        Classroom classroom = new Classroom(name);
+        guestClassroomRepository.save(classroom);
+
+        List<ClassroomDTO> result = guestClassromService.getAll();
+        assertEquals(name, result.get(0).getName());
+    }
+
+    @Test
+    public void getAllWithoutClassroomsReturnEmptyList() {
+        int expected = 0;
+        List<ClassroomDTO> result = guestClassromService.getAll();
+        assertEquals(expected, result.size());
+    }
 }
