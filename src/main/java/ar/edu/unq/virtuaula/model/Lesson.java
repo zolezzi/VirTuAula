@@ -32,7 +32,7 @@ public class Lesson implements Serializable {
     @JoinColumn(name = "classroom_id", referencedColumnName = "id")
     @JsonIgnoreProperties("lessons")
     private Classroom classroom;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     @JsonIgnoreProperties("lesson")
@@ -45,9 +45,8 @@ public class Lesson implements Serializable {
         this.name = name;
     }
 
-	public void addTask(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
 
 }

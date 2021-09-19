@@ -28,11 +28,10 @@ public class VirtuaulaApplicationTests {
         return classroomPersist.getLessons().get(0);
     }
     
-    protected Task createTask(Classroom classroom, Lesson lesson, String statement) {
+    protected Lesson createTask(Classroom classroom, String statement) {
     	Task task = new Task(statement);
-    	lesson.addTask(task);
-    	classroom.addLesson(lesson);
-    	guestClassroomRepository.save(classroom);
-    	return task;
+    	classroom.getLessons().get(0).addTask(task);
+    	Classroom classroomPersist = guestClassroomRepository.save(classroom);
+    	return classroomPersist.getLessons().get(0);
     }
 }
