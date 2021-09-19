@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.repository.GuestClassromRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import ar.edu.unq.virtuaula.repository.ClassromRepository;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class GuestClassroomService {
+public class ClassroomService {
 
-    private final GuestClassromRepository guestClassromRepository;
+    private final ClassromRepository guestClassromRepository;
     private final MapperUtil mapperUtil;
 
     public List<ClassroomDTO> getAll() {

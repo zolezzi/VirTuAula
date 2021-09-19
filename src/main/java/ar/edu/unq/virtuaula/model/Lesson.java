@@ -33,7 +33,7 @@ public class Lesson implements Serializable {
     @JsonIgnoreProperties("lessons")
     private Classroom classroom;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "lesson_id")
     @JsonIgnoreProperties("lesson")
     private List<Task> tasks = new ArrayList<>();
@@ -47,6 +47,11 @@ public class Lesson implements Serializable {
 
     public void addTask(Task task) {
         this.tasks.add(task);
+    }
+    
+    public int progress() {
+        int completed = (int) this.tasks.stream().filter(task -> State.COMPLETED.equals(task.getState())).count();
+        return completed * 100 / this.tasks.size();
     }
 
 }

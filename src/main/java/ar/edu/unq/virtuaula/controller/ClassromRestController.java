@@ -7,18 +7,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
-import ar.edu.unq.virtuaula.service.GuestClassroomService;
+import ar.edu.unq.virtuaula.service.ClassroomService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class GuestClassromRestController {
+public class ClassromRestController {
 
-    private final GuestClassroomService guestClassromService;
+    private final ClassroomService classromService;
 
     @GetMapping("/classrooms")
     public List<ClassroomDTO> getAll() {
-        return guestClassromService.getAll();
+        return classromService.getAll();
     }
 }

@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
+public class ClassromServiceTest extends VirtuaulaApplicationTests {
 
     @Autowired
-    private GuestClassroomService guestClassroomService;
+    private ClassroomService guestClassroomService;
 
     @Test
     public void getAllWithClassroomReturnNotEmptyList() {
@@ -48,14 +48,14 @@ public class GuestClassromServiceTest extends VirtuaulaApplicationTests {
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertEquals(expected, result.size());
     }
-    
+
     @Test
     public void findByIdWithClassroomReturnClassroom() {
         String name = "Matematicas";
         Classroom classroomPersisted = createClassroomWithName(name);
-        
+
         Classroom classroomReturn = guestClassroomService.findById(classroomPersisted.getId());
-        
+
         assertEquals(classroomPersisted.getId(), classroomReturn.getId());
         assertEquals(name, classroomReturn.getName());
     }

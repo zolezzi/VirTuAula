@@ -15,7 +15,7 @@ public class MapperUtil {
         this.modelMapper = new ModelMapper();
         this.configure();
     }
-    
+
     public ModelMapper getMapper() {
         return this.modelMapper;
     }
@@ -23,8 +23,8 @@ public class MapperUtil {
     private void configure() {
         // ClassroomDTO config
         this.modelMapper.typeMap(Classroom.class, ClassroomDTO.class).addMappings(mapper -> {
-        	mapper.map(Classroom::getId, ClassroomDTO::setId);
-        	mapper.map(Classroom::getName, ClassroomDTO::setName);
+            mapper.map(Classroom::getId, ClassroomDTO::setId);
+            mapper.map(Classroom::getName, ClassroomDTO::setName);
         });
     }
 }

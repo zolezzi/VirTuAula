@@ -27,7 +27,7 @@ public class Classroom implements Serializable {
     private Long id;
 
     private String name;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "classroom_id")
     @JsonIgnoreProperties("classroom")

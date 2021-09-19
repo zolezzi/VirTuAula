@@ -5,7 +5,7 @@ import ar.edu.unq.virtuaula.model.Lesson;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GuestLessonRepository extends JpaRepository<Lesson, Long> {
+public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     List<Lesson> findByClassroom(Classroom classroom);
 }
