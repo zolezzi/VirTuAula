@@ -1,6 +1,5 @@
 package ar.edu.unq.virtuaula.service;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,6 +15,7 @@ import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import lombok.RequiredArgsConstructor;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class LessonService {
 
     public List<LessonDTO> getAllByClassroom(Classroom classroom) {
         List<Lesson> lessons = lessonRepository.findByClassroom(classroom);
-        return Arrays.asList(mapperUtil.getMapper().map(lessons, LessonDTO[].class));
+        return transformToDTO(lessons, classroom.getId());
     }
 
     public Lesson findById(Long lessonId) {
@@ -38,6 +38,15 @@ public class LessonService {
     public LessonVO completeTasks(Classroom classroom, Lesson lesson, List<Task> tasks) {
         completeState(tasks);
         return createLessonVO(lesson);
+    }
+    
+    private List<LessonDTO> transformToDTO(List<Lesson> lessons, Long classroomId) {
+        return lessons.stream().map(lesson -> {
+           LessonDTO lessonDTO = mapperUtil.getMapper().map(lesson, LessonDTO.class);
+           lessonDTO.setProgress(lesson.progress());
+           lessonDTO.setClassroomId(classroomId);
+           return lessonDTO;
+        }).collect(toList());
     }
 
     private LessonVO createLessonVO(Lesson lesson) {

@@ -9,6 +9,8 @@ public class LessonDTO implements Serializable {
     private static final long serialVersionUID = -225949991242303086L;
     private Long id;
     private String name;
+    private int progress;
+    private Long classroomId;
 
     public LessonDTO() {
     }

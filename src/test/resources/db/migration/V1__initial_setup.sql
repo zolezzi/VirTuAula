@@ -1,3 +1,4 @@
+drop table if exists option_task;
 drop table if exists task;
 drop table if exists lesson;
 drop table if exists classroom;
