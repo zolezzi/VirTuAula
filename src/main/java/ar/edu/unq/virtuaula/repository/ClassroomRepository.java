@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import ar.edu.unq.virtuaula.model.Classroom;
 
-public interface ClassromRepository extends JpaRepository<Classroom, Long> {
+public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
 
 }

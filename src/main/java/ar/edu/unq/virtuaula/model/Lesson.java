@@ -48,7 +48,7 @@ public class Lesson implements Serializable {
     public void addTask(Task task) {
         this.tasks.add(task);
     }
-    
+
     public int progress() {
         int completed = (int) this.tasks.stream().filter(task -> State.COMPLETED.equals(task.getState())).count();
         return completed * 100 / this.tasks.size();

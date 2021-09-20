@@ -10,6 +10,7 @@ import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -41,11 +42,11 @@ public class Task implements Serializable {
     private Long answer;
 
     private Long correctAnswer;
-    
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     @JsonIgnoreProperties("task")
-    private List<OptionTask> options;
+    private List<OptionTask> options = new ArrayList<>();
 
     public Task() {
     }
@@ -57,6 +58,14 @@ public class Task implements Serializable {
 
     public void complete() {
         this.state = State.COMPLETED;
+    }
+    
+    public void uncomplete() {
+        this.state = State.UNCOMPLETED;
+    }
+    
+    public void addOption(OptionTask option) {
+        this.options.add(option);
     }
 
 }

@@ -14,15 +14,15 @@ import lombok.Data;
 @Data
 @Entity
 public class OptionTask implements Serializable {
-    
+
     private static final long serialVersionUID = 768575911005782319L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String val;
-    
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     @JsonIgnoreProperties("options")

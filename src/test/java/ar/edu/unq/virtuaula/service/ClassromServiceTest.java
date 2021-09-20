@@ -18,7 +18,7 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllWithClassroomReturnNotEmptyList() {
         int expected = 1;
-        createClassroomWithName("Matematicas");
+        createOneClassroom();
 
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertEquals(expected, result.size());
@@ -26,7 +26,7 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
 
     @Test
     public void getAllWithClassroomReturnClassroomWithId() {
-        Classroom classroom = createClassroomWithName("Matematicas");
+        Classroom classroom = createOneClassroom();
 
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertNotNull(result.get(0).getId());
@@ -35,11 +35,10 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
 
     @Test
     public void getAllWithClassroomReturnMathClassroomName() {
-        String name = "Matematicas";
-        createClassroomWithName(name);
+        Classroom classroom = createOneClassroom();
 
         List<ClassroomDTO> result = guestClassroomService.getAll();
-        assertEquals(name, result.get(0).getName());
+        assertEquals(classroom.getName(), result.get(0).getName());
     }
 
     @Test
@@ -50,13 +49,20 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
+    public void getAllWithClassroomReturnClassroomWithProgress() {
+        int expected = 100;
+        createOneClassroom();
+        List<ClassroomDTO> result = guestClassroomService.getAll();
+        assertEquals(expected, result.get(0).getProgress());
+    }
+
+    @Test
     public void findByIdWithClassroomReturnClassroom() {
-        String name = "Matematicas";
-        Classroom classroomPersisted = createClassroomWithName(name);
+        Classroom classroom = createOneClassroom();
 
-        Classroom classroomReturn = guestClassroomService.findById(classroomPersisted.getId());
+        Classroom classroomReturn = guestClassroomService.findById(classroom.getId());
 
-        assertEquals(classroomPersisted.getId(), classroomReturn.getId());
-        assertEquals(name, classroomReturn.getName());
+        assertEquals(classroom.getId(), classroomReturn.getId());
+        assertEquals(classroom.getName(), classroomReturn.getName());
     }
 }
