@@ -19,7 +19,6 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     public void getAllWithClassroomReturnNotEmptyList() {
         int expected = 1;
         createOneClassroom();
-
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertEquals(expected, result.size());
     }
@@ -27,7 +26,6 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllWithClassroomReturnClassroomWithId() {
         Classroom classroom = createOneClassroom();
-
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getId(), result.get(0).getId());
@@ -36,7 +34,6 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllWithClassroomReturnMathClassroomName() {
         Classroom classroom = createOneClassroom();
-
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertEquals(classroom.getName(), result.get(0).getName());
     }
@@ -59,9 +56,7 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void findByIdWithClassroomReturnClassroom() {
         Classroom classroom = createOneClassroom();
-
         Classroom classroomReturn = guestClassroomService.findById(classroom.getId());
-
         assertEquals(classroom.getId(), classroomReturn.getId());
         assertEquals(classroom.getName(), classroomReturn.getName());
     }

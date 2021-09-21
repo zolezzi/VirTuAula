@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.Task;
 
 @Component
 public class MapperUtil {
@@ -25,6 +27,12 @@ public class MapperUtil {
         this.modelMapper.typeMap(Classroom.class, ClassroomDTO.class).addMappings(mapper -> {
             mapper.map(Classroom::getId, ClassroomDTO::setId);
             mapper.map(Classroom::getName, ClassroomDTO::setName);
+        });
+        // TaskDTO config
+        this.modelMapper.typeMap(Task.class, TaskDTO.class).addMappings(mapper -> {
+            mapper.map(Task::getId, TaskDTO::setId);
+            mapper.map(Task::getStatement, TaskDTO::setStatement);
+            mapper.map(Task::getAnswer, TaskDTO::setAswerSelectedId);
         });
     }
 }
