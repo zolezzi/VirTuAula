@@ -3,21 +3,30 @@ package ar.edu.unq.virtuaula.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
+import ar.edu.unq.virtuaula.vo.TaskVO;
 
 public class LessonServiceTest extends VirtuaulaApplicationTests {
 
     @Autowired
     private LessonService guestLessonService;
+    
+    @Autowired
+    private MapperUtil mapperUtil;
 
     @Test
     public void getAllByClassroomWithExistingClassroomReturnLesson() {
@@ -54,8 +63,16 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     public void completeTaskWithTaskProgressComplete() {
         int expected = 100;
         Classroom classroom = createOneClassroom();
-        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), classroom.getLessons().get(0).getTasks());
+        List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks()); 
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
         assertEquals(expected, lessonVo.getProgress());
     }
+
+	private List<TaskVO> createTaskVO(List<Task> tasks) {
+		return tasks.stream().map(task -> { 
+			TaskVO taskVO = mapperUtil.getMapper().map(task, TaskVO.class);
+			return taskVO;
+		}).toList();
+	}
 
 }

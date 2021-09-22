@@ -7,6 +7,7 @@ import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.vo.TaskVO;
 
 @Component
 public class MapperUtil {
@@ -32,7 +33,13 @@ public class MapperUtil {
         this.modelMapper.typeMap(Task.class, TaskDTO.class).addMappings(mapper -> {
             mapper.map(Task::getId, TaskDTO::setId);
             mapper.map(Task::getStatement, TaskDTO::setStatement);
-            mapper.map(Task::getAnswer, TaskDTO::setAswerSelectedId);
+            mapper.map(Task::getAnswer, TaskDTO::setAnswerSelectedId);
+        });
+        
+        // TaskVO config
+        this.modelMapper.typeMap(Task.class, TaskVO.class).addMappings(mapper -> {
+            mapper.map(Task::getId, TaskVO::setId);
+            mapper.map(Task::getAnswer, TaskVO::setAnswerId);
         });
     }
 }

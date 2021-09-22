@@ -17,6 +17,7 @@ import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.TaskRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
+import ar.edu.unq.virtuaula.vo.TaskVO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,7 +38,7 @@ public class LessonService {
         return lessonRepository.findById(lessonId).get();
     }
 
-    public LessonVO completeTasks(Classroom classroom, Lesson lesson, List<Task> tasks) {
+    public LessonVO completeTasks(Classroom classroom, Lesson lesson, List<TaskVO> tasks) {
         completeState(tasks);
         return createLessonVO(lesson);
     }
@@ -58,10 +59,17 @@ public class LessonService {
         return lessonVO;
     }
 
-    private void completeState(List<Task> tasks) {
+    private void completeState(List<TaskVO> tasks) {
         tasks.stream().forEach(task -> {
-        	task.complete();
-            taskRepository.save(task);
+        	Task tasksBD;
+			try {
+				tasksBD = taskRepository.findById(task.getId()).orElseThrow(() -> new Exception("Error not found Tasks with id: " + task.getId()));
+	        	tasksBD.setAnswer(task.getAnswerId());
+	        	tasksBD.complete();
+	            taskRepository.save(tasksBD);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         });
     }
 
