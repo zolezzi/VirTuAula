@@ -33,7 +33,7 @@ public class MapperUtil {
         this.modelMapper.typeMap(Task.class, TaskDTO.class).addMappings(mapper -> {
             mapper.map(Task::getId, TaskDTO::setId);
             mapper.map(Task::getStatement, TaskDTO::setStatement);
-            mapper.map(Task::getAnswer, TaskDTO::setAnswerSelectedId);
+            mapper.map(Task::getAnswer, TaskDTO::setAnswer);
         });
         
         // TaskVO config

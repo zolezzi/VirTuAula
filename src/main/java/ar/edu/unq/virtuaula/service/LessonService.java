@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
-import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
@@ -42,13 +41,13 @@ public class LessonService {
         completeState(tasks);
         return createLessonVO(lesson);
     }
-    
+
     private List<LessonDTO> transformToDTO(List<Lesson> lessons, Long classroomId) {
         return lessons.stream().map(lesson -> {
-           LessonDTO lessonDTO = mapperUtil.getMapper().map(lesson, LessonDTO.class);
-           lessonDTO.setProgress(lesson.progress());
-           lessonDTO.setClassroomId(classroomId);
-           return lessonDTO;
+            LessonDTO lessonDTO = mapperUtil.getMapper().map(lesson, LessonDTO.class);
+            lessonDTO.setProgress(lesson.progress());
+            lessonDTO.setClassroomId(classroomId);
+            return lessonDTO;
         }).collect(toList());
     }
 
@@ -61,15 +60,15 @@ public class LessonService {
 
     private void completeState(List<TaskVO> tasks) {
         tasks.stream().forEach(task -> {
-        	Task tasksBD;
-			try {
-				tasksBD = taskRepository.findById(task.getId()).orElseThrow(() -> new Exception("Error not found Tasks with id: " + task.getId()));
-	        	tasksBD.setAnswer(task.getAnswerId());
-	        	tasksBD.complete();
-	            taskRepository.save(tasksBD);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            Task tasksBD;
+            try {
+                tasksBD = taskRepository.findById(task.getId()).orElseThrow(() -> new Exception("Error not found Tasks with id: " + task.getId()));
+                tasksBD.setAnswer(task.getAnswerId());
+                tasksBD.complete();
+                taskRepository.save(tasksBD);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 

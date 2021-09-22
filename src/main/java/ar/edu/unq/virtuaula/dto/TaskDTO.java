@@ -12,5 +12,5 @@ public class TaskDTO implements Serializable{
 	private Long id;
     private String statement;
     private List<OptionTaskDTO> options;
-    private Long answerSelectedId;
+    private Long answer;
 }
