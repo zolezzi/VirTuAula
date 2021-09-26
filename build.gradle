@@ -48,3 +48,23 @@ jacoco {
 jacocoTestReport {
 	dependsOn test
 }
+
+jacocoTestCoverageVerification {
+	afterEvaluate {
+		getClassDirectories().setFrom(classDirectories.files.collect {
+			fileTree(dir: it, exclude:[
+				'ar/edu/unq/virtuaula/dto/*',
+				'ar/edu/unq/virtuaula/VirtuaulaApplication.class'
+			])
+		})
+	}
+
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.6
+			}
+		}
+	}
+}
+check.dependsOn jacocoTestCoverageVerification
