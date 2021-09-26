@@ -45,7 +45,7 @@ public class Classroom implements Serializable {
     }
     
     public int progress() {
-        int completed = this.lessons.stream().mapToInt(lesson -> lesson.progress()).sum();;
+        int completed = this.lessons.stream().mapToInt(lesson -> lesson.progress()).sum();
         return completed * 100 / (this.lessons.size() * 100);
     }
 }
