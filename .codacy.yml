@@ -1,0 +1,10 @@
+engines:
+    coverage:
+        enabled: true
+        exclude_paths:[
+            - 'test/**'
+        ]
+    metrics:
+        enabled: true
+    duplication:
+        enabled: true
