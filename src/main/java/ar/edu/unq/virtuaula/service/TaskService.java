@@ -23,8 +23,4 @@ public class TaskService {
         List<Task> tasks = taskRepository.findByLesson(lesson);
         return Arrays.asList(mapperUtil.getMapper().map(tasks, TaskDTO[].class));
     }
-    
-    public List<Task> mapTask(List<TaskDTO> tasks){
-    	return Arrays.asList(mapperUtil.getMapper().map(tasks, Task[].class));
-    }
 }
