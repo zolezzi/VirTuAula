@@ -67,23 +67,3 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 			"${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     ]
 }
-
-jacocoTestCoverageVerification {
-	afterEvaluate {
-		getClassDirectories().setFrom(classDirectories.files.collect {
-			fileTree(dir: it, exclude:[
-				'ar/edu/unq/virtuaula/dto/*',
-				'ar/edu/unq/virtuaula/VirtuaulaApplication.class'
-			])
-		})
-	}
-
-	violationRules {
-		rule {
-			limit {
-				minimum = 0.2
-			}
-		}
-	}
-}
-check.dependsOn jacocoTestCoverageVerification

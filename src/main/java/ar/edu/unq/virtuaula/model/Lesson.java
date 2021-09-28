@@ -38,13 +38,6 @@ public class Lesson implements Serializable {
     @JsonIgnoreProperties("lesson")
     private List<Task> tasks = new ArrayList<>();
 
-    public Lesson() {
-    }
-
-    public Lesson(String name) {
-        this.name = name;
-    }
-
     public void addTask(Task task) {
         this.tasks.add(task);
     }

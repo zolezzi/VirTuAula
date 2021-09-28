@@ -14,10 +14,5 @@ public class ClassroomDTO implements Serializable {
     public ClassroomDTO() {
     }
 
-    public ClassroomDTO(Long id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
 
 }

@@ -48,22 +48,14 @@ public class Task implements Serializable {
     @JsonIgnoreProperties("task")
     private List<OptionTask> options = new ArrayList<>();
 
-    public Task() {
-    }
-
-    public Task(String statement, Long correctAnswer) {
-        this.statement = statement;
-        this.correctAnswer = correctAnswer;
-    }
-
     public void complete() {
         this.state = State.COMPLETED;
     }
-    
+
     public void uncomplete() {
         this.state = State.UNCOMPLETED;
     }
-    
+
     public void addOption(OptionTask option) {
         this.options.add(option);
     }

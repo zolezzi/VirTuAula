@@ -33,17 +33,10 @@ public class Classroom implements Serializable {
     @JsonIgnoreProperties("classroom")
     private List<Lesson> lessons = new ArrayList<>();
 
-    public Classroom() {
-    }
-
-    public Classroom(String name) {
-        this.name = name;
-    }
-
     public void addLesson(Lesson lesson) {
         this.lessons.add(lesson);
     }
-    
+
     public int progress() {
         int completed = this.lessons.stream().mapToInt(lesson -> lesson.progress()).sum();
         return completed * 100 / (this.lessons.size() * 100);

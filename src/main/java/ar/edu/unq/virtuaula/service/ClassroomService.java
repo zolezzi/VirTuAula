@@ -28,12 +28,12 @@ public class ClassroomService {
     public Classroom findById(Long id) {
         return classromRepository.findById(id).get();
     }
-    
+
     private List<ClassroomDTO> transformToDTO(List<Classroom> classrooms) {
         return classrooms.stream().map(classroom -> {
-           ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
-           classroomDTO.setProgress(classroom.progress());
-           return classroomDTO;
+            ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
+            classroomDTO.setProgress(classroom.progress());
+            return classroomDTO;
         }).collect(toList());
     }
 }
