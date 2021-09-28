@@ -5,11 +5,7 @@ import ar.edu.unq.virtuaula.model.Lesson;
 
 public class ClassroomBuilder {
 
-    private static Classroom instance;
-    
-    public ClassroomBuilder() {
-        this.instance = new Classroom();
-    }
+    private final Classroom instance = new Classroom();
     
     public static ClassroomBuilder classroomWithName(String name) {
         ClassroomBuilder classroomBuilder = new ClassroomBuilder();

@@ -5,11 +5,7 @@ import ar.edu.unq.virtuaula.model.Task;
 
 public class LessonBuilder {
 
-    private static Lesson instance;
-    
-    public LessonBuilder() {
-        this.instance = new Lesson();
-    }
+    private final Lesson instance = new Lesson();
     
     public static LessonBuilder lessonWithName(String name) {
         LessonBuilder lessonBuilder = new LessonBuilder();
