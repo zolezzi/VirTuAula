@@ -11,13 +11,4 @@ public class ClassroomDTO implements Serializable {
     private String name;
     private int progress;
 
-    public ClassroomDTO() {
-    }
-
-    public ClassroomDTO(Long id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
-
 }

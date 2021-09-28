@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TaskVO {
 
-	private Long id;
-	private Long answerId;
+    private Long id;
+    private Long answerId;
 }

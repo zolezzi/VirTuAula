@@ -12,13 +12,4 @@ public class LessonDTO implements Serializable {
     private int progress;
     private Long classroomId;
 
-    public LessonDTO() {
-    }
-
-    public LessonDTO(Long id, String name) {
-        super();
-        this.id = id;
-        this.name = name;
-    }
-
 }
