@@ -30,6 +30,8 @@ public class Task implements Serializable {
     private Long id;
 
     private String statement;
+    
+    private int score;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")

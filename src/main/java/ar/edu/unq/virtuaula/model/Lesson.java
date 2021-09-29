@@ -27,6 +27,8 @@ public class Lesson implements Serializable {
     private Long id;
 
     private String name;
+    
+    private int note;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "classroom_id", referencedColumnName = "id")
@@ -47,4 +49,11 @@ public class Lesson implements Serializable {
         return this.tasks.isEmpty() ? 0 : completed * 100 / this.tasks.size();
     }
 
+    public int lessonQualification() {
+    	int completed = (int) this.tasks.stream()
+    			.filter(task -> State.COMPLETED.equals(task.getState()) && !task.getCorrectAnswer().equals(task.getAnswer()))
+    			.mapToInt(taskAnser -> taskAnser.getScore())
+    			.sum();
+    	return this.tasks.isEmpty() && completed == 0 ? completed : (this.note - completed);
+    }
 }
