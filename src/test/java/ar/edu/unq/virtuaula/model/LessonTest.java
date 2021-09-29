@@ -73,7 +73,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
         Mockito.when(task.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task.getAnswer()).thenReturn(Long.valueOf("1"));
         Mockito.when(task.getCorrectAnswer()).thenReturn(Long.valueOf("1"));
-        Mockito.when(task.getScore()).thenReturn(Integer.valueOf("10"));
+        Mockito.when(task.getScore()).thenReturn(Integer.valueOf("5"));
         
         Mockito.when(task2.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task2.getAnswer()).thenReturn(Long.valueOf("1"));
