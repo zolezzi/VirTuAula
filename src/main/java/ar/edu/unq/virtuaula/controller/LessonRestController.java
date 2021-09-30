@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.service.ClassroomService;
 import ar.edu.unq.virtuaula.service.LessonService;
 import ar.edu.unq.virtuaula.vo.LessonVO;

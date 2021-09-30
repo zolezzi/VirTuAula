@@ -1,14 +1,17 @@
 package ar.edu.unq.virtuaula.service;
 
-import ar.edu.unq.virtuaula.model.User;
-import ar.edu.unq.virtuaula.repository.UserRepository;
 import java.util.Collections;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import ar.edu.unq.virtuaula.model.User;
+import ar.edu.unq.virtuaula.repository.UserRepository;
 
 @Service
 @Transactional
@@ -23,6 +26,6 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                Collections.EMPTY_LIST);
+                Collections.emptyList());
     }
 }

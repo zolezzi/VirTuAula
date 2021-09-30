@@ -8,10 +8,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
-import ar.edu.unq.virtuaula.model.State;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.TaskRepository;
