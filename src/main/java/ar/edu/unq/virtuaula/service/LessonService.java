@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.State;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.TaskRepository;
@@ -47,6 +48,9 @@ public class LessonService {
         	LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
         	lessonVO.setProgress(lesson.progress());
         	lessonVO.setClassroomId(classroomId);
+        	if(lesson.progress() == 100) {
+        		lessonVO.setNote(lesson.qualification());
+        	}
             return lessonVO;
         }).collect(toList());
     }
@@ -55,6 +59,9 @@ public class LessonService {
         Lesson lessonActual = lessonRepository.getById(lesson.getId());
         LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
         lessonVO.setProgress(lessonActual.progress());
+    	if(lessonActual.progress() == 100) {
+    		lessonVO.setNote(lessonActual.qualification());
+    	}
         return lessonVO;
     }
 

@@ -28,7 +28,7 @@ public class Lesson implements Serializable {
 
     private String name;
     
-    private int note;
+    private int maxNote;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "classroom_id", referencedColumnName = "id")
@@ -54,6 +54,6 @@ public class Lesson implements Serializable {
     			.filter(task -> State.COMPLETED.equals(task.getState()) && !task.getCorrectAnswer().equals(task.getAnswer()))
     			.mapToInt(taskAnser -> taskAnser.getScore())
     			.sum();
-    	return this.tasks.isEmpty() && completed == 0 ? completed : (this.note - completed);
+    	return this.tasks.isEmpty() && completed == 0 ? completed : (this.maxNote - completed);
     }
 }

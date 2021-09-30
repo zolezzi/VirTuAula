@@ -53,7 +53,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
     
     @Test
     public void qualifyWithOneTaskEvaluateAnswerCorrect() {
-        Lesson lesson = LessonBuilder.lessonWithNameAndNote("Ecuaciones", 10).build();
+        Lesson lesson = LessonBuilder.lessonWithNameAndMaxNote("Ecuaciones", 10).build();
         int expected = 10;
         Task task = Mockito.mock(Task.class);
         Mockito.when(task.getState()).thenReturn(State.COMPLETED);
@@ -66,7 +66,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
     
     @Test
     public void qualifyWithTwoTaskEvaluateAnswerIncorrect() {
-        Lesson lesson = LessonBuilder.lessonWithNameAndNote("Ecuaciones", 10).build();
+        Lesson lesson = LessonBuilder.lessonWithNameAndMaxNote("Ecuaciones", 10).build();
         int expected = 5;
         Task task = Mockito.mock(Task.class);
         Task task2 = Mockito.mock(Task.class);
@@ -88,7 +88,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
     
     @Test
     public void qualifyWithoutTaskEvaluateAnswerCorrect() {
-        Lesson lesson = LessonBuilder.lessonWithNameAndNote("Ecuaciones", 10).build();
+        Lesson lesson = LessonBuilder.lessonWithNameAndMaxNote("Ecuaciones", 10).build();
         int expected = 0;
         assertEquals(expected, lesson.qualification());
     }

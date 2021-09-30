@@ -13,10 +13,10 @@ public class LessonBuilder {
         return lessonBuilder;
     }
     
-    public static LessonBuilder lessonWithNameAndNote(String name, int note) {
+    public static LessonBuilder lessonWithNameAndMaxNote(String name, int note) {
         LessonBuilder lessonBuilder = new LessonBuilder();
         lessonBuilder.instance.setName(name);
-        lessonBuilder.instance.setNote(note);
+        lessonBuilder.instance.setMaxNote(note);
         return lessonBuilder;
     }
     
