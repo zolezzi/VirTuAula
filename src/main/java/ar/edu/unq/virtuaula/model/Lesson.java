@@ -49,7 +49,7 @@ public class Lesson implements Serializable {
         return this.tasks.isEmpty() ? 0 : completed * 100 / this.tasks.size();
     }
 
-    public int lessonQualification() {
+    public int qualification() {
     	int completed = (int) this.tasks.stream()
     			.filter(task -> State.COMPLETED.equals(task.getState()) && !task.getCorrectAnswer().equals(task.getAnswer()))
     			.mapToInt(taskAnser -> taskAnser.getScore())
