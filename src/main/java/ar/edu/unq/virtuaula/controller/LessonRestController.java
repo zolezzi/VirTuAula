@@ -25,7 +25,7 @@ public class LessonRestController {
     private final LessonService lessonService;
 
     @GetMapping("/lessons/{classroomId}")
-    public List<LessonDTO> getByClassroomId(@PathVariable("classroomId") Long classroomId) {
+    public List<LessonVO> getByClassroomId(@PathVariable("classroomId") Long classroomId) {
         return lessonService.getAllByClassroom(classroomService.findById(classroomId));
     }
 

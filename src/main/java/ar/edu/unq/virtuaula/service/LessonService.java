@@ -28,9 +28,9 @@ public class LessonService {
     private final TaskRepository taskRepository;
     private final MapperUtil mapperUtil;
 
-    public List<LessonDTO> getAllByClassroom(Classroom classroom) {
+    public List<LessonVO> getAllByClassroom(Classroom classroom) {
         List<Lesson> lessons = lessonRepository.findByClassroom(classroom);
-        return transformToDTO(lessons, classroom.getId());
+        return transformToVO(lessons, classroom.getId());
     }
 
     public Lesson findById(Long lessonId) {
@@ -42,12 +42,12 @@ public class LessonService {
         return createLessonVO(lesson);
     }
 
-    private List<LessonDTO> transformToDTO(List<Lesson> lessons, Long classroomId) {
+    private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
         return lessons.stream().map(lesson -> {
-            LessonDTO lessonDTO = mapperUtil.getMapper().map(lesson, LessonDTO.class);
-            lessonDTO.setProgress(lesson.progress());
-            lessonDTO.setClassroomId(classroomId);
-            return lessonDTO;
+        	LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
+        	lessonVO.setProgress(lesson.progress());
+        	lessonVO.setClassroomId(classroomId);
+            return lessonVO;
         }).collect(toList());
     }
 

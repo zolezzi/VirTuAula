@@ -30,14 +30,14 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     public void getAllByClassroomWithExistingClassroomReturnLesson() {
         int expected = 1;
         Classroom classroom = createOneClassroom();
-        List<LessonDTO> result = guestLessonService.getAllByClassroom(classroom);
+        List<LessonVO> result = guestLessonService.getAllByClassroom(classroom);
         assertEquals(expected, result.size());
     }
 
     @Test
     public void getAllByClassroomWithExistingClassroomReturnLessonWithId() {
         Classroom classroom = createOneClassroom();
-        List<LessonDTO> result = guestLessonService.getAllByClassroom(classroom);
+        List<LessonVO> result = guestLessonService.getAllByClassroom(classroom);
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getId(), result.get(0).getId());
     }
@@ -45,7 +45,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllByClassroomWithExistingClassroomReturnLessonWithName() {
         Classroom classroom = createOneClassroom();
-        List<LessonDTO> result = guestLessonService.getAllByClassroom(classroom);
+        List<LessonVO> result = guestLessonService.getAllByClassroom(classroom);
         assertEquals(classroom.getLessons().get(0).getName(), result.get(0).getName());
     }
 

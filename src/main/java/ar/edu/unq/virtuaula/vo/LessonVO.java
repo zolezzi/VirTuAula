@@ -8,4 +8,5 @@ public class LessonVO {
     private Long id;
     private String name;
     private int progress;
+    private Long classroomId;
 }
