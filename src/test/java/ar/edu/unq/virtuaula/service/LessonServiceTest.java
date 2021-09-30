@@ -1,5 +1,6 @@
 package ar.edu.unq.virtuaula.service;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -9,14 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
-import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
-import static java.util.stream.Collectors.toList;
 
 public class LessonServiceTest extends VirtuaulaApplicationTests {
 
