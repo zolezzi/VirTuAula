@@ -9,7 +9,6 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE virtuaula;'
   - mysql -e 'USE virtuaula;'
-  - sudo apt-get install --reinstall ca-certificates
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
   - chmod +x gradlew
@@ -18,4 +17,4 @@ before_script:
   - bash <(curl -Ls https://coverage.codacy.com/get.sh) download
 
 after_success:
-  - bash <(curl -Ls https://coverage.codacy.com/get.sh)
+  - bash <(curl -k -Ls https://coverage.codacy.com/get.sh)
