@@ -16,12 +16,16 @@ import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LessonServiceTest extends VirtuaulaApplicationTests {
 
     @Autowired
     private LessonService guestLessonService;
-    
+
     @Autowired
     private MapperUtil mapperUtil;
 
@@ -49,6 +53,13 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
+    public void getAllByClassroomWithExistingClassroomReturnLessonWithoutNote() {
+        Classroom classroom = createOneClassroomWithTwoTasks();
+        List<LessonVO> result = guestLessonService.getAllByClassroom(classroom);
+        assertEquals(null, result.get(0).getNote());
+    }
+
+    @Test
     public void findByIdWithLessonReturnLesson() {
         Classroom classroom = createOneClassroom();
         Lesson lessonReturn = guestLessonService.findById(classroom.getLessons().get(0).getId());
@@ -60,16 +71,49 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     public void completeTaskWithTaskProgressComplete() {
         int expected = 100;
         Classroom classroom = createOneClassroom();
-        List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks()); 
+        List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks());
         LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
         assertEquals(expected, lessonVo.getProgress());
     }
 
-	private List<TaskVO> createTaskVO(List<Task> tasks) {
-		return tasks.stream().map(task -> { 
-			TaskVO taskVO = mapperUtil.getMapper().map(task, TaskVO.class);
-			return taskVO;
-		}).collect(toList());
-	}
+    @Test
+    public void completeTaskWithTaskProgressCompleteSetNote() {
+        Classroom classroom = createOneClassroom();
+        List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks());
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        assertNotNull(lessonVo.getNote());
+    }
+
+    @Test
+    public void completeTaskWithTaskProgressUncompleteDontAddNote() {
+        Classroom classroom = createOneClassroomWithTwoTasks();
+        TaskVO task = new TaskVO();
+        task.setId(1l);
+        task.setAnswerId(1l);
+        List<TaskVO> tasks = Arrays.asList(task);
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        assertEquals(null, lessonVo.getNote());
+    }
+
+    @Test
+    public void completeTaskWithTaskNonExistentThrowsException() {
+        Classroom classroom = createOneClassroomWithTwoTasks();
+        TaskVO task = new TaskVO();
+        task.setId(-1l);
+        task.setAnswerId(1l);
+        List<TaskVO> tasks = Arrays.asList(task);
+        NoSuchElementException assertThrows = assertThrows(NoSuchElementException.class, () -> {
+            guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        });
+
+        assertTrue(assertThrows.getMessage().contains("Error not found Tasks with id: " + task.getId()));
+    }
+
+    private List<TaskVO> createTaskVO(List<Task> tasks) {
+        return tasks.stream().map(task -> {
+            TaskVO taskVO = mapperUtil.getMapper().map(task, TaskVO.class);
+            return taskVO;
+        }).collect(toList());
+    }
 
 }

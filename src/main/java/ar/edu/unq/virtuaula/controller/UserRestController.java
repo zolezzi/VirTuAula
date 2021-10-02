@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class UserRestController {
-    
+
     private final UserService userService;
-    
+
     @PostMapping(value = "/login")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody AuthRequestDTO authRequestDto) {
-            return ResponseEntity.ok().body(userService.login(authRequestDto));
+        return ResponseEntity.ok().body(userService.login(authRequestDto));
     }
 }

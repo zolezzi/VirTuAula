@@ -16,6 +16,7 @@ import ar.edu.unq.virtuaula.repository.UserRepository;
 @Service
 @Transactional
 public class JwtUserDetailsService implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 

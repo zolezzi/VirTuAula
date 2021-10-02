@@ -26,6 +26,14 @@ public class VirtuaulaApplicationTests {
         return createClassroom(classroom);
     }
     
+    protected Classroom createOneClassroomWithTwoTasks() {
+        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
+        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
+        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
+        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
+        return createClassroom(classroom);
+    }
+
     protected Classroom createClassroom(Classroom classroom) {
         return classroomRepository.save(classroom);
     }

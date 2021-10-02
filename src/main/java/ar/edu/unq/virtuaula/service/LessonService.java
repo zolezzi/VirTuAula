@@ -16,6 +16,7 @@ import ar.edu.unq.virtuaula.repository.TaskRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -43,12 +44,13 @@ public class LessonService {
 
     private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
         return lessons.stream().map(lesson -> {
-        	LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
-        	lessonVO.setProgress(lesson.progress());
-        	lessonVO.setClassroomId(classroomId);
-        	if(lesson.progress() == 100) {
-        		lessonVO.setNote(lesson.qualification());
-        	}
+            LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
+            lessonVO.setNote(null);
+            lessonVO.setProgress(lesson.progress());
+            lessonVO.setClassroomId(classroomId);
+            if (lesson.progress() == 100) {
+                lessonVO.setNote(lesson.qualification());
+            }
             return lessonVO;
         }).collect(toList());
     }
@@ -56,24 +58,21 @@ public class LessonService {
     private LessonVO createLessonVO(Lesson lesson) {
         Lesson lessonActual = lessonRepository.getById(lesson.getId());
         LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
+        lessonVO.setNote(null);
         lessonVO.setProgress(lessonActual.progress());
-    	if(lessonActual.progress() == 100) {
-    		lessonVO.setNote(lessonActual.qualification());
-    	}
+        if (lessonActual.progress() == 100) {
+            lessonVO.setNote(lessonActual.qualification());
+        }
         return lessonVO;
     }
 
     private void completeState(List<TaskVO> tasks) {
         tasks.stream().forEach(task -> {
             Task tasksBD;
-            try {
-                tasksBD = taskRepository.findById(task.getId()).orElseThrow(() -> new Exception("Error not found Tasks with id: " + task.getId()));
-                tasksBD.setAnswer(task.getAnswerId());
-                tasksBD.complete();
-                taskRepository.save(tasksBD);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            tasksBD = taskRepository.findById(task.getId()).orElseThrow(() -> new NoSuchElementException("Error not found Tasks with id: " + task.getId()));
+            tasksBD.setAnswer(task.getAnswerId());
+            tasksBD.complete();
+            taskRepository.save(tasksBD);
         });
     }
 

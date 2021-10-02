@@ -20,13 +20,13 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-        		.apiInfo(apiInfo())
+                .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ar.edu.unq.virtuaula"))
                 .paths(PathSelectors.any())
                 .build();
     }
-    
+
     private ApiInfo apiInfo() {
         return new ApiInfo(
                 "API",
