@@ -1,5 +1,6 @@
 package ar.edu.unq.virtuaula.controller;
 
+import ar.edu.unq.virtuaula.model.Classroom;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class LessonRestController {
 
     @PostMapping("/lessons/{classroomId}/{lessonId}")
     public LessonVO completeTasks(@PathVariable("classroomId") Long classroomId, @PathVariable("lessonId") Long lessonId, @RequestBody List<TaskVO> tasks) {
-        return lessonService.completeTasks(classroomService.findById(classroomId), lessonService.findById(lessonId), tasks);
+        Classroom classroom = classroomService.findById(classroomId);
+        return lessonService.completeTasks(classroom, lessonId, tasks);
     }
 }

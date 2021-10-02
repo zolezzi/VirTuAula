@@ -61,7 +61,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
         Mockito.when(task.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task.getAnswer()).thenReturn(1l);
         Mockito.when(task.getCorrectAnswer()).thenReturn(1l);
-        Mockito.when(task.getScore()).thenReturn(10);
+        Mockito.when(task.getScore()).thenReturn(10.0);
         lesson.addTask(task);
         assertEquals(expected, lesson.qualification());
     }
@@ -75,12 +75,12 @@ public class LessonTest extends VirtuaulaApplicationTests {
         Mockito.when(task.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task.getAnswer()).thenReturn(1l);
         Mockito.when(task.getCorrectAnswer()).thenReturn(1l);
-        Mockito.when(task.getScore()).thenReturn(5);
+        Mockito.when(task.getScore()).thenReturn(5.0);
 
         Mockito.when(task2.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task2.getAnswer()).thenReturn(1l);
         Mockito.when(task2.getCorrectAnswer()).thenReturn(2l);
-        Mockito.when(task2.getScore()).thenReturn(5);
+        Mockito.when(task2.getScore()).thenReturn(5.0);
 
         lesson.addTask(task);
         lesson.addTask(task2);
@@ -96,7 +96,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
         Mockito.when(task.getState()).thenReturn(State.UNCOMPLETED);
         Mockito.when(task.getAnswer()).thenReturn(null);
         Mockito.when(task.getCorrectAnswer()).thenReturn(1l);
-        Mockito.when(task.getScore()).thenReturn(10);
+        Mockito.when(task.getScore()).thenReturn(10.0);
 
         lesson.addTask(task);
 
@@ -118,7 +118,7 @@ public class LessonTest extends VirtuaulaApplicationTests {
         Mockito.when(task.getState()).thenReturn(State.COMPLETED);
         Mockito.when(task.getAnswer()).thenReturn(1l);
         Mockito.when(task.getCorrectAnswer()).thenReturn(1l);
-        Mockito.when(task.getScore()).thenReturn(100);
+        Mockito.when(task.getScore()).thenReturn(100.0);
         lesson.addTask(task);
 
         IllegalArgumentException assertThrows = assertThrows(IllegalArgumentException.class, () -> {

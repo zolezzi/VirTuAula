@@ -72,7 +72,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         int expected = 100;
         Classroom classroom = createOneClassroom();
         List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks());
-        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0).getId(), tasks);
         assertEquals(expected, lessonVo.getProgress());
     }
 
@@ -80,7 +80,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     public void completeTaskWithTaskProgressCompleteSetNote() {
         Classroom classroom = createOneClassroom();
         List<TaskVO> tasks = createTaskVO(classroom.getLessons().get(0).getTasks());
-        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0).getId(), tasks);
         assertNotNull(lessonVo.getNote());
     }
 
@@ -91,7 +91,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         task.setId(1l);
         task.setAnswerId(1l);
         List<TaskVO> tasks = Arrays.asList(task);
-        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, classroom.getLessons().get(0).getId(), tasks);
         assertEquals(null, lessonVo.getNote());
     }
 
@@ -103,7 +103,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         task.setAnswerId(1l);
         List<TaskVO> tasks = Arrays.asList(task);
         NoSuchElementException assertThrows = assertThrows(NoSuchElementException.class, () -> {
-            guestLessonService.completeTasks(classroom, classroom.getLessons().get(0), tasks);
+            guestLessonService.completeTasks(classroom, classroom.getLessons().get(0).getId(), tasks);
         });
 
         assertTrue(assertThrows.getMessage().contains("Error not found Tasks with id: " + task.getId()));

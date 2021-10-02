@@ -53,7 +53,7 @@ public class Lesson implements Serializable {
     public int qualification() {
         int completed = (int) this.tasks.stream()
                 .filter(task -> State.COMPLETED.equals(task.getState()) && task.getCorrectAnswer().equals(task.getAnswer()))
-                .mapToInt(taskAnser -> taskAnser.getScore())
+                .mapToDouble(taskAnser -> taskAnser.getScore())
                 .sum();
         return this.tasks.isEmpty() ? 0 : validate(completed);
     }

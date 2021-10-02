@@ -17,6 +17,7 @@ import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,7 +38,8 @@ public class LessonService {
         return lessonRepository.findById(lessonId).get();
     }
 
-    public LessonVO completeTasks(Classroom classroom, Lesson lesson, List<TaskVO> tasks) {
+    public LessonVO completeTasks(Classroom classroom, Long lessonId, List<TaskVO> tasks) {
+        Lesson lesson = classroom.getLessons().stream().filter(les -> les.getId().equals(lessonId)).collect(Collectors.toList()).get(0);
         completeState(tasks);
         return createLessonVO(lesson);
     }
@@ -56,12 +58,11 @@ public class LessonService {
     }
 
     private LessonVO createLessonVO(Lesson lesson) {
-        Lesson lessonActual = lessonRepository.getById(lesson.getId());
         LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
         lessonVO.setNote(null);
-        lessonVO.setProgress(lessonActual.progress());
-        if (lessonActual.progress() == 100) {
-            lessonVO.setNote(lessonActual.qualification());
+        lessonVO.setProgress(lesson.progress());
+        if (lesson.progress() == 100) {
+            lessonVO.setNote(lesson.qualification());
         }
         return lessonVO;
     }
