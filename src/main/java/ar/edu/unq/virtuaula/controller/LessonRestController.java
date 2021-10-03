@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.ClassroomService;
 import ar.edu.unq.virtuaula.service.LessonService;
@@ -33,7 +34,8 @@ public class LessonRestController {
 
     @PostMapping("/lessons/{classroomId}/{lessonId}")
     public LessonVO completeTasks(@PathVariable("classroomId") Long classroomId, @PathVariable("lessonId") Long lessonId, @RequestBody List<TaskVO> tasks) {
-        return lessonService.completeTasks(classroomService.findById(classroomId), lessonService.findById(lessonId), tasks);
+        Classroom classroom = classroomService.findById(classroomId);
+        return lessonService.completeTasks(classroom, lessonId, tasks);
     }
     
     @PostMapping("/lessons/create/{classroomId}/{accountId}")

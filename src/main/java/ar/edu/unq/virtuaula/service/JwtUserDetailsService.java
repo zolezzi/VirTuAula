@@ -16,6 +16,7 @@ import ar.edu.unq.virtuaula.repository.UserRepository;
 @Service
 @Transactional
 public class JwtUserDetailsService implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -28,12 +29,5 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 Collections.emptyList());
     }
-    
-    public User getUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
-        }
-        return user;
-    }
+
 }

@@ -20,7 +20,7 @@ public class UserRestController {
     
     private final AuthenticationUserService authenticationUserService;
     private final UserService userService;
-    
+
     @PostMapping(value = "/login")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody AuthRequestDTO authRequestDto) {
             return ResponseEntity.ok().body(authenticationUserService.login(authRequestDto));

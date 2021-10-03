@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.Data;
+import org.springframework.util.Assert;
 
 @Data
 @Entity
@@ -27,7 +28,7 @@ public class Lesson implements Serializable {
     private Long id;
 
     private String name;
-    
+
     private int maxNote;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -49,11 +50,16 @@ public class Lesson implements Serializable {
         return this.tasks.isEmpty() ? 0 : completed * 100 / this.tasks.size();
     }
 
-    public int qualification() {
-    	int completed = (int) this.tasks.stream()
-    			.filter(task -> State.COMPLETED.equals(task.getState()) && !task.getCorrectAnswer().equals(task.getAnswer()))
-    			.mapToInt(taskAnser -> taskAnser.getScore())
-    			.sum();
-    	return this.tasks.isEmpty() && completed == 0 ? completed : (this.maxNote - completed);
+    public double qualification() {
+        double completed = (double) this.tasks.stream()
+                .filter(task -> State.COMPLETED.equals(task.getState()) && task.getCorrectAnswer().equals(task.getAnswer()))
+                .mapToDouble(taskAnser -> taskAnser.getScore())
+                .sum();
+        return this.tasks.isEmpty() ? 0 : validate(completed);
+    }
+
+    private double validate(double completed) {
+        Assert.isTrue(this.maxNote >= completed, "The qualification exceed the max note.");
+        return completed;
     }
 }

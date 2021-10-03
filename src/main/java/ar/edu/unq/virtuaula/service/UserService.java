@@ -1,3 +1,4 @@
+
 package ar.edu.unq.virtuaula.service;
 
 import javax.transaction.Transactional;
@@ -32,3 +33,4 @@ public class UserService {
     }
     
 }
+
