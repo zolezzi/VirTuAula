@@ -8,9 +8,12 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.repository.ClassroomRepository;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.TaskRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
@@ -76,5 +79,15 @@ public class LessonService {
             }
         });
     }
+
+	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
+		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
+		if(!teacherUser.containsClassroom(classroom)) {
+			throw new Exception("Error not found classrrom with id: " + classroom.getId());
+		}
+		newLesson.setClassroom(classroom);
+		newLesson = lessonRepository.save(newLesson);
+		return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
+	}
 
 }

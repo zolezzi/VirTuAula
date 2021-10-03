@@ -5,7 +5,7 @@ import ar.edu.unq.virtuaula.model.Task;
 
 public class TaskBuilder {
 
-    private final Task instance = new Task();;
+    private final Task instance = new Task();
     
     public static TaskBuilder taskWithStatement(String statement) {
         TaskBuilder taskBuilder = new TaskBuilder();
