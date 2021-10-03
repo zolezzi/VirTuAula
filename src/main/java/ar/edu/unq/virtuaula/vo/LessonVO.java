@@ -9,5 +9,5 @@ public class LessonVO {
     private String name;
     private int progress;
     private Long classroomId;
-    private Integer note;
+    private Double note;
 }
