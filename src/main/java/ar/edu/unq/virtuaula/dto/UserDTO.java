@@ -11,5 +11,5 @@ public class UserDTO implements Serializable{
 	private Long id;
     private String username;
     private String token;
-
+    private AccountDTO account;
 }
