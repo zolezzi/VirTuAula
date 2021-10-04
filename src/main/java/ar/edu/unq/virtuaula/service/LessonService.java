@@ -4,13 +4,13 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
@@ -30,6 +30,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final TaskRepository taskRepository;
     private final MapperUtil mapperUtil;
+    private final static int FULL_PROGRESS = 100;
 
     public List<LessonVO> getAllByClassroom(Classroom classroom) {
         List<Lesson> lessons = lessonRepository.findByClassroom(classroom);
@@ -41,7 +42,7 @@ public class LessonService {
     }
 
     public LessonVO completeTasks(Classroom classroom, Long lessonId, List<TaskVO> tasks) {
-        Lesson lesson = classroom.getLessons().stream().filter(les -> les.getId().equals(lessonId)).collect(Collectors.toList()).get(0);
+        Lesson lesson = classroom.getLessons().stream().filter(les -> les.getId().equals(lessonId)).findFirst().get();
         completeState(tasks);
         return createLessonVO(lesson);
     }
@@ -49,7 +50,7 @@ public class LessonService {
 	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
 		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
 		if(!teacherUser.containsClassroom(classroom)) {
-			throw new Exception("Error not found classrrom with id: " + classroom.getId());
+			throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
 		}
 		newLesson.setClassroom(classroom);
 		newLesson = lessonRepository.save(newLesson);
@@ -62,7 +63,7 @@ public class LessonService {
             lessonVO.setNote(null);
             lessonVO.setProgress(lesson.progress());
             lessonVO.setClassroomId(classroomId);
-            if (lesson.progress() == 100) {
+            if (lesson.progress() == FULL_PROGRESS) {
                 lessonVO.setNote(lesson.qualification());
             }
             return lessonVO;
@@ -73,7 +74,7 @@ public class LessonService {
         LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
         lessonVO.setNote(null);
         lessonVO.setProgress(lesson.progress());
-        if (lesson.progress() == 100) {
+        if (lesson.progress() == FULL_PROGRESS) {
             lessonVO.setNote(lesson.qualification());
         }
         return lessonVO;

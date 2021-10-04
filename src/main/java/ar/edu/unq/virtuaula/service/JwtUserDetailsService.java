@@ -1,7 +1,5 @@
 package ar.edu.unq.virtuaula.service;
 
-import java.util.Collections;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;

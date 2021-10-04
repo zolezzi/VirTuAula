@@ -1,16 +1,19 @@
 package ar.edu.unq.virtuaula.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.util.MapperUtil;
-import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import static java.util.stream.Collectors.toList;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.util.MapperUtil;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
@@ -22,6 +25,11 @@ public class ClassroomService {
 
     public List<ClassroomDTO> getAll() {
         List<Classroom> classrooms = classromRepository.findAll();
+        return transformToDTO(classrooms);
+    }
+    
+    public List<ClassroomDTO> findByAccount(Account account) {
+        List<Classroom> classrooms = account.getClassrooms();
         return transformToDTO(classrooms);
     }
 
