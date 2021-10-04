@@ -16,7 +16,7 @@ public class AuthenticationUserServiceTest extends VirtuaulaApplicationTests{
     private AuthenticationUserService authenticationUserService;
 	
     @Test
-    public void findTeacherAccountReturnAccountWithId() throws TeacherNotFoundException {
+    public void whenLoginUserAccountValidReturnJwtResponse() throws TeacherNotFoundException {
     	createOneUserWithTeacherAccount();
     	AuthRequestDTO authRequest = new AuthRequestDTO();
     	authRequest.setUsername("charlie");
