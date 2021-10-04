@@ -1,7 +1,10 @@
 package ar.edu.unq.virtuaula.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -10,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.TeacherAccount;
 
 public class ClassromServiceTest extends VirtuaulaApplicationTests {
 
@@ -71,4 +76,22 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
         List<ClassroomDTO> classroomReturn = guestClassroomService.findByAccount(account);
         assertEquals(expected, classroomReturn.size());
     }
+    
+    @Test
+    public void findByAccountIdWithClassroomReturnContainsClassroom() {
+    	Classroom classroom = createOneClassroom();
+    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+    	Boolean result = account.containsClassroom(classroom);
+        assertTrue(result);
+    }
+    
+    @Test
+    public void whenAccountQueryContainsClassroomWithoutClassroomReturnFalse() {
+    	Classroom classroom = createOneClassroom();
+    	Classroom classroom2 = createOneClassroom();
+    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+    	Boolean result = account.containsClassroom(classroom2);
+        assertFalse(result);
+    }
+
 }

@@ -1,5 +1,9 @@
 package ar.edu.unq.virtuaula;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -66,6 +70,23 @@ public class VirtuaulaApplicationTests {
         		.accountWithEmail("charlie@gmail.com")
         		.withAccountType(accountType)
         		.withUser(user)
+        		.build();
+        account = createTeacherAccount(account);
+        return account;
+    }
+    
+    protected Account createOneTeacherAccountWithClassroom(Classroom classroom) {
+    	List<Classroom> classrooms = new ArrayList<>();
+    	classrooms.add(classroom);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
+    	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+        		.accountWithFisrtName("Charlie")
+        		.accountWithLastName("Cardozo")
+        		.accountWithEmail("charlie@gmail.com")
+        		.withAccountType(accountType)
+        		.withUser(user)
+        		.withClassroom(classrooms)
         		.build();
         account = createTeacherAccount(account);
         return account;

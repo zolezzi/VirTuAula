@@ -3,23 +3,26 @@ package ar.edu.unq.virtuaula.service;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LessonServiceTest extends VirtuaulaApplicationTests {
 
@@ -109,6 +112,23 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         assertTrue(assertThrows.getMessage().contains("Error not found Tasks with id: " + task.getId()));
     }
 
+    @Test
+    public void whenAccountCreateLessonInClassroomWithAccountClassroomNotFoundClassroomReturnException() {
+    	Classroom classroom = createOneClassroom();
+    	Classroom classroom2 = createOneClassroom();
+    	LessonDTO lesson = new LessonDTO();
+    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+    	        
+    	Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
+    		guestLessonService.create(classroom2, account, lesson);
+        });
+
+        String expectedMessage = "Error not found classroom with id: 2";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
     private List<TaskVO> createTaskVO(List<Task> tasks) {
         return tasks.stream().map(task -> {
             TaskVO taskVO = mapperUtil.getMapper().map(task, TaskVO.class);
