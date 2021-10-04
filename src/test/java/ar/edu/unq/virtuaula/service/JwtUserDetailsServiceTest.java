@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.model.User;
@@ -26,7 +27,7 @@ public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests{
     
     @Test
     public void whenGetUserWithUsernameNotExistsThenThrowExpetion() {
-        Exception exception = assertThrows(RuntimeException.class, () -> {
+        Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
         	UserDetailsService.loadUserByUsername("charlie2");
         });
 

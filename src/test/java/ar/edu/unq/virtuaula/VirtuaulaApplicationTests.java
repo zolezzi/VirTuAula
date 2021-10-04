@@ -10,6 +10,7 @@ import ar.edu.unq.virtuaula.builder.LessonBuilder;
 import ar.edu.unq.virtuaula.builder.TaskBuilder;
 import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
+import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
@@ -53,6 +54,10 @@ public class VirtuaulaApplicationTests {
     }
     
     protected User createOneUserWithTeacherAccount() {
+        return createOneTeacherAccount().getUser();
+    }
+    
+    protected Account createOneTeacherAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
     	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
@@ -63,6 +68,6 @@ public class VirtuaulaApplicationTests {
         		.withUser(user)
         		.build();
         account = createTeacherAccount(account);
-        return account.getUser();
+        return account;
     }
 }

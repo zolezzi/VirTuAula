@@ -1,5 +1,6 @@
 package ar.edu.unq.virtuaula.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class TeacherAccount extends Account {
           name = "teacher_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "student_id", referencedColumnName = "id"))
-    private List<StudentAccount> students;
+    private List<StudentAccount> students = new ArrayList<>();
 
 	public boolean containsClassroom(Classroom classroom) {	
 		return this.getClassrooms().isEmpty() ? false : this.getClassrooms()

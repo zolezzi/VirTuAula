@@ -1,14 +1,17 @@
 package ar.edu.unq.virtuaula.service;
 
-import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
-import ar.edu.unq.virtuaula.dto.ClassroomDTO;
-import ar.edu.unq.virtuaula.model.Classroom;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.Classroom;
 
 public class ClassromServiceTest extends VirtuaulaApplicationTests {
 
@@ -59,5 +62,13 @@ public class ClassromServiceTest extends VirtuaulaApplicationTests {
         Classroom classroomReturn = guestClassroomService.findById(classroom.getId());
         assertEquals(classroom.getId(), classroomReturn.getId());
         assertEquals(classroom.getName(), classroomReturn.getName());
+    }
+    
+    @Test
+    public void findByAccountIdWithoutClassroomReturnEmptyList() {
+    	int expected = 0;
+    	Account account = createOneTeacherAccount();
+        List<ClassroomDTO> classroomReturn = guestClassroomService.findByAccount(account);
+        assertEquals(expected, classroomReturn.size());
     }
 }
