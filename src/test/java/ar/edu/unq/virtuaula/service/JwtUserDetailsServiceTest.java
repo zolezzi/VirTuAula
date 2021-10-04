@@ -22,6 +22,11 @@ public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests{
         User user = createOneUserWithTeacherAccount();
         User result = (User) UserDetailsService.loadUserByUsername("charlie");
         assertNotNull(result);
+        assertNotNull(result.getAuthorities());
+        assertTrue(result.isAccountNonExpired());
+        assertTrue(result.isAccountNonLocked());
+        assertTrue(result.isCredentialsNonExpired());
+        assertTrue(result.isEnabled());
         assertEquals(result.getId(), user.getId());
     }
     

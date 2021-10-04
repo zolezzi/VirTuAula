@@ -1,6 +1,7 @@
 package ar.edu.unq.virtuaula.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,5 +43,5 @@ public class AccountType implements Serializable{
           name = "account_type_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "privilege_id", referencedColumnName = "id"))
-    private List<Privilege> privileges;
+    private List<Privilege> privileges = new ArrayList<>();
 }

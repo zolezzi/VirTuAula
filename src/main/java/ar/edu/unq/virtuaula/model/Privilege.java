@@ -1,6 +1,7 @@
 package ar.edu.unq.virtuaula.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -24,5 +25,5 @@ public class Privilege implements Serializable{
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private List<AccountType> accountTypes;
+    private List<AccountType> accountTypes = new ArrayList<>();
 }

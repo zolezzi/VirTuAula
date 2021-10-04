@@ -1,19 +1,24 @@
 package ar.edu.unq.virtuaula.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
 import ar.edu.unq.virtuaula.dto.AuthRequestDTO;
 import ar.edu.unq.virtuaula.dto.JwtResponseDTO;
+import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.util.JwtTokenUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
+import ar.edu.unq.virtuaula.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthenticationUserService {
 
     private final JwtUserDetailsService jwtUserDetailsService;
@@ -26,11 +31,19 @@ public class AuthenticationUserService {
 
         User userDetails = (User) jwtUserDetailsService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-       AccountDTO account =  mapperUtil.getMapper().map(userDetails.getAccount(), AccountDTO.class);
+        AccountVO account =  createAccountVO(userDetails.getAccount());
         return new JwtResponseDTO(userDetails.getUsername(), token, account);
     }
 
-    private void authenticate(String username, String password) {
+    private AccountVO createAccountVO(Account account) {
+    	AccountVO accountVO = new AccountVO();
+    	AccountTypeDTO accountType = mapperUtil.getMapper().map(account.getAccountType(), AccountTypeDTO.class);
+    	accountVO.setAccountId(account.getId());
+    	accountVO.setAccountType(accountType);
+    	return accountVO;
+	}
+
+	private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 }

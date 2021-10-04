@@ -3,7 +3,6 @@ package ar.edu.unq.virtuaula;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,7 +32,7 @@ public class VirtuaulaApplicationTests {
     
     @Autowired
     protected AccountRepository accountRepository;
-
+    
     protected Classroom createOneClassroom() {
         Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").completed().withCorrectAnswer(1l).withAnswer(1l).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).build();
@@ -63,7 +62,7 @@ public class VirtuaulaApplicationTests {
     
     protected Account createOneTeacherAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
-    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
+    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
     	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
         		.accountWithFisrtName("Charlie")
         		.accountWithLastName("Cardozo")
