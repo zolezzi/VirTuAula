@@ -3,6 +3,11 @@ engines:
         enabled: true
         exclude_paths:[
             - 'test/**'
+            - 'src/main/java/ar/edu/unq/virtuaula/VirtuaulaApplication.java'
+            - 'src/main/java/ar/edu/unq/virtuaula/util/JwtTokenUtil.java'
+            - 'src/main/java/ar/edu/unq/virtuaula/security/JwtRequestFilter.java'
+            - 'src/main/java/ar/edu/virtuaula/controller/**'
+            - 'src/main/java/ar/edu/unq/virtuaula/dto/**'
         ]
     metrics:
         enabled: true
