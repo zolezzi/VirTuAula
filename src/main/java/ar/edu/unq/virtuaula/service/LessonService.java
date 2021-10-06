@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -10,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
@@ -48,16 +50,27 @@ public class LessonService {
     }
 
 	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
+		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTaks(), Task[].class));
 		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
 		if(!teacherUser.containsClassroom(classroom)) {
 			throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
 		}
 		newLesson.setClassroom(classroom);
+		
 		newLesson = lessonRepository.save(newLesson);
+		setRelationshipTaskAndLesson(tasks, newLesson);
 		return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
 	}
     
-    private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
+    private void setRelationshipTaskAndLesson(List<Task> tasks, Lesson newLesson) {
+		for(Task task : tasks) {
+			task.setLesson(newLesson);
+			
+		}
+		taskRepository.saveAll(tasks);
+	}
+
+	private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
         return lessons.stream().map(lesson -> {
             LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
             lessonVO.setNote(null);
