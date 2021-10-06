@@ -50,13 +50,12 @@ public class LessonService {
     }
 
 	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
-		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTasks(), Task[].class));
 		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
 		if(!teacherUser.containsClassroom(classroom)) {
 			throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
 		}
+		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTasks(), Task[].class));
 		newLesson.setClassroom(classroom);
-		
 		newLesson = lessonRepository.save(newLesson);
 		setRelationshipTaskAndLesson(tasks, newLesson);
 		return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
