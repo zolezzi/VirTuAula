@@ -11,10 +11,10 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
-import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
@@ -50,7 +50,7 @@ public class LessonService {
     }
 
 	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
-		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTaks(), Task[].class));
+		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTasks(), Task[].class));
 		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
 		if(!teacherUser.containsClassroom(classroom)) {
 			throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());

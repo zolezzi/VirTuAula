@@ -14,4 +14,5 @@ public class TaskDTO implements Serializable {
     private List<OptionTaskDTO> options;
     private Double score;
     private Long answer;
+    private Long correctAnswer;
 }

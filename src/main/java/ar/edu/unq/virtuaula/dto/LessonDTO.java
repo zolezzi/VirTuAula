@@ -13,6 +13,6 @@ public class LessonDTO implements Serializable {
     private String name;
     private Long classroomId;
     private int maxNote;
-    private List<TaskDTO> taks;
+    private List<TaskDTO> tasks;
 
 }
