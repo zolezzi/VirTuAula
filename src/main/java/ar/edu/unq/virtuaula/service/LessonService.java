@@ -2,7 +2,6 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -14,7 +13,6 @@ import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
-import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
@@ -49,27 +47,20 @@ public class LessonService {
         return createLessonVO(lesson);
     }
 
-	public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
-		Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
-		if(!teacherUser.containsClassroom(classroom)) {
-			throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
-		}
-		List<Task> tasks =  Arrays.asList(mapperUtil.getMapper().map(lesson.getTasks(), Task[].class));
-		newLesson.setClassroom(classroom);
-		newLesson = lessonRepository.save(newLesson);
-		setRelationshipTaskAndLesson(tasks, newLesson);
-		return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
-	}
-    
-    private void setRelationshipTaskAndLesson(List<Task> tasks, Lesson newLesson) {
-		for(Task task : tasks) {
-			task.setLesson(newLesson);
-			
-		}
-		taskRepository.saveAll(tasks);
-	}
+    public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
+        Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
+        if (!teacherUser.containsClassroom(classroom)) {
+            throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
+        }
+        newLesson.setClassroom(classroom);
+        newLesson.getTasks().forEach(task -> {
+            task.uncomplete();
+        });
+        newLesson = lessonRepository.save(newLesson);
+        return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
+    }
 
-	private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
+    private List<LessonVO> transformToVO(List<Lesson> lessons, Long classroomId) {
         return lessons.stream().map(lesson -> {
             LessonVO lessonVO = mapperUtil.getMapper().map(lesson, LessonVO.class);
             lessonVO.setNote(null);
@@ -102,4 +93,3 @@ public class LessonService {
     }
 
 }
-
