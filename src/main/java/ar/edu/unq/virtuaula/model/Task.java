@@ -64,7 +64,7 @@ public class Task implements Serializable {
         this.options.add(option);
     }
 
-	public Long findCorrectAswer() {
+	public Long findCorrectAnswer() {
 		return this.getOptions().stream().filter(optionTask -> optionTask.isCorrect()).findFirst().get().getId();
 	}
 

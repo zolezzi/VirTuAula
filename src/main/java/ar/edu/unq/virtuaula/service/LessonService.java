@@ -57,7 +57,7 @@ public class LessonService {
             task.uncomplete();
         });
         newLesson = lessonRepository.save(newLesson);
-        newLesson.getTasks().forEach(task -> task.setCorrectAnswer(task.findCorrectAswer()));
+        newLesson.getTasks().forEach(task -> task.setCorrectAnswer(task.findCorrectAnswer()));
         newLesson = lessonRepository.save(newLesson);
         return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
     }

@@ -54,6 +54,6 @@ public class TaskTest extends VirtuaulaApplicationTests {
         task.addOption(optionTask2);
         task.addOption(optionTask3);
         task.addOption(optionTask4);
-        assertEquals(expected, task.findCorrectAswer());
+        assertEquals(expected, task.findCorrectAnswer());
     }
 }
