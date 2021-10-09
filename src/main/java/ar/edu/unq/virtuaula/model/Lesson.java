@@ -36,7 +36,7 @@ public class Lesson implements Serializable {
     @JsonIgnoreProperties("lessons")
     private Classroom classroom;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
     @JsonIgnoreProperties("lesson")
     private List<Task> tasks = new ArrayList<>();

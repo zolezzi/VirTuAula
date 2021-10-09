@@ -31,7 +31,7 @@ public class AccountType implements Serializable{
 
     private String name;
   
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_type_id")
     @JsonIgnoreProperties("account")
     private List<Account> accounts;

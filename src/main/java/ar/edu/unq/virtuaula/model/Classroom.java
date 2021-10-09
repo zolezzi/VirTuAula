@@ -30,7 +30,7 @@ public class Classroom implements Serializable {
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "classroom_id")
     @JsonIgnoreProperties("classroom")
     private List<Lesson> lessons = new ArrayList<>();

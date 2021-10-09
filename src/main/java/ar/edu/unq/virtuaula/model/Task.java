@@ -46,7 +46,7 @@ public class Task implements Serializable {
 
     private Long correctAnswer;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     @JsonIgnoreProperties("task")
     private List<OptionTask> options = new ArrayList<>();
