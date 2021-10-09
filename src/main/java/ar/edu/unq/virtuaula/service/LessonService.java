@@ -33,7 +33,7 @@ public class LessonService {
     private final static int FULL_PROGRESS = 100;
 
     public List<LessonVO> getAllByClassroom(Classroom classroom) {
-        List<Lesson> lessons = lessonRepository.findByClassroom(classroom);
+        List<Lesson> lessons = classroom.getLessons();
         return transformToVO(lessons, classroom.getId());
     }
 
@@ -52,7 +52,6 @@ public class LessonService {
         if (!teacherUser.containsClassroom(classroom)) {
             throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
         }
-        newLesson.setClassroom(classroom);
         newLesson.getTasks().forEach(task -> {
             task.uncomplete();
         });

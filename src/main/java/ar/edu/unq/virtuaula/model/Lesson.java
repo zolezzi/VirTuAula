@@ -1,6 +1,5 @@
 package ar.edu.unq.virtuaula.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import lombok.Data;
+
 import org.springframework.util.Assert;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
 
 @Data
 @Entity
@@ -30,11 +32,6 @@ public class Lesson implements Serializable {
     private String name;
 
     private int maxNote;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "classroom_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("lessons")
-    private Classroom classroom;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")
