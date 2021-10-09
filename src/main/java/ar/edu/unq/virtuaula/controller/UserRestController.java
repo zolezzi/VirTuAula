@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unq.virtuaula.dto.AuthRequestDTO;
 import ar.edu.unq.virtuaula.dto.JwtResponseDTO;
 import ar.edu.unq.virtuaula.service.AuthenticationUserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -17,6 +19,8 @@ public class UserRestController {
     private final AuthenticationUserService authenticationUserService;
 
     @PostMapping(value = "/login")
+    @ApiResponse(code = 200, message = "Successfully" , response = ResponseEntity.class)
+    @ApiOperation(value = "Post login by user", notes = "Post login by user")
     public ResponseEntity<JwtResponseDTO> login(@RequestBody AuthRequestDTO authRequestDto) {
             return ResponseEntity.ok().body(authenticationUserService.login(authRequestDto));
     }
