@@ -42,7 +42,7 @@ public class MapperUtil {
         // OptionTaskDTO config
         this.modelMapper.typeMap(OptionTask.class, OptionTaskDTO.class).addMappings(mapper -> {
             mapper.map(OptionTask::getId, OptionTaskDTO::setId);
-            mapper.map(OptionTask::isCorrect, OptionTaskDTO::setCorrect);
+            mapper.map(OptionTask::isCorrect, OptionTaskDTO::setIsCorrect);
             mapper.map(OptionTask::getResponseValue, OptionTaskDTO::setResponseValue);
         });
         
