@@ -53,6 +53,7 @@ public class TaskService {
 	private List<OptionTaskVO> transformOptionTaskToVO(List<OptionTask> options) {
 		return options.stream().map(option -> {
 			OptionTaskVO optionVO = new OptionTaskVO();
+			optionVO.setId(option.getId());
 			optionVO.setResponseValue(option.getResponseValue());
             return optionVO;
         }).collect(toList());
