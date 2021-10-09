@@ -25,6 +25,8 @@ public class OptionTask implements Serializable {
     private Long id;
 
     private String responseValue;
+    
+    private boolean isCorrect;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "task_id", referencedColumnName = "id")

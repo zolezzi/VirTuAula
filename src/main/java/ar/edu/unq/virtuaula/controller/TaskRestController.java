@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.TaskDTO;
+import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.LessonService;
 import ar.edu.unq.virtuaula.service.TaskService;
+import ar.edu.unq.virtuaula.vo.TaskStudentVO;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,9 +22,15 @@ public class TaskRestController {
 
     private final TaskService taskService;
     private final LessonService lessonService;
+    private final AccountService accountService;
 
     @GetMapping("/tasks/{lessonId}")
-    public List<TaskDTO> getByClassroomId(@PathVariable("lessonId") Long lessonId) {
-        return taskService.getAllTaskByLesson(lessonService.findById(lessonId));
+    public List<TaskStudentVO> getByClassroomId(@PathVariable("lessonId") Long lessonId) {
+        return taskService.getAllTaskByLessonForStudent(lessonService.findById(lessonId));
+    }
+    
+    @GetMapping("/tasks/{lessonId}/{accountId}")
+    public List<TaskDTO> getByClassroomId(@PathVariable("lessonId") Long lessonId, @PathVariable("accountId") Long accountId ) throws TeacherNotFoundException {
+        return taskService.getAllTaskByLesson(lessonService.findById(lessonId), accountService.findTeacherById(accountId));
     }
 }

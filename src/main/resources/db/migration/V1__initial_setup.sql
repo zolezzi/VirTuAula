@@ -12,7 +12,7 @@ drop table if exists classroom;
 create table classroom(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
 create table lesson(id bigint primary key AUTO_INCREMENT, name varchar(255) not null, max_note double(10,2), classroom_id bigint, constraint fk_lesson_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id));
 create table task(id bigint primary key AUTO_INCREMENT, statement varchar(255) not null, state varchar(15) default 'UNCOMPLETED', answer bigint, correct_answer bigint, score double(10,2), lesson_id bigint, constraint fk_task_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id));
-create table option_task(id bigint primary key AUTO_INCREMENT, response_value varchar(255) not null, task_id bigint, constraint fk_option_task FOREIGN KEY (task_id) REFERENCES task(id));
+create table option_task(id bigint primary key AUTO_INCREMENT, response_value varchar(255) not null, task_id bigint, is_correct boolean not null default 0, constraint fk_option_task FOREIGN KEY (task_id) REFERENCES task(id));
 create table account_type(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
 create table privilege(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
 create table user(id bigint primary key AUTO_INCREMENT, username varchar(255), password varchar(255));

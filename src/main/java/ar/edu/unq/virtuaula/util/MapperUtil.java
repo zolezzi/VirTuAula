@@ -4,8 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.dto.OptionTaskDTO;
 import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.vo.TaskVO;
 
@@ -37,11 +39,19 @@ public class MapperUtil {
             mapper.map(Task::getCorrectAnswer, TaskDTO::setCorrectAnswer);
         });
         
+        // OptionTaskDTO config
+        this.modelMapper.typeMap(OptionTask.class, OptionTaskDTO.class).addMappings(mapper -> {
+            mapper.map(OptionTask::getId, OptionTaskDTO::setId);
+            mapper.map(OptionTask::isCorrect, OptionTaskDTO::setCorrect);
+            mapper.map(OptionTask::getResponseValue, OptionTaskDTO::setResponseValue);
+        });
+        
         this.modelMapper.typeMap(TaskDTO.class, Task.class).addMappings(mapper -> {
             mapper.map(TaskDTO::getId, Task::setId);
             mapper.map(TaskDTO::getStatement, Task::setStatement);
             mapper.map(TaskDTO::getAnswer, Task::setAnswer);
             mapper.map(TaskDTO::getCorrectAnswer, Task::setCorrectAnswer);
+
         });
 
         // TaskVO config
