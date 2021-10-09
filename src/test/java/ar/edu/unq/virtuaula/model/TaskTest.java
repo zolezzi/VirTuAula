@@ -36,4 +36,24 @@ public class TaskTest extends VirtuaulaApplicationTests {
 
         assertEquals(State.UNCOMPLETED, task.getState());
     }
+    
+    @Test
+    public void taskWithOptionTaskFindCorrectAnswer() {
+    	Long expected = Long.valueOf(4l);
+        Task task = TaskBuilder.taskWithStatement("Cuando mide el Obelisco").build();
+        OptionTask optionTask1 = Mockito.mock(OptionTask.class);
+        OptionTask optionTask2 = Mockito.mock(OptionTask.class);
+        OptionTask optionTask3 = Mockito.mock(OptionTask.class);
+        OptionTask optionTask4 = Mockito.mock(OptionTask.class);
+        Mockito.when(optionTask1.isCorrect()).thenReturn(false);
+        Mockito.when(optionTask2.isCorrect()).thenReturn(false);
+        Mockito.when(optionTask3.isCorrect()).thenReturn(false);
+        Mockito.when(optionTask4.isCorrect()).thenReturn(true);
+        Mockito.when(optionTask4.getId()).thenReturn(Long.valueOf(4l));
+        task.addOption(optionTask1);
+        task.addOption(optionTask2);
+        task.addOption(optionTask3);
+        task.addOption(optionTask4);
+        assertEquals(expected, task.findCorrectAswer());
+    }
 }
