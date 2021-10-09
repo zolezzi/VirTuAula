@@ -13,7 +13,6 @@ import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.vo.TaskStudentVO;
-import ar.edu.unq.virtuaula.vo.TaskVO;
 
 public class TaskServiceTest extends VirtuaulaApplicationTests {
 
