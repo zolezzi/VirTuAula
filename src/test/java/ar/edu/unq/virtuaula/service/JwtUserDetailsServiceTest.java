@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.UserDTO;
+import ar.edu.unq.virtuaula.exception.UserRegisterException;
 import ar.edu.unq.virtuaula.model.User;
 
 public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests{
@@ -37,6 +40,53 @@ public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests{
         });
 
         String expectedMessage = "User not found with username: charlie2";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void testRegisterAUserWithUserValidReturnUserWithUsername() throws UserRegisterException {
+    	UserDTO user = Mockito.mock(UserDTO.class);
+	    Mockito.when(user.getPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getRepeatPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getEmail()).thenReturn("charlie2@gmail.com");
+	    Mockito.when(user.getUsername()).thenReturn("charly2");
+	    UserDTO userResult = UserDetailsService.register(user);
+    	assertEquals(user.getUsername(), userResult.getUsername());
+    }
+    
+    @Test
+    public void testRegisterAUserWithUserValidButItAlreadyExistsRegisterEmailReturnUserRegisterException() {
+    	createOneUser();
+    	UserDTO user = Mockito.mock(UserDTO.class);
+	    Mockito.when(user.getPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getRepeatPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getEmail()).thenReturn("charlie@gmail.com");
+	    Mockito.when(user.getUsername()).thenReturn("charly2");
+        Exception exception = assertThrows(UserRegisterException.class, () -> {
+        	UserDetailsService.register(user);
+        });
+
+        String expectedMessage = "There is already a registered user with this email: charlie@gmail.com";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void testRegisterAUserWithUserInvalidEmailReturnUserRegisterException() {
+    	createOneUser();
+    	UserDTO user = Mockito.mock(UserDTO.class);
+	    Mockito.when(user.getPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getRepeatPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getEmail()).thenReturn("charlie@");
+	    Mockito.when(user.getUsername()).thenReturn("charly2");
+        Exception exception = assertThrows(UserRegisterException.class, () -> {
+        	UserDetailsService.register(user);
+        });
+
+        String expectedMessage = "Error register user: [Error email invalid]";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

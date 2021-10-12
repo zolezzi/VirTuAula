@@ -14,6 +14,11 @@ public class UserBuilder {
         return userBuilder;
     }
     
+    public UserBuilder withEmail(String email) {
+        this.instance.setEmail(email);
+        return this;
+    }
+    
     public UserBuilder withAccount(Account account) {
         this.instance.setAccount(account);
         return this;

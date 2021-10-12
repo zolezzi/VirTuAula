@@ -22,6 +22,7 @@ import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.UserRepository;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -32,6 +33,9 @@ public class VirtuaulaApplicationTests {
     
     @Autowired
     protected AccountRepository accountRepository;
+    
+    @Autowired
+    protected UserRepository userRepository;
     
     protected Classroom createOneClassroom() {
         Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").completed().withCorrectAnswer(1l).withAnswer(1l).build();
@@ -52,12 +56,23 @@ public class VirtuaulaApplicationTests {
         return classroomRepository.save(classroom);
     }
     
-    protected TeacherAccount createTeacherAccount(TeacherAccount user) {
-        return accountRepository.save(user);
+    protected TeacherAccount createTeacherAccount(TeacherAccount account) {
+        return accountRepository.save(account);
     }
     
     protected User createOneUserWithTeacherAccount() {
         return createOneTeacherAccount().getUser();
+    }
+    
+    protected User createUser(User user) {
+    	return userRepository.save(user);
+    }
+    
+    protected User createOneUser() {
+    	User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
+    			.withEmail("charlie@gmail.com")
+    			.build();
+    	return createUser(user);
     }
     
     protected Account createOneTeacherAccount() {
