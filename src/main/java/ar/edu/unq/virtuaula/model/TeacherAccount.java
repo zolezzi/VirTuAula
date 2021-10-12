@@ -36,4 +36,12 @@ public class TeacherAccount extends Account {
 				.map(classroomI -> classroomI.getId())
 				.collect(Collectors.toList()).contains(classroom.getId());
 	}
+
+	public boolean containsLesson(Lesson lesson) {
+		return this.getClassrooms().isEmpty() ? false : this.getClassrooms()
+				.stream()
+				.map(classroomI -> classroomI.getLessons())
+				.flatMap(lessonI -> lessonI.stream())
+				.collect(Collectors.toList()).contains(lesson);
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.TaskDTO;
+import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.LessonService;
@@ -36,7 +37,7 @@ public class TaskRestController {
     @GetMapping("/tasks/{lessonId}/{accountId}")
     @ApiResponse(code = 200, message = "Success" , response = TaskDTO.class, responseContainer = "List")
     @ApiOperation(value = "Get all task teacher by lesson id and account id", notes = "Get all tasks of a lesson and teacher")
-    public List<TaskDTO> getByClassroomId(@PathVariable("lessonId") Long lessonId, @PathVariable("accountId") Long accountId ) throws TeacherNotFoundException {
+    public List<TaskDTO> getByClassroomId(@PathVariable("lessonId") Long lessonId, @PathVariable("accountId") Long accountId ) throws Exception {
         return taskService.getAllTaskByLesson(lessonService.findById(lessonId), accountService.findTeacherById(accountId));
     }
 }

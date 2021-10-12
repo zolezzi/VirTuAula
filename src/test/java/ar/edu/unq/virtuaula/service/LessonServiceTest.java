@@ -129,6 +129,22 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         assertTrue(actualMessage.contains(expectedMessage));
     }
     
+    @Test
+    public void whenAccountCreateLessonInClassroomWithoutClassroomNotFoundClassroomReturnException() {
+    	Classroom classroom = createOneClassroom();
+    	LessonDTO lesson = new LessonDTO();
+    	TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
+    	        
+    	Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
+    		guestLessonService.create(classroom, account, lesson);
+        });
+
+        String expectedMessage = "Error not found classroom with id: 1";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
     private List<TaskVO> createTaskVO(List<Task> tasks) {
         return tasks.stream().map(task -> {
             TaskVO taskVO = mapperUtil.getMapper().map(task, TaskVO.class);

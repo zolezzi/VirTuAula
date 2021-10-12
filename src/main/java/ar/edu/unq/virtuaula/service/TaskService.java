@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.TaskDTO;
+import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
@@ -28,7 +29,10 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final MapperUtil mapperUtil;
 
-    public List<TaskDTO> getAllTaskByLesson(Lesson lesson, TeacherAccount teacherAccount) {
+    public List<TaskDTO> getAllTaskByLesson(Lesson lesson, TeacherAccount teacherAccount) throws LessonNotFoundException {
+    	if(!teacherAccount.containsLesson(lesson)) {
+    		throw new LessonNotFoundException("Not found lesson id: " + lesson.getId() + " for teacher account id: " + teacherAccount.getId());
+    	}
         List<Task> tasks = taskRepository.findByLesson(lesson);
         return Arrays.asList(mapperUtil.getMapper().map(tasks, TaskDTO[].class));
     }
