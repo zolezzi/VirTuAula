@@ -15,7 +15,7 @@ create table task(id bigint primary key AUTO_INCREMENT, statement varchar(255) n
 create table option_task(id bigint primary key AUTO_INCREMENT, response_value varchar(255) not null, task_id bigint, is_correct boolean not null default 0, constraint fk_option_task FOREIGN KEY (task_id) REFERENCES task(id));
 create table account_type(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
 create table privilege(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
-create table user(id bigint primary key AUTO_INCREMENT, username varchar(255), password varchar(255));
+create table user(id bigint primary key AUTO_INCREMENT, username varchar(255), password varchar(255), email varchar(255));
 create table account(id bigint primary key AUTO_INCREMENT, username varchar(255), first_name varchar(255), last_name varchar(255), email varchar(255), account_type_id bigint, account_type_role varchar(255), experience double(20,2), user_id bigint, constraint fk_account_type FOREIGN KEY (account_type_id) REFERENCES account_type(id), constraint fk_account_user FOREIGN KEY (user_id) REFERENCES user(id));
 create table account_types_privileges(id bigint primary key AUTO_INCREMENT, account_type_id bigint, privilege_id bigint, constraint fk_account_type_privilege FOREIGN KEY (account_type_id) REFERENCES account_type(id), constraint fk_privilege_account_type FOREIGN KEY (privilege_id) REFERENCES privilege(id));
 create table teachers_students(id bigint primary key AUTO_INCREMENT, teacher_id bigint, student_id bigint, constraint fk_teacher FOREIGN KEY (teacher_id) REFERENCES account(id), constraint fk_student FOREIGN KEY (student_id) REFERENCES account(id));

@@ -31,7 +31,7 @@ public class AuthenticationUserService {
 
         User userDetails = (User) jwtUserDetailsService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-        AccountVO account =  createAccountVO(userDetails.getAccount());
+        AccountVO account =  userDetails.getAccount() == null ? null : createAccountVO(userDetails.getAccount());
         return new JwtResponseDTO(userDetails.getUsername(), token, account);
     }
 

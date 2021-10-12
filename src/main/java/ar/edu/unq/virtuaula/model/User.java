@@ -27,6 +27,7 @@ public class User implements Serializable, UserDetails {
 
     private String username;
     private String password;
+    private String email;
     
     @OneToOne(mappedBy = "user")
     private Account account;
