@@ -1,5 +1,6 @@
 package ar.edu.unq.virtuaula.service;
 
+import java.util.Optional;
 import java.util.Vector;
 
 import javax.transaction.Transactional;
@@ -47,6 +48,14 @@ public class JwtUserDetailsService implements UserDetailsService {
 		}
 		newUser = userRepository.save(newUser);
 		return mapperUtil.getMapper().map(newUser, UserDTO.class);
+	}
+
+	public User findById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with user by ID: " + userId);
+        }
+        return user.get();
 	}
 
 }

@@ -3,12 +3,14 @@ package ar.edu.unq.virtuaula.util;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.dto.OptionTaskDTO;
 import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.vo.TaskVO;
 
 @Component
@@ -46,6 +48,7 @@ public class MapperUtil {
             mapper.map(OptionTask::getResponseValue, OptionTaskDTO::setResponseValue);
         });
         
+        // Task config
         this.modelMapper.typeMap(TaskDTO.class, Task.class).addMappings(mapper -> {
             mapper.map(TaskDTO::getId, Task::setId);
             mapper.map(TaskDTO::getStatement, Task::setStatement);
@@ -58,6 +61,14 @@ public class MapperUtil {
         this.modelMapper.typeMap(Task.class, TaskVO.class).addMappings(mapper -> {
             mapper.map(Task::getId, TaskVO::setId);
             mapper.map(Task::getAnswer, TaskVO::setAnswerId);
+        });
+        
+        // ClassroomDTO config
+        this.modelMapper.typeMap(TeacherAccount.class, AccountDTO.class).addMappings(mapper -> {
+            mapper.map(TeacherAccount::getId, AccountDTO::setAccountId);
+            mapper.map(TeacherAccount::getFirstName, AccountDTO::setFirstName);
+            mapper.map(TeacherAccount::getLastName, AccountDTO::setLastName);
+            mapper.map(TeacherAccount::getEmail, AccountDTO::setEmail);
         });
     }
 }
