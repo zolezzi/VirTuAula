@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.UserDTO;
+import ar.edu.unq.virtuaula.exception.UserNotFoundException;
 import ar.edu.unq.virtuaula.exception.UserRegisterException;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.UserRepository;
@@ -39,7 +40,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public UserDTO register(UserDTO userDto) throws UserRegisterException {
 		UserValidator.validateSamePassword(userDto.getPassword(), userDto.getRepeatPassword(), erros);
 		User newUser = mapperUtil.getMapper().map(userDto, User.class);
-		if(!UserValidator.validate(newUser, erros) && !erros.isEmpty()) {
+		if(!UserValidator.validate(newUser, erros) || !erros.isEmpty()) {
 			throw new UserRegisterException("Error register user: " + erros.toString());
 		}
 		User userBD = userRepository.findByEmail(newUser.getEmail());
@@ -50,10 +51,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return mapperUtil.getMapper().map(newUser, UserDTO.class);
 	}
 
-	public User findById(Long userId) {
+	public User findById(Long userId) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with user by ID: " + userId);
+            throw new UserNotFoundException("User not found with user by ID: " + userId);
         }
         return user.get();
 	}

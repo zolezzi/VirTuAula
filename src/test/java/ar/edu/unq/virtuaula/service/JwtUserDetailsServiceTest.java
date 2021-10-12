@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.UserDTO;
+import ar.edu.unq.virtuaula.exception.UserNotFoundException;
 import ar.edu.unq.virtuaula.exception.UserRegisterException;
 import ar.edu.unq.virtuaula.model.User;
 
@@ -87,6 +88,44 @@ public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests{
         });
 
         String expectedMessage = "Error register user: [Error email invalid]";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void testFindAUserWithUserValidReturnUserWithUsername() throws UserRegisterException, UserNotFoundException {
+    	User user = createOneUser();
+	    User userResult = UserDetailsService.findById(user.getId());
+    	assertEquals(user.getUsername(), userResult.getUsername());
+    }
+
+    @Test
+    public void testFindUserByIdNotRegisterThenReturnUserNotFoundException() throws UserNotFoundException {
+    	createOneUser();
+        Exception exception = assertThrows(UserNotFoundException.class, () -> {
+        	UserDetailsService.findById(10l);
+        });
+
+        String expectedMessage = "User not found with user by ID: 10";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void testRegisterAUserWithUserInvalidPasswordReturnUserRegisterException() {
+    	createOneUser();
+    	UserDTO user = Mockito.mock(UserDTO.class);
+	    Mockito.when(user.getPassword()).thenReturn("1234567n");
+	    Mockito.when(user.getRepeatPassword()).thenReturn("2");
+	    Mockito.when(user.getEmail()).thenReturn("charlie@virtuaula.com");
+	    Mockito.when(user.getUsername()).thenReturn("charly2");
+        Exception exception = assertThrows(UserRegisterException.class, () -> {
+        	UserDetailsService.register(user);
+        });
+
+        String expectedMessage = "Error register user: [Error the password must be the same]";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

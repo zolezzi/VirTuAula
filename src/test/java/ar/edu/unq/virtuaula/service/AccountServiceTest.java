@@ -6,12 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
+import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.User;
 
 public class AccountServiceTest extends VirtuaulaApplicationTests {
 
@@ -56,5 +59,19 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void createTeacherAccountReturnAccountWithId() throws TeacherNotFoundException {
+    	User user = createOneUser();
+    	String expected = "charly2";
+    	AccountDTO account = Mockito.mock(AccountDTO.class);
+	    Mockito.when(account.getFirstName()).thenReturn("Charlie");
+	    Mockito.when(account.getLastName()).thenReturn("Zolezzi");
+	    Mockito.when(account.getEmail()).thenReturn("charlie@virtuaula.com");
+	    
+	    AccountDTO result = accountService.createAccountTeacher(user, account);
+        assertNotNull(result);
+        assertEquals(expected, result.getUsername());
     }
 }
