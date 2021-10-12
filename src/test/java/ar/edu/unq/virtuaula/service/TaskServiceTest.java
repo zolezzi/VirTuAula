@@ -51,4 +51,12 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
     }
+    
+    @Test
+    public void getAllTaskByLessonWithTaskReturnListWithTaskWithOptionTaskWithId() {
+        Classroom classroom = createOneClassroomWithTwoTasksAndTwoOptionTasks();
+        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0));
+        assertNotNull(result.get(0).getId());
+        assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
+    }
 }

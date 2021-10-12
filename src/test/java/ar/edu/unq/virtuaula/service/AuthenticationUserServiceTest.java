@@ -25,4 +25,14 @@ public class AuthenticationUserServiceTest extends VirtuaulaApplicationTests{
         assertNotNull(result);
     }
     
+    @Test
+    public void whenLoginUserWithoutAccountValidReturnJwtResponse() throws TeacherNotFoundException {
+    	createOneUser();
+    	AuthRequestDTO authRequest = new AuthRequestDTO();
+    	authRequest.setUsername("charly2");
+    	authRequest.setPassword("1234567n");
+        JwtResponseDTO result = authenticationUserService.login(authRequest);
+        assertNotNull(result);
+    }
+    
 }

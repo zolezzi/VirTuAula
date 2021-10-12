@@ -10,6 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
 import ar.edu.unq.virtuaula.builder.ClassroomBuilder;
 import ar.edu.unq.virtuaula.builder.LessonBuilder;
+import ar.edu.unq.virtuaula.builder.OptionTaskBuilder;
 import ar.edu.unq.virtuaula.builder.TaskBuilder;
 import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
@@ -17,6 +18,7 @@ import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
@@ -47,6 +49,18 @@ public class VirtuaulaApplicationTests {
     protected Classroom createOneClassroomWithTwoTasks() {
         Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
         Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
+        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
+        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
+        return createClassroom(classroom);
+    }
+    
+    protected Classroom createOneClassroomWithTwoTasksAndTwoOptionTasks() {
+    	OptionTask option1 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
+    	OptionTask option2 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
+    	OptionTask option3 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
+    	OptionTask option4 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
+        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).withOptionTask(option1).withOptionTask(option2).build();
+        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).withOptionTask(option3).withOptionTask(option4).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
