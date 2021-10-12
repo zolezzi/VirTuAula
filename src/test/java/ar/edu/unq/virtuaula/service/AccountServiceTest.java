@@ -69,6 +69,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
 	    Mockito.when(account.getFirstName()).thenReturn("Charlie");
 	    Mockito.when(account.getLastName()).thenReturn("Zolezzi");
 	    Mockito.when(account.getEmail()).thenReturn("charlie@virtuaula.com");
+	    Mockito.when(account.getDni()).thenReturn(36001002);
 	    
 	    AccountDTO result = accountService.createAccountTeacher(user, account);
         assertNotNull(result);

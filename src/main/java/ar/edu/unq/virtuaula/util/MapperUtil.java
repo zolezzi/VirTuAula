@@ -69,6 +69,7 @@ public class MapperUtil {
             mapper.map(TeacherAccount::getFirstName, AccountDTO::setFirstName);
             mapper.map(TeacherAccount::getLastName, AccountDTO::setLastName);
             mapper.map(TeacherAccount::getEmail, AccountDTO::setEmail);
+            mapper.map(TeacherAccount::getDni, AccountDTO::setDni);
         });
     }
 }

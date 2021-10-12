@@ -37,6 +37,7 @@ public class Account implements Serializable{
     private String firstName;
     private String lastName;
     private String email;
+    private Integer dni;
     
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_type_id", referencedColumnName = "id")
