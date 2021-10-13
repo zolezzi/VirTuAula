@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ClassroomService {
 
     private final ClassroomRepository classromRepository;
+    private final AccountService accountService;
     private final MapperUtil mapperUtil;
 
     public List<ClassroomDTO> getAll() {
@@ -44,4 +46,11 @@ public class ClassroomService {
             return classroomDTO;
         }).collect(toList());
     }
+
+	public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO) {
+		Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
+		teacherAccount.getClassrooms().add(newClassroom);
+		newClassroom = classromRepository.save(newClassroom);
+		return mapperUtil.getMapper().map(newClassroom, ClassroomDTO.class);
+	}
 }

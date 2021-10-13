@@ -29,6 +29,7 @@ public class Classroom implements Serializable {
     private Long id;
 
     private String name;
+    private String description;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "classroom_id")

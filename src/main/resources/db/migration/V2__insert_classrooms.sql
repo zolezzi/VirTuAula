@@ -1,2 +1,2 @@
-﻿INSERT INTO classroom (name) values ('Matemáticas');
-INSERT INTO classroom (name) values ('Historia');
+﻿INSERT INTO classroom (name, description) values ('Matemáticas', 'Materia dada por el profesor Charlie en el horario de 14 a 16hs');
+INSERT INTO classroom (name, description) values ('Historia', 'Materia dada por el profesor House en el horario de 16hs a 18hs');
