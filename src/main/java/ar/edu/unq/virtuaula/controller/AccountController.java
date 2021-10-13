@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
-import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.UserNotFoundException;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.JwtUserDetailsService;
 import io.swagger.annotations.ApiOperation;

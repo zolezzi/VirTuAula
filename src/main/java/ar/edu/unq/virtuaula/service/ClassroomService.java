@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class ClassroomService {
 
     private final ClassroomRepository classromRepository;
-    private final AccountService accountService;
     private final MapperUtil mapperUtil;
 
     public List<ClassroomDTO> getAll() {

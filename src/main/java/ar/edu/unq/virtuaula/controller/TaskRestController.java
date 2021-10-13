@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.TaskDTO;
-import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
-import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.LessonService;
 import ar.edu.unq.virtuaula.service.TaskService;

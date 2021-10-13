@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
-import ar.edu.unq.virtuaula.dto.UserDTO;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
