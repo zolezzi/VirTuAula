@@ -36,7 +36,6 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
     }
-    
 
     @Test
     public void getAllTaskByLessonWithTaskAndTeacherReturnListWithTaskWithStatement() throws LessonNotFoundException {
@@ -45,13 +44,13 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
         List<TaskDTO> result = guestTaskService.getAllTaskByLesson(classroom.getLessons().get(0), account);
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getStatement(), result.get(0).getStatement());
     }
-    
+
     @Test
     public void getAllTaskByLessonWithTaskAndTeacherWithoutClassroomReturnNotFoundLesson() throws LessonNotFoundException {
         Classroom classroom = createOneClassroom();
         TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
         Exception exception = assertThrows(LessonNotFoundException.class, () -> {
-        	guestTaskService.getAllTaskByLesson(classroom.getLessons().get(0), account);
+            guestTaskService.getAllTaskByLesson(classroom.getLessons().get(0), account);
         });
         String expectedMessage = "Not found lesson id: 1 for teacher account id: 1";
         String actualMessage = exception.getMessage();
@@ -64,13 +63,13 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
         Classroom classroom2 = createOneClassroom();
         TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom2);
         Exception exception = assertThrows(LessonNotFoundException.class, () -> {
-        	guestTaskService.getAllTaskByLesson(classroom.getLessons().get(0), account);
+            guestTaskService.getAllTaskByLesson(classroom.getLessons().get(0), account);
         });
         String expectedMessage = "Not found lesson id: 1 for teacher account id: 1";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
-    
+
     @Test
     public void getAllTaskByLessonWithTaskAndTeacherReturnListWithTaskWithId() throws LessonNotFoundException {
         Classroom classroom = createOneClassroom();
@@ -79,7 +78,7 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
     }
-    
+
     @Test
     public void getAllTaskByLessonWithTaskReturnListWithTaskWithOptionTaskWithId() {
         Classroom classroom = createOneClassroomWithTwoTasksAndTwoOptionTasks();

@@ -11,15 +11,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@DiscriminatorValue(value="StudentAccount")
+@DiscriminatorValue(value = "StudentAccount")
 public class StudentAccount extends Account {
-	
-	private static final long serialVersionUID = -6667231579400890583L;
+
+    private static final long serialVersionUID = -6667231579400890583L;
 
     @ManyToMany(mappedBy = "students")
     private List<TeacherAccount> teachers = new ArrayList<>();
-    
+
     private Double experience;
 }

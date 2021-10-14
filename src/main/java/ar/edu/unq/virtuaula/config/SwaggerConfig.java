@@ -42,7 +42,7 @@ public class SwaggerConfig {
                 "API license URL",
                 Collections.emptyList());
     }
-    
+
     private ApiKey bearerToken() {
         return new ApiKey("JWT", "Authorization", "header");
     }

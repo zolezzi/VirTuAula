@@ -59,13 +59,12 @@ public class Task implements Serializable {
         this.state = State.UNCOMPLETED;
     }
 
-    
     public void addOption(OptionTask option) {
         this.options.add(option);
     }
 
-	public Long findCorrectAnswer() {
-		return this.getOptions().stream().filter(optionTask -> optionTask.isCorrect()).findFirst().get().getId();
-	}
+    public Long findCorrectAnswer() {
+        return this.getOptions().stream().filter(optionTask -> optionTask.isCorrect()).findFirst().get().getId();
+    }
 
 }

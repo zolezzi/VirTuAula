@@ -67,40 +67,40 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
         assertEquals(classroom.getId(), classroomReturn.getId());
         assertEquals(classroom.getName(), classroomReturn.getName());
     }
-    
+
     @Test
     public void findByAccountIdWithoutClassroomReturnEmptyList() {
-    	int expected = 0;
-    	Account account = createOneTeacherAccount();
+        int expected = 0;
+        Account account = createOneTeacherAccount();
         List<ClassroomDTO> classroomReturn = guestClassroomService.findByAccount(account);
         assertEquals(expected, classroomReturn.size());
     }
-    
+
     @Test
     public void findByAccountIdWithClassroomReturnContainsClassroom() {
-    	Classroom classroom = createOneClassroom();
-    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
-    	Boolean result = account.containsClassroom(classroom);
+        Classroom classroom = createOneClassroom();
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+        Boolean result = account.containsClassroom(classroom);
         assertTrue(result);
     }
-    
+
     @Test
     public void whenAccountQueryContainsClassroomWithoutClassroomReturnFalse() {
-    	Classroom classroom = createOneClassroom();
-    	Classroom classroom2 = createOneClassroom();
-    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
-    	Boolean result = account.containsClassroom(classroom2);
+        Classroom classroom = createOneClassroom();
+        Classroom classroom2 = createOneClassroom();
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+        Boolean result = account.containsClassroom(classroom2);
         assertFalse(result);
     }
-    
+
     @Test
     public void whenCreateNewClassroomWithTeacherAccountThenClassroomWithId() {
-    	int expected = 1;
-    	TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-    	ClassroomDTO classroomDTO = Mockito.mock(ClassroomDTO.class);
-	    Mockito.when(classroomDTO.getName()).thenReturn("Algebra");
-	    Mockito.when(classroomDTO.getDescription()).thenReturn("Materia dada en el horario del 14 a 18");
-	    ClassroomDTO result = guestClassroomService.create(account, classroomDTO);
+        int expected = 1;
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
+        ClassroomDTO classroomDTO = Mockito.mock(ClassroomDTO.class);
+        Mockito.when(classroomDTO.getName()).thenReturn("Algebra");
+        Mockito.when(classroomDTO.getDescription()).thenReturn("Materia dada en el horario del 14 a 18");
+        ClassroomDTO result = guestClassroomService.create(account, classroomDTO);
         assertNotNull(result);
         assertEquals(expected, account.getClassrooms().size());
     }

@@ -31,19 +31,19 @@ public class AuthenticationUserService {
 
         User userDetails = (User) jwtUserDetailsService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-        AccountVO account =  userDetails.getAccount() == null ? null : createAccountVO(userDetails.getAccount());
+        AccountVO account = userDetails.getAccount() == null ? null : createAccountVO(userDetails.getAccount());
         return new JwtResponseDTO(userDetails.getUsername(), token, account);
     }
 
     private AccountVO createAccountVO(Account account) {
-    	AccountVO accountVO = new AccountVO();
-    	AccountTypeDTO accountType = mapperUtil.getMapper().map(account.getAccountType(), AccountTypeDTO.class);
-    	accountVO.setAccountId(account.getId());
-    	accountVO.setAccountType(accountType);
-    	return accountVO;
-	}
+        AccountVO accountVO = new AccountVO();
+        AccountTypeDTO accountType = mapperUtil.getMapper().map(account.getAccountType(), AccountTypeDTO.class);
+        accountVO.setAccountId(account.getId());
+        accountVO.setAccountType(accountType);
+        return accountVO;
+    }
 
-	private void authenticate(String username, String password) {
+    private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
 }

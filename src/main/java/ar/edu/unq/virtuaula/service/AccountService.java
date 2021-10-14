@@ -19,38 +19,38 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
-	
-	private final AccountRepository accountRepository;
-	private final AccountTypeRepository accountTypeRepository;
-	private final MapperUtil mapperUtil;
-	private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
 
-	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
-		TeacherAccount teacher = null;
-		try {
-			teacher = (TeacherAccount) accountRepository.findById(accountId).get();
-		}catch (Exception e) {
-			throw new TeacherNotFoundException("Error not found account with id: " + accountId, e);
-		}
-		return teacher;
-	}
-	
-	public Account findById(Long accountId) throws AccountNotFoundException {
-		Account account = null;
-		try {
-			account =  accountRepository.findById(accountId).get();
-		}catch (Exception e) {
-			throw new AccountNotFoundException("Error not found account with id: " + accountId, e);
-		}
-		return account;
-	}
+    private final AccountRepository accountRepository;
+    private final AccountTypeRepository accountTypeRepository;
+    private final MapperUtil mapperUtil;
+    private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
 
-	public AccountDTO createAccountTeacher(User user, AccountDTO account) {
-		TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
-		newAccount.setUser(user);
-		newAccount.setUsername(user.getUsername());
-		newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
-		newAccount = accountRepository.save(newAccount);
-		return  mapperUtil.getMapper().map(newAccount, AccountDTO.class);
-	}
+    public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
+        TeacherAccount teacher = null;
+        try {
+            teacher = (TeacherAccount) accountRepository.findById(accountId).get();
+        } catch (Exception e) {
+            throw new TeacherNotFoundException("Error not found account with id: " + accountId, e);
+        }
+        return teacher;
+    }
+
+    public Account findById(Long accountId) throws AccountNotFoundException {
+        Account account = null;
+        try {
+            account = accountRepository.findById(accountId).get();
+        } catch (Exception e) {
+            throw new AccountNotFoundException("Error not found account with id: " + accountId, e);
+        }
+        return account;
+    }
+
+    public AccountDTO createAccountTeacher(User user, AccountDTO account) {
+        TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
+        newAccount.setUser(user);
+        newAccount.setUsername(user.getUsername());
+        newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
+        newAccount = accountRepository.save(newAccount);
+        return mapperUtil.getMapper().map(newAccount, AccountDTO.class);
+    }
 }

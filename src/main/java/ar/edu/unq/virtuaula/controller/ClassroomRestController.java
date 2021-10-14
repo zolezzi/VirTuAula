@@ -26,14 +26,14 @@ public class ClassroomRestController {
     private final AccountService accountService;
 
     @GetMapping("/classrooms/{accountId}")
-    @ApiResponse(code = 200, message = "Success" , response = ClassroomDTO.class, responseContainer = "List")
+    @ApiResponse(code = 200, message = "Success", response = ClassroomDTO.class, responseContainer = "List")
     @ApiOperation(value = "Get all classrooms by account id", notes = "Get all classrooms of a account")
     public List<ClassroomDTO> findByAccountId(@PathVariable("accountId") Long accountId) throws AccountNotFoundException {
         return classromService.findByAccount(accountService.findById(accountId));
     }
-    
-    @PostMapping("/classrooms/create/{accountId}")   
-    @ApiResponse(code = 200, message = "Successfully create classroom" , response = LessonDTO.class)
+
+    @PostMapping("/classrooms/create/{accountId}")
+    @ApiResponse(code = 200, message = "Successfully create classroom", response = LessonDTO.class)
     @ApiOperation(value = "Post create classroom for teacher by account id", notes = "Post create classroom for a teacher")
     public ClassroomDTO create(@PathVariable("accountId") Long accountId, @RequestBody ClassroomDTO classroom) throws Exception {
         return classromService.create(accountService.findTeacherById(accountId), classroom);
