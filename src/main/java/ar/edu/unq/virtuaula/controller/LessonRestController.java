@@ -31,7 +31,7 @@ public class LessonRestController {
     private final AccountService accountService;
 
     @GetMapping("/lessons/{classroomId}")
-    @ApiResponse(code = 200, message = "Successfully request" , response = LessonVO.class, responseContainer = "List")
+    @ApiResponse(code = 200, message = "Successfully request", response = LessonVO.class, responseContainer = "List")
     @ApiOperation(value = "Get all lessons by clasroom id", notes = "Get all lessons of a clasroom")
     public List<LessonVO> getByClassroomId(@PathVariable("classroomId") Long classroomId) {
         return lessonService.getAllByClassroom(classroomService.findById(classroomId));
@@ -45,7 +45,7 @@ public class LessonRestController {
     }
 
     @PostMapping("/lessons/{classroomId}/{lessonId}/{accountId}")
-    @ApiResponse(code = 200, message = "Successfully complete task" , response = LessonVO.class)
+    @ApiResponse(code = 200, message = "Successfully complete task", response = LessonVO.class)
     @ApiOperation(value = "Post complete task for student by clasroom id, lesson id and list tasks list", notes = "Post complete task for a student")
     public LessonVO completeTasks(@PathVariable("classroomId") Long classroomId, @PathVariable("lessonId") Long lessonId, @PathVariable("accountId") Long accountId, @RequestBody List<TaskVO> tasks) throws Exception {
         Classroom classroom = classroomService.findById(classroomId);
@@ -58,4 +58,5 @@ public class LessonRestController {
     public LessonDTO create(@PathVariable("classroomId") Long classroomId, @PathVariable("accountId") Long accountId, @RequestBody LessonDTO lesson) throws Exception {
         return lessonService.create(classroomService.findById(classroomId), accountService.findTeacherById(accountId), lesson);
     }
+
 }

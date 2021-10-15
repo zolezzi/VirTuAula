@@ -16,10 +16,10 @@ public class TaskTest extends VirtuaulaApplicationTests {
         task.addOption(optionTask);
         assertEquals(sizeBeforeAdd + 1, task.getOptions().size());
     }
-    
+
     @Test
     public void taskWithOptionTaskFindCorrectAnswer() {
-    	Long expected = Long.valueOf(4l);
+        Long expected = Long.valueOf(4l);
         Task task = TaskBuilder.taskWithStatement("Cuando mide el Obelisco").build();
         OptionTask optionTask1 = Mockito.mock(OptionTask.class);
         OptionTask optionTask2 = Mockito.mock(OptionTask.class);

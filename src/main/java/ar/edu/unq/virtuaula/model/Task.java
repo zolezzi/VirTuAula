@@ -45,13 +45,13 @@ public class Task implements Serializable {
     @JoinColumn(name = "task_id")
     @JsonIgnoreProperties("task")
     private List<OptionTask> options = new ArrayList<>();
-    
+
     public void addOption(OptionTask option) {
         this.options.add(option);
     }
 
-	public Long findCorrectAnswer() {
-		return this.getOptions().stream().filter(optionTask -> optionTask.isCorrect()).findFirst().get().getId();
-	}
+    public Long findCorrectAnswer() {
+        return this.getOptions().stream().filter(optionTask -> optionTask.isCorrect()).findFirst().get().getId();
+    }
 
 }

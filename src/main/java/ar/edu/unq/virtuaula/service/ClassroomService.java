@@ -30,6 +30,7 @@ public class ClassroomService {
         List<Classroom> classrooms = classromRepository.findAll();
         return transformToClassroomDTO(classrooms);
     }
+<<<<<<< HEAD
     
     private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {
         return classrooms.stream().map(classroom -> {
@@ -39,6 +40,10 @@ public class ClassroomService {
 	}
 
 	public List<ClassroomDTO> findByAccount(Account account) {
+=======
+
+    public List<ClassroomDTO> findByAccount(Account account) {
+>>>>>>> 4f983eba2de1ced05633ce3d77334f5ccbb88a3e
         List<Classroom> classrooms = account.getClassrooms();
         return transformToDTO(classrooms, account.getId());
     }
@@ -55,6 +60,7 @@ public class ClassroomService {
         }).collect(toList());
     }
 
+<<<<<<< HEAD
 	public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO) {
 		Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
 		teacherAccount.getClassrooms().add(newClassroom);
@@ -68,4 +74,12 @@ public class ClassroomService {
         		.sum();
         return classroom.getLessons().isEmpty() ? 0 : completed / classroom.getLessons().size();
 	}
+=======
+    public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO) {
+        Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
+        teacherAccount.getClassrooms().add(newClassroom);
+        newClassroom = classromRepository.save(newClassroom);
+        return mapperUtil.getMapper().map(newClassroom, ClassroomDTO.class);
+    }
+>>>>>>> 4f983eba2de1ced05633ce3d77334f5ccbb88a3e
 }

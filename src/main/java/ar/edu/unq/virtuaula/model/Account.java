@@ -24,36 +24,36 @@ import lombok.Data;
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="account_type_role")
-public class Account implements Serializable{
+@DiscriminatorColumn(name = "account_type_role")
+public class Account implements Serializable {
 
-	private static final long serialVersionUID = -4749006084233219581L;
+    private static final long serialVersionUID = -4749006084233219581L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String username;
     private String firstName;
     private String lastName;
     private String email;
     private Integer dni;
-    
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_type_id", referencedColumnName = "id")
     @JsonIgnoreProperties("accounts")
     private AccountType accountType;
-    
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    
+
     @ManyToMany
     @JoinTable(
-        name = "accounts_classrooms", 
-        joinColumns = @JoinColumn(
-          name = "account_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "classroom_id", referencedColumnName = "id"))
+            name = "accounts_classrooms",
+            joinColumns = @JoinColumn(
+                    name = "account_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "classroom_id", referencedColumnName = "id"))
     private List<Classroom> classrooms = new ArrayList<>();
 }

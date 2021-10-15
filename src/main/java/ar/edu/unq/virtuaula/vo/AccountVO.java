@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class AccountVO {
 
-	private Long accountId;
-	private AccountTypeDTO accountType;
+    private Long accountId;
+    private AccountTypeDTO accountType;
 
 }

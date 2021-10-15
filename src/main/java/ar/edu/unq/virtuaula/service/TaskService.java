@@ -30,36 +30,36 @@ public class TaskService {
     private final MapperUtil mapperUtil;
 
     public List<TaskDTO> getAllTaskByLesson(Lesson lesson, TeacherAccount teacherAccount) throws LessonNotFoundException {
-    	if(!teacherAccount.containsLesson(lesson)) {
-    		throw new LessonNotFoundException("Not found lesson id: " + lesson.getId() + " for teacher account id: " + teacherAccount.getId());
-    	}
+        if (!teacherAccount.containsLesson(lesson)) {
+            throw new LessonNotFoundException("Not found lesson id: " + lesson.getId() + " for teacher account id: " + teacherAccount.getId());
+        }
         List<Task> tasks = taskRepository.findByLesson(lesson);
         return Arrays.asList(mapperUtil.getMapper().map(tasks, TaskDTO[].class));
     }
 
-	public List<TaskStudentVO> getAllTaskByLessonForStudent(Lesson lesson) {
-		List<Task> tasks = taskRepository.findByLesson(lesson);
-		return transformToVO(tasks);
-	}
-	
+    public List<TaskStudentVO> getAllTaskByLessonForStudent(Lesson lesson) {
+        List<Task> tasks = taskRepository.findByLesson(lesson);
+        return transformToVO(tasks);
+    }
+
     private List<TaskStudentVO> transformToVO(List<Task> tasks) {
         return tasks.stream().map(task -> {
-        	TaskStudentVO taskVO = new TaskStudentVO();
-        	taskVO.setId(task.getId());
-        	taskVO.setStatement(task.getStatement());
-        	taskVO.setScore(task.getScore());
-        	taskVO.setAnswer(task.getAnswer());
-        	taskVO.setOptions(transformOptionTaskToVO(task.getOptions()));
+            TaskStudentVO taskVO = new TaskStudentVO();
+            taskVO.setId(task.getId());
+            taskVO.setStatement(task.getStatement());
+            taskVO.setScore(task.getScore());
+            taskVO.setAnswer(task.getAnswer());
+            taskVO.setOptions(transformOptionTaskToVO(task.getOptions()));
             return taskVO;
         }).collect(toList());
     }
 
-	private List<OptionTaskVO> transformOptionTaskToVO(List<OptionTask> options) {
-		return options.stream().map(option -> {
-			OptionTaskVO optionVO = new OptionTaskVO();
-			optionVO.setId(option.getId());
-			optionVO.setResponseValue(option.getResponseValue());
+    private List<OptionTaskVO> transformOptionTaskToVO(List<OptionTask> options) {
+        return options.stream().map(option -> {
+            OptionTaskVO optionVO = new OptionTaskVO();
+            optionVO.setId(option.getId());
+            optionVO.setResponseValue(option.getResponseValue());
             return optionVO;
         }).collect(toList());
-	}
+    }
 }

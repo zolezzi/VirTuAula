@@ -40,14 +40,14 @@ public class MapperUtil {
             mapper.map(Task::getAnswer, TaskDTO::setAnswer);
             mapper.map(Task::getCorrectAnswer, TaskDTO::setCorrectAnswer);
         });
-        
+
         // OptionTaskDTO config
         this.modelMapper.typeMap(OptionTask.class, OptionTaskDTO.class).addMappings(mapper -> {
             mapper.map(OptionTask::getId, OptionTaskDTO::setId);
             mapper.map(OptionTask::isCorrect, OptionTaskDTO::setIsCorrect);
             mapper.map(OptionTask::getResponseValue, OptionTaskDTO::setResponseValue);
         });
-        
+
         // Task config
         this.modelMapper.typeMap(TaskDTO.class, Task.class).addMappings(mapper -> {
             mapper.map(TaskDTO::getId, Task::setId);
@@ -62,7 +62,7 @@ public class MapperUtil {
             mapper.map(Task::getId, TaskVO::setId);
             mapper.map(Task::getAnswer, TaskVO::setAnswerId);
         });
-        
+
         // ClassroomDTO config
         this.modelMapper.typeMap(TeacherAccount.class, AccountDTO.class).addMappings(mapper -> {
             mapper.map(TeacherAccount::getId, AccountDTO::setAccountId);

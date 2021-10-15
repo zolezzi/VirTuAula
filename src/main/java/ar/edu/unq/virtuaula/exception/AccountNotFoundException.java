@@ -1,10 +1,10 @@
 package ar.edu.unq.virtuaula.exception;
 
-public class AccountNotFoundException extends Exception{
+public class AccountNotFoundException extends Exception {
 
-	private static final long serialVersionUID = -8142466419243923155L;
+    private static final long serialVersionUID = -8142466419243923155L;
 
-	public AccountNotFoundException(String message, Exception e) {
-		super(message, e);
-	}
+    public AccountNotFoundException(String message, Exception e) {
+        super(message, e);
+    }
 }

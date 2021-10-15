@@ -14,34 +14,34 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
-@DiscriminatorValue(value="TeacherAccount")
+@DiscriminatorValue(value = "TeacherAccount")
 public class TeacherAccount extends Account {
 
-	private static final long serialVersionUID = -3455382936475619272L;
-	
+    private static final long serialVersionUID = -3455382936475619272L;
+
     @ManyToMany
     @JoinTable(
-        name = "teachers_students", 
-        joinColumns = @JoinColumn(
-          name = "teacher_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "student_id", referencedColumnName = "id"))
+            name = "teachers_students",
+            joinColumns = @JoinColumn(
+                    name = "teacher_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "student_id", referencedColumnName = "id"))
     private List<StudentAccount> students = new ArrayList<>();
 
-	public boolean containsClassroom(Classroom classroom) {	
-		return this.getClassrooms().isEmpty() ? false : this.getClassrooms()
-				.stream()
-				.map(classroomI -> classroomI.getId())
-				.collect(Collectors.toList()).contains(classroom.getId());
-	}
+    public boolean containsClassroom(Classroom classroom) {
+        return this.getClassrooms().isEmpty() ? false : this.getClassrooms()
+                .stream()
+                .map(classroomI -> classroomI.getId())
+                .collect(Collectors.toList()).contains(classroom.getId());
+    }
 
-	public boolean containsLesson(Lesson lesson) {
-		return this.getClassrooms().isEmpty() ? false : this.getClassrooms()
-				.stream()
-				.map(classroomI -> classroomI.getLessons())
-				.flatMap(lessonI -> lessonI.stream())
-				.collect(Collectors.toList()).contains(lesson);
-	}
+    public boolean containsLesson(Lesson lesson) {
+        return this.getClassrooms().isEmpty() ? false : this.getClassrooms()
+                .stream()
+                .map(classroomI -> classroomI.getLessons())
+                .flatMap(lessonI -> lessonI.stream())
+                .collect(Collectors.toList()).contains(lesson);
+    }
 }

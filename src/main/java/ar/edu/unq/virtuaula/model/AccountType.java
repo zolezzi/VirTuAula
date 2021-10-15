@@ -21,16 +21,16 @@ import lombok.Data;
 
 @Data
 @Entity
-public class AccountType implements Serializable{
+public class AccountType implements Serializable {
 
-	private static final long serialVersionUID = -7210790696019271337L;
-	
+    private static final long serialVersionUID = -7210790696019271337L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-  
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_type_id")
     @JsonIgnoreProperties("account")
@@ -38,10 +38,10 @@ public class AccountType implements Serializable{
 
     @ManyToMany
     @JoinTable(
-        name = "account_types_privileges", 
-        joinColumns = @JoinColumn(
-          name = "account_type_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "privilege_id", referencedColumnName = "id"))
+            name = "account_types_privileges",
+            joinColumns = @JoinColumn(
+                    name = "account_type_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "id"))
     private List<Privilege> privileges = new ArrayList<>();
 }

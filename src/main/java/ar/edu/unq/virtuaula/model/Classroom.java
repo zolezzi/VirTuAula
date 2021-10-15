@@ -36,7 +36,7 @@ public class Classroom implements Serializable {
     @JoinColumn(name = "classroom_id")
     @JsonIgnoreProperties("classroom")
     private List<Lesson> lessons = new ArrayList<>();
-    
+
     @ManyToMany(mappedBy = "classrooms")
     private List<Account> accounts;
 

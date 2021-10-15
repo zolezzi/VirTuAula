@@ -86,7 +86,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     }
     
     @Test
-    public void whenfindStudentAccountWithUsernameNotExistsThenThrowExpetion() {
+    public void whenFindStudentAccountWithUsernameNotExistsThenThrowExpetion() {
         Exception exception = assertThrows(StudentAccountNotFoundException.class, () -> {
         	accountService.findStudentById(10l);
         });

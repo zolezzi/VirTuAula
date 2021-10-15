@@ -26,7 +26,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
-    private Vector<String> erros = new Vector<>();
+    private Vector<String> errors = new Vector<>();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,26 +37,26 @@ public class JwtUserDetailsService implements UserDetailsService {
         return user;
     }
 
-	public UserDTO register(UserDTO userDto) throws UserRegisterException {
-		UserValidator.validateSamePassword(userDto.getPassword(), userDto.getRepeatPassword(), erros);
-		User newUser = mapperUtil.getMapper().map(userDto, User.class);
-		if(!UserValidator.validate(newUser, erros) || !erros.isEmpty()) {
-			throw new UserRegisterException("Error register user: " + erros.toString());
-		}
-		User userBD = userRepository.findByEmail(newUser.getEmail());
-		if(userBD != null) {
-			throw new UserRegisterException("There is already a registered user with this email: " + newUser.getEmail());
-		}
-		newUser = userRepository.save(newUser);
-		return mapperUtil.getMapper().map(newUser, UserDTO.class);
-	}
+    public UserDTO register(UserDTO userDto) throws UserRegisterException {
+        UserValidator.validateSamePassword(userDto.getPassword(), userDto.getRepeatPassword(), errors);
+        User newUser = mapperUtil.getMapper().map(userDto, User.class);
+        if (!UserValidator.validate(newUser, errors) || !errors.isEmpty()) {
+            throw new UserRegisterException("Error register user: " + errors.toString());
+        }
+        User userBD = userRepository.findByEmail(newUser.getEmail());
+        if (userBD != null) {
+            throw new UserRegisterException("There is already a registered user with this email: " + newUser.getEmail());
+        }
+        newUser = userRepository.save(newUser);
+        return mapperUtil.getMapper().map(newUser, UserDTO.class);
+    }
 
-	public User findById(Long userId) throws UserNotFoundException {
+    public User findById(Long userId) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) {
+        if (!user.isPresent()) {
             throw new UserNotFoundException("User not found with user by ID: " + userId);
         }
         return user.get();
-	}
+    }
 
 }

@@ -135,13 +135,13 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
 
     @Test
     public void whenAccountCreateLessonInClassroomWithAccountClassroomNotFoundClassroomReturnException() {
-    	Classroom classroom = createOneClassroom();
-    	Classroom classroom2 = createOneClassroom();
-    	LessonDTO lesson = new LessonDTO();
-    	TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
-    	        
-    	Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
-    		guestLessonService.create(classroom2, account, lesson);
+        Classroom classroom = createOneClassroom();
+        Classroom classroom2 = createOneClassroom();
+        LessonDTO lesson = new LessonDTO();
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
+
+        Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
+            guestLessonService.create(classroom2, account, lesson);
         });
 
         String expectedMessage = "Error not found classroom with id: 2";
@@ -149,15 +149,15 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
-    
+
     @Test
     public void whenAccountCreateLessonInClassroomWithoutClassroomNotFoundClassroomReturnException() {
-    	Classroom classroom = createOneClassroom();
-    	LessonDTO lesson = new LessonDTO();
-    	TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-    	        
-    	Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
-    		guestLessonService.create(classroom, account, lesson);
+        Classroom classroom = createOneClassroom();
+        LessonDTO lesson = new LessonDTO();
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
+
+        Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
+            guestLessonService.create(classroom, account, lesson);
         });
 
         String expectedMessage = "Error not found classroom with id: 1";

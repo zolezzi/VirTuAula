@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountController {
 
-	private final AccountService accountService;
-	private final JwtUserDetailsService userService;
-	
+    private final AccountService accountService;
+    private final JwtUserDetailsService userService;
+
     @PostMapping("/account/create/{userId}")
-    @ApiResponse(code = 200, message = "Successfully create account" , response = AccountDTO.class)
+    @ApiResponse(code = 200, message = "Successfully create account", response = AccountDTO.class)
     @ApiOperation(value = "Create account by user id", notes = "Create account by user id")
     public AccountDTO createAccount(@PathVariable("userId") Long userId, @RequestBody AccountDTO account) throws Exception {
         return accountService.createAccountTeacher(userService.findById(userId), account);

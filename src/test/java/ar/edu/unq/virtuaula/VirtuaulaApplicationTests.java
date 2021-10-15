@@ -37,16 +37,16 @@ public class VirtuaulaApplicationTests {
 
     @Autowired
     protected ClassroomRepository classroomRepository;
-    
+
     @Autowired
     protected AccountRepository accountRepository;
-    
+
     @Autowired
     protected StudentTaskRepository studentTaskRepository;
     
     @Autowired
     protected UserRepository userRepository;
-    
+
     protected Classroom createOneClassroom() {
         Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).build();
@@ -58,7 +58,7 @@ public class VirtuaulaApplicationTests {
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").build();
         return createClassroom(classroom);
     }
-    
+
     protected Classroom createOneClassroomWithTwoTasks() {
         Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
         Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
@@ -66,7 +66,7 @@ public class VirtuaulaApplicationTests {
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
     }
-    
+
     protected Classroom createOneClassroomWithTwoTasksAndTwoOptionTasks() {
     	OptionTask option1 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
     	OptionTask option2 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
@@ -82,7 +82,7 @@ public class VirtuaulaApplicationTests {
     protected Classroom createClassroom(Classroom classroom) {
         return classroomRepository.save(classroom);
     }
-    
+
     protected TeacherAccount createTeacherAccount(TeacherAccount account) {
         return accountRepository.save(account);
     }
@@ -94,28 +94,28 @@ public class VirtuaulaApplicationTests {
     protected User createOneUserWithTeacherAccount() {
         return createOneTeacherAccount().getUser();
     }
-    
+
     protected User createUser(User user) {
-    	return userRepository.save(user);
+        return userRepository.save(user);
     }
-    
+
     protected User createOneUser() {
-    	User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
-    			.withEmail("charlie@gmail.com")
-    			.build();
-    	return createUser(user);
+        User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
+                .withEmail("charlie@gmail.com")
+                .build();
+        return createUser(user);
     }
-    
+
     protected Account createOneTeacherAccount() {
-    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
-    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
-    	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
-        		.accountWithFisrtName("Charlie")
-        		.accountWithLastName("Cardozo")
-        		.accountWithEmail("charlie@gmail.com")
-        		.withAccountType(accountType)
-        		.withUser(user)
-        		.build();
+        AccountType accountType = AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+        User user = UserBuilder.userWithUsernameAndPassword("charlie", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
+        TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+                .accountWithFisrtName("Charlie")
+                .accountWithLastName("Cardozo")
+                .accountWithEmail("charlie@gmail.com")
+                .withAccountType(accountType)
+                .withUser(user)
+                .build();
         account = createTeacherAccount(account);
         return account;
     }
