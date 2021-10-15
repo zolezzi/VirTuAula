@@ -9,5 +9,5 @@ import ar.edu.unq.virtuaula.model.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByLesson(Lesson lesson);
+	public List<Task> findByLesson(Lesson lesson);
 }

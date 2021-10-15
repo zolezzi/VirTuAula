@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.ClassroomService;
@@ -35,13 +36,20 @@ public class LessonRestController {
     public List<LessonVO> getByClassroomId(@PathVariable("classroomId") Long classroomId) {
         return lessonService.getAllByClassroom(classroomService.findById(classroomId));
     }
+    
+    @GetMapping("/lessons/{classroomId}/{accountId}")
+    @ApiResponse(code = 200, message = "Successfully request" , response = LessonVO.class, responseContainer = "List")
+    @ApiOperation(value = "Get all lessons by clasroom id", notes = "Get all lessons of a clasroom")
+    public List<LessonVO> getByClassroomIdAndStudent(@PathVariable("classroomId") Long classroomId, @PathVariable("accountId") Long accountId) throws StudentAccountNotFoundException {
+        return lessonService.getAllByClassroomAndStudent(classroomService.findById(classroomId), accountService.findStudentById(accountId));
+    }
 
-    @PostMapping("/lessons/{classroomId}/{lessonId}")
+    @PostMapping("/lessons/{classroomId}/{lessonId}/{accountId}")
     @ApiResponse(code = 200, message = "Successfully complete task" , response = LessonVO.class)
     @ApiOperation(value = "Post complete task for student by clasroom id, lesson id and list tasks list", notes = "Post complete task for a student")
-    public LessonVO completeTasks(@PathVariable("classroomId") Long classroomId, @PathVariable("lessonId") Long lessonId, @RequestBody List<TaskVO> tasks) {
+    public LessonVO completeTasks(@PathVariable("classroomId") Long classroomId, @PathVariable("lessonId") Long lessonId, @PathVariable("accountId") Long accountId, @RequestBody List<TaskVO> tasks) throws Exception {
         Classroom classroom = classroomService.findById(classroomId);
-        return lessonService.completeTasks(classroom, lessonId, tasks);
+        return lessonService.completeTasks(classroom, lessonId, accountService.findStudentById(accountId), tasks);
     }
     
     @PostMapping("/lessons/create/{classroomId}/{accountId}")   

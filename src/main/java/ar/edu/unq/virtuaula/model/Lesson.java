@@ -42,15 +42,15 @@ public class Lesson implements Serializable {
         this.tasks.add(task);
     }
 
-    public int progress() {
-        int completed = (int) this.tasks.stream().filter(task -> State.COMPLETED.equals(task.getState())).count();
-        return this.tasks.isEmpty() ? 0 : completed * 100 / this.tasks.size();
+    public int progress(List<StudentTask> tasks) {
+        int completed = (int) tasks.stream().filter(task -> State.COMPLETED.equals(task.getState())).count();
+        return tasks.isEmpty() ? 0 : completed * 100 / tasks.size();
     }
 
-    public double qualification() {
-        double completed = (double) this.tasks.stream()
-                .filter(task -> State.COMPLETED.equals(task.getState()) && task.getCorrectAnswer().equals(task.getAnswer()))
-                .mapToDouble(taskAnser -> taskAnser.getScore())
+    public double qualification(List<StudentTask> tasks) {
+        double completed = (double) tasks.stream()
+                .filter(studentTask -> State.COMPLETED.equals(studentTask.getState()) && studentTask.getTask().getCorrectAnswer().equals(studentTask.getAnswer()))
+                .mapToDouble(studentTask -> studentTask.getTask().getScore())
                 .sum();
         return this.tasks.isEmpty() ? 0 : validate(completed);
     }

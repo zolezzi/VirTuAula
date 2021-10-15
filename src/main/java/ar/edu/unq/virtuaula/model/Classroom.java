@@ -3,6 +3,7 @@ package ar.edu.unq.virtuaula.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -43,8 +44,10 @@ public class Classroom implements Serializable {
         this.lessons.add(lesson);
     }
 
-    public int progress() {
-        int completed = this.lessons.stream().mapToInt(lesson -> lesson.progress()).sum();
-        return this.lessons.isEmpty() ? 0 : completed / this.lessons.size();
-    }
+	public boolean containsLesson(Long lessonId) {
+		return this.getLessons().stream().map(lesson -> lesson.getId())
+		.collect(Collectors.toList())
+		.contains(lessonId);
+	}
+
 }

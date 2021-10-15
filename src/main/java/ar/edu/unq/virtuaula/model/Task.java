@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,10 +36,7 @@ public class Task implements Serializable {
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
     @JsonIgnoreProperties("tasks")
     private Lesson lesson;
-
-    @Enumerated(EnumType.STRING)
-    private State state;
-
+    
     private Long answer;
 
     private Long correctAnswer;
@@ -50,15 +45,6 @@ public class Task implements Serializable {
     @JoinColumn(name = "task_id")
     @JsonIgnoreProperties("task")
     private List<OptionTask> options = new ArrayList<>();
-
-    public void complete() {
-        this.state = State.COMPLETED;
-    }
-
-    public void uncomplete() {
-        this.state = State.UNCOMPLETED;
-    }
-
     
     public void addOption(OptionTask option) {
         this.options.add(option);

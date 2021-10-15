@@ -13,6 +13,7 @@ import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -22,26 +23,34 @@ import lombok.RequiredArgsConstructor;
 public class ClassroomService {
 
     private final ClassroomRepository classromRepository;
+    private final StudentTaskRepository studentTaskRepository;
     private final MapperUtil mapperUtil;
 
     public List<ClassroomDTO> getAll() {
         List<Classroom> classrooms = classromRepository.findAll();
-        return transformToDTO(classrooms);
+        return transformToClassroomDTO(classrooms);
     }
     
-    public List<ClassroomDTO> findByAccount(Account account) {
+    private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {
+        return classrooms.stream().map(classroom -> {
+            ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
+            return classroomDTO;
+        }).collect(toList());
+	}
+
+	public List<ClassroomDTO> findByAccount(Account account) {
         List<Classroom> classrooms = account.getClassrooms();
-        return transformToDTO(classrooms);
+        return transformToDTO(classrooms, account.getId());
     }
 
     public Classroom findById(Long id) {
         return classromRepository.findById(id).get();
     }
 
-    private List<ClassroomDTO> transformToDTO(List<Classroom> classrooms) {
+    private List<ClassroomDTO> transformToDTO(List<Classroom> classrooms, Long accountId) {
         return classrooms.stream().map(classroom -> {
             ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
-            classroomDTO.setProgress(classroom.progress());
+            classroomDTO.setProgress(calculateProgress(classroom, accountId));
             return classroomDTO;
         }).collect(toList());
     }
@@ -51,5 +60,12 @@ public class ClassroomService {
 		teacherAccount.getClassrooms().add(newClassroom);
 		newClassroom = classromRepository.save(newClassroom);
 		return mapperUtil.getMapper().map(newClassroom, ClassroomDTO.class);
+	}
+	
+	private int calculateProgress(Classroom classroom, Long accountId) {
+        int completed = classroom.getLessons().stream()
+        		.mapToInt(lesson -> lesson.progress(studentTaskRepository.findByLessonAndStudent(lesson.getId(), accountId)))
+        		.sum();
+        return classroom.getLessons().isEmpty() ? 0 : completed / classroom.getLessons().size();
 	}
 }

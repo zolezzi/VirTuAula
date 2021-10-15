@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
+import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
@@ -52,5 +54,15 @@ public class AccountService {
 		newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
 		newAccount = accountRepository.save(newAccount);
 		return  mapperUtil.getMapper().map(newAccount, AccountDTO.class);
+	}
+
+	public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
+		StudentAccount student = null;
+		try {
+			student = (StudentAccount) accountRepository.findById(accountId).get();
+		}catch (Exception e) {
+			throw new StudentAccountNotFoundException("Error not found account with id: " + accountId, e);
+		}
+		return student;
 	}
 }
