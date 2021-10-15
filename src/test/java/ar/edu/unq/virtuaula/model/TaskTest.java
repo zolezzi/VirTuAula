@@ -16,20 +16,6 @@ public class TaskTest extends VirtuaulaApplicationTests {
         task.addOption(optionTask);
         assertEquals(sizeBeforeAdd + 1, task.getOptions().size());
     }
-
-    @Test
-    public void taskUncompleteThenCompleteNowHasCompleteState() {
-        Task task = TaskBuilder.taskWithStatement("Cuando mide el Obelisco").uncompleted().build();
-        task.complete();
-        assertEquals(State.COMPLETED, task.getState());
-    }
-
-    @Test
-    public void taskCompleteThenUncompleteNowHasUncompleteState() {
-        Task task = TaskBuilder.taskWithStatement("Cuando mide el Obelisco").completed().build();
-        task.uncomplete();
-        assertEquals(State.UNCOMPLETED, task.getState());
-    }
     
     @Test
     public void taskWithOptionTaskFindCorrectAnswer() {

@@ -52,7 +52,7 @@ public class Lesson implements Serializable {
                 .filter(studentTask -> State.COMPLETED.equals(studentTask.getState()) && studentTask.getTask().getCorrectAnswer().equals(studentTask.getAnswer()))
                 .mapToDouble(studentTask -> studentTask.getTask().getScore())
                 .sum();
-        return this.tasks.isEmpty() ? 0 : validate(completed);
+        return tasks.isEmpty() ? 0 : validate(completed);
     }
 
     private double validate(double completed) {

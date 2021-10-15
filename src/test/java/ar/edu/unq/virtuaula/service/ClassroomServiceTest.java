@@ -15,6 +15,9 @@ import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 
 public class ClassroomServiceTest extends VirtuaulaApplicationTests {
@@ -54,12 +57,33 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
 
     @Test
     public void getAllWithClassroomReturnClassroomWithProgress() {
-        int expected = 100;
+        int expected = 0;
         createOneClassroom();
         List<ClassroomDTO> result = guestClassroomService.getAll();
         assertEquals(expected, result.get(0).getProgress());
     }
 
+    @Test
+    public void getAllWithClassroomWithAccountReturnClassroomWithProgress() {
+        int expected = 100;
+        Classroom classroom = createOneClassroom();
+        Lesson lesson = classroom.getLessons().get(0);
+        Task task = lesson.getTasks().get(0);
+        StudentAccount studentAccount = (StudentAccount) createOneStudentAccountWithClassroom(classroom);
+        createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, studentAccount);
+        List<ClassroomDTO> result = guestClassroomService.findByAccount(studentAccount);
+        assertEquals(expected, result.get(0).getProgress());
+    }
+    
+    @Test
+    public void getAllWithClassroomWithoutLessonAndAccountReturnClassroomWithProgress() {
+        int expected = 0;
+        Classroom classroom = createOneClassroomWithoutLesson();
+        StudentAccount studentAccount = (StudentAccount) createOneStudentAccountWithClassroom(classroom);
+        List<ClassroomDTO> result = guestClassroomService.findByAccount(studentAccount);
+        assertEquals(expected, result.get(0).getProgress());
+    }
+    
     @Test
     public void findByIdWithClassroomReturnClassroom() {
         Classroom classroom = createOneClassroom();

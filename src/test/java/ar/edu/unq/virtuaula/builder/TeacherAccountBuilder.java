@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 
@@ -38,6 +39,11 @@ public class TeacherAccountBuilder {
     
     public TeacherAccountBuilder withUser(User user) {
         this.instance.setUser(user);
+        return this;
+    }
+    
+    public TeacherAccountBuilder addStudent(StudentAccount student) {
+        this.instance.getStudents().add(student);
         return this;
     }
     

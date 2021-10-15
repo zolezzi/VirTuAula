@@ -60,7 +60,7 @@ public class LessonService {
         Lesson lesson = lessonBD.get();
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lesson, studentAccount.getId());
-        studentAccount.setExperience(studentAccount.getExperience() + lessonVO.getNote() * MULTIPLIER);
+        studentAccount.setExperience(studentAccount.calculateExperience(lessonVO.getNote(), MULTIPLIER));
         return lessonVO;
     }
 

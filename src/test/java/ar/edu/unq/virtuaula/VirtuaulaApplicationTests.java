@@ -11,6 +11,8 @@ import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
 import ar.edu.unq.virtuaula.builder.ClassroomBuilder;
 import ar.edu.unq.virtuaula.builder.LessonBuilder;
 import ar.edu.unq.virtuaula.builder.OptionTaskBuilder;
+import ar.edu.unq.virtuaula.builder.StudentAccountBuilder;
+import ar.edu.unq.virtuaula.builder.StudentTaskBuilder;
 import ar.edu.unq.virtuaula.builder.TaskBuilder;
 import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
@@ -19,11 +21,14 @@ import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.OptionTask;
+import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
 
 @SpringBootTest
@@ -37,18 +42,26 @@ public class VirtuaulaApplicationTests {
     protected AccountRepository accountRepository;
     
     @Autowired
+    protected StudentTaskRepository studentTaskRepository;
+    
+    @Autowired
     protected UserRepository userRepository;
     
     protected Classroom createOneClassroom() {
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").completed().withCorrectAnswer(1l).withAnswer(1l).build();
+        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
     }
     
+    protected Classroom createOneClassroomWithoutLesson() {
+        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").build();
+        return createClassroom(classroom);
+    }
+    
     protected Classroom createOneClassroomWithTwoTasks() {
-        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
-        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).build();
+        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
+        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
@@ -59,8 +72,8 @@ public class VirtuaulaApplicationTests {
     	OptionTask option2 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
     	OptionTask option3 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
     	OptionTask option4 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
-        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).withOptionTask(option1).withOptionTask(option2).build();
-        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").uncompleted().withCorrectAnswer(1l).withOptionTask(option3).withOptionTask(option4).build();
+        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionTask(option1).withOptionTask(option2).build();
+        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionTask(option3).withOptionTask(option4).build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
@@ -71,6 +84,10 @@ public class VirtuaulaApplicationTests {
     }
     
     protected TeacherAccount createTeacherAccount(TeacherAccount account) {
+        return accountRepository.save(account);
+    }
+    
+    protected StudentAccount createStudentAccount(StudentAccount account) {
         return accountRepository.save(account);
     }
     
@@ -103,7 +120,47 @@ public class VirtuaulaApplicationTests {
         return account;
     }
     
-    protected Account createOneTeacherAccountWithClassroom(Classroom classroom) {
+    protected Account createOneStudentAccount() {
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("STUDENT").build();
+    	User user = UserBuilder.userWithUsernameAndPassword("charlie2", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
+    	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie2")
+        		.accountWithFisrtName("Charlie2")
+        		.accountWithLastName("Cardozo2")
+        		.accountWithEmail("charlie2@gmail.com")
+        		.withAccountType(accountType)
+        		.withUser(user)
+        		.build();
+        account = createStudentAccount(account);
+        return account;
+    }
+    
+    protected Account createOneStudentTasktWithLessonAndTaskAndStudentAccount(Lesson lesson, Task task, StudentAccount studentAccount) {
+    	StudentTask studentTask = StudentTaskBuilder.createStudentTask()
+    			.withLesson(lesson)
+    			.withTask(task)
+    			.withStudentAccount(studentAccount)
+    			.completed()
+    			.build();
+    	studentTask = createStudentTask(studentTask);
+        return studentTask.getStudentAccount();
+    }
+    
+    protected Account createOneStudentTaskUncompletedtWithLessonAndTaskAndStudentAccount(Lesson lesson, Task task, StudentAccount studentAccount) {
+    	StudentTask studentTask = StudentTaskBuilder.createStudentTask()
+    			.withLesson(lesson)
+    			.withTask(task)
+    			.withStudentAccount(studentAccount)
+    			.uncompleted()
+    			.build();
+    	studentTask = createStudentTask(studentTask);
+        return studentTask.getStudentAccount();
+    }
+    
+    private StudentTask createStudentTask(StudentTask studentTask) {
+		return studentTaskRepository.save(studentTask);
+	}
+
+	protected Account createOneTeacherAccountWithClassroom(Classroom classroom) {
     	List<Classroom> classrooms = new ArrayList<>();
     	classrooms.add(classroom);
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
@@ -114,6 +171,41 @@ public class VirtuaulaApplicationTests {
         		.accountWithEmail("charlie@gmail.com")
         		.withAccountType(accountType)
         		.withUser(user)
+        		.withClassroom(classrooms)
+        		.build();
+        account = createTeacherAccount(account);
+        return account;
+    }
+	
+	protected Account createOneStudentAccountWithClassroom(Classroom classroom) {
+    	List<Classroom> classrooms = new ArrayList<>();
+    	classrooms.add(classroom);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
+    	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie")
+        		.accountWithFisrtName("Charlie")
+        		.accountWithLastName("Cardozo")
+        		.accountWithEmail("charlie@gmail.com")
+        		.withAccountType(accountType)
+        		.withUser(user)
+        		.withClassroom(classrooms)
+        		.build();
+        account = createStudentAccount(account);
+        return account;
+    }
+	
+	protected Account createOneTeacherAccountWithClassroomAndStudent(Classroom classroom, StudentAccount student) {
+    	List<Classroom> classrooms = new ArrayList<>();
+    	classrooms.add(classroom);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+    	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
+    	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+        		.accountWithFisrtName("Charlie")
+        		.accountWithLastName("Cardozo")
+        		.accountWithEmail("charlie@gmail.com")
+        		.withAccountType(accountType)
+        		.withUser(user)
+        		.addStudent(student)
         		.withClassroom(classrooms)
         		.build();
         account = createTeacherAccount(account);

@@ -2,7 +2,6 @@ package ar.edu.unq.virtuaula.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,15 +30,15 @@ public class StudentTask implements Serializable{
     @Enumerated(EnumType.STRING)
     private State state;
 	
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "lesson_id", referencedColumnName = "id")
 	private Lesson lesson;
 	
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
     
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonIgnoreProperties("resultsTasks")
     private StudentAccount studentAccount;

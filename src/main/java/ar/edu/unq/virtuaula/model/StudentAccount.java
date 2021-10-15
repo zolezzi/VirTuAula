@@ -33,4 +33,8 @@ public class StudentAccount extends Account {
     private List<StudentTask> resultsTasks = new ArrayList<>();
     
     private Double experience;
+
+	public Double calculateExperience(Double note, int multiplier) {
+		return note == null ? this.experience : this.experience + (note * multiplier);
+	}
 }

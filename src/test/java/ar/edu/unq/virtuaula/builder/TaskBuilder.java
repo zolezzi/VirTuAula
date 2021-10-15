@@ -13,16 +13,6 @@ public class TaskBuilder {
         return taskBuilder;
     }
 
-    public TaskBuilder completed() {
-        this.instance.complete();
-        return this;
-    }
-
-    public TaskBuilder uncompleted() {
-        this.instance.uncomplete();
-        return this;
-    }
-
     public TaskBuilder withCorrectAnswer(Long correctAnswer) {
         this.instance.setCorrectAnswer(correctAnswer);
         return this;

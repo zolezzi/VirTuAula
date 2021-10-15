@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
+import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.User;
@@ -74,5 +75,25 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
 	    AccountDTO result = accountService.createAccountTeacher(user, account);
         assertNotNull(result);
         assertEquals(expected, result.getUsername());
+    }
+    
+    @Test
+    public void findStudentAccountReturnAccountWithId() throws StudentAccountNotFoundException {
+    	Account account = createOneStudentAccount();
+        Account result = (Account) accountService.findStudentById(1l);
+        assertNotNull(result);
+        assertEquals(result.getId(), account.getId());
+    }
+    
+    @Test
+    public void whenfindStudentAccountWithUsernameNotExistsThenThrowExpetion() {
+        Exception exception = assertThrows(StudentAccountNotFoundException.class, () -> {
+        	accountService.findStudentById(10l);
+        });
+
+        String expectedMessage = "Error not found account with id: 10";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
