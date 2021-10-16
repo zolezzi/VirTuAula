@@ -89,7 +89,7 @@ public class LessonService {
 			studentTask.setLesson(newLesson);
 			studentTask.setStudentAccount(student);
 			return studentTask;
-		}).collect(Collectors.toList());
+		}).collect(toList());
 		student.getResultsTasks().addAll(listStudentTasks);
 	}
 	
