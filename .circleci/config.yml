@@ -27,7 +27,9 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-
+      - run : sudo apt-get install jq
+      - run : wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
+      - run : chmod +x gradlew
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -44,3 +46,4 @@ jobs:
 
       # run tests!
       - run: gradle test
+      - run: bash <(curl -k -Ls https://coverage.codacy.com/get.sh)
