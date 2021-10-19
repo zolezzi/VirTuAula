@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -70,6 +69,7 @@ public class LessonService {
             throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
         }
         newLesson = lessonRepository.save(newLesson);
+        classroom.addLesson(newLesson);
         newLesson.getTasks().forEach(task -> task.setCorrectAnswer(task.findCorrectAnswer()));
         createStudentTaskForAllStudent(newLesson, teacherUser);
         newLesson = lessonRepository.save(newLesson);
