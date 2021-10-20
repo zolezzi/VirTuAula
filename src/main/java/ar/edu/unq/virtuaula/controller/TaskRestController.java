@@ -25,11 +25,11 @@ public class TaskRestController {
     private final LessonService lessonService;
     private final AccountService accountService;
 
-    @GetMapping("/tasks/{lessonId}")
+    @GetMapping("/tasks/students/{lessonId}/{accountId}")
     @ApiResponse(code = 200, message = "Success", response = TaskStudentVO.class, responseContainer = "List")
     @ApiOperation(value = "Get all task students by lesson id", notes = "Get all tasks of a lesson")
-    public List<TaskStudentVO> getByClassroomId(@PathVariable("lessonId") Long lessonId) {
-        return taskService.getAllTaskByLessonForStudent(lessonService.findById(lessonId));
+    public List<TaskStudentVO> getByClassroomIdStudent(@PathVariable("lessonId") Long lessonId,@PathVariable("accountId") Long accountId) {
+        return taskService.getAllTaskByLessonForStudent(lessonService.findById(lessonId), accountId);
     }
 
     @GetMapping("/tasks/{lessonId}/{accountId}")

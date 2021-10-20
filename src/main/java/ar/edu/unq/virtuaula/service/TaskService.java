@@ -13,12 +13,15 @@ import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.OptionTask;
+import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.repository.TaskRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.OptionTaskVO;
 import ar.edu.unq.virtuaula.vo.TaskStudentVO;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final StudentTaskRepository studentTaskRepository;
     private final MapperUtil mapperUtil;
 
     public List<TaskDTO> getAllTaskByLesson(Lesson lesson, TeacherAccount teacherAccount) throws LessonNotFoundException {
@@ -37,18 +41,23 @@ public class TaskService {
         return Arrays.asList(mapperUtil.getMapper().map(tasks, TaskDTO[].class));
     }
 
-    public List<TaskStudentVO> getAllTaskByLessonForStudent(Lesson lesson) {
+    public List<TaskStudentVO> getAllTaskByLessonForStudent(Lesson lesson, Long studentId) {
         List<Task> tasks = taskRepository.findByLesson(lesson);
-        return transformToVO(tasks);
+        return transformToVO(tasks, studentId);
     }
 
-    private List<TaskStudentVO> transformToVO(List<Task> tasks) {
+    private List<TaskStudentVO> transformToVO(List<Task> tasks, Long studentId) {
         return tasks.stream().map(task -> {
+            Optional<StudentTask> studentTask = studentTaskRepository.findByTaskIdAndStudentId(task.getId(), studentId);
             TaskStudentVO taskVO = new TaskStudentVO();
             taskVO.setId(task.getId());
             taskVO.setStatement(task.getStatement());
             taskVO.setScore(task.getScore());
-            taskVO.setAnswer(task.getAnswer());
+            if (studentTask.isPresent()) {
+                taskVO.setAnswer(studentTask.get().getAnswer());
+            } else {
+                taskVO.setAnswer(task.getAnswer());
+            }
             taskVO.setOptions(transformOptionTaskToVO(task.getOptions()));
             return taskVO;
         }).collect(toList());

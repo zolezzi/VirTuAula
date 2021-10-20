@@ -25,14 +25,14 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllTaskByLessonWithTaskReturnListWithTaskWithStatement() {
         Classroom classroom = createOneClassroom();
-        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0));
+        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0), 1L);
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getStatement(), result.get(0).getStatement());
     }
 
     @Test
     public void getAllTaskByLessonWithTaskReturnListWithTaskWithId() {
         Classroom classroom = createOneClassroom();
-        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0));
+        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0), 1L);
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
     }
@@ -82,7 +82,7 @@ public class TaskServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void getAllTaskByLessonWithTaskReturnListWithTaskWithOptionTaskWithId() {
         Classroom classroom = createOneClassroomWithTwoTasksAndTwoOptionTasks();
-        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0));
+        List<TaskStudentVO> result = guestTaskService.getAllTaskByLessonForStudent(classroom.getLessons().get(0), 1L);
         assertNotNull(result.get(0).getId());
         assertEquals(classroom.getLessons().get(0).getTasks().get(0).getId(), result.get(0).getId());
     }

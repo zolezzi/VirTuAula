@@ -56,10 +56,10 @@ public class ClassroomService {
     }
 
 	public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO) {
-		Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
+		final Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
 		teacherAccount.getClassrooms().add(newClassroom);
-		newClassroom = classromRepository.save(newClassroom);
-		return mapperUtil.getMapper().map(newClassroom, ClassroomDTO.class);
+                teacherAccount.getStudents().stream().forEach(student -> student.getClassrooms().add(newClassroom));
+		return mapperUtil.getMapper().map(classromRepository.save(newClassroom), ClassroomDTO.class);
 	}
 	
 	private int calculateProgress(Classroom classroom, Long accountId) {
