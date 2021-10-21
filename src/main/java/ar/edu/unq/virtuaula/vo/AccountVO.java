@@ -8,5 +8,6 @@ public class AccountVO {
 
     private Long accountId;
     private AccountTypeDTO accountType;
+    private Double experience;
 
 }
