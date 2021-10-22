@@ -99,18 +99,10 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     }
     
     @Test
-    public void getExperienceWithStudentAccountReturnExperience() {
+    public void getExperienceWithStudentAccountReturnExperience() throws StudentAccountNotFoundException {
         StudentAccount account = (StudentAccount) createOneStudentAccount();
         Double experience =  accountService.getExperience(account.getId());
         assertNotNull(experience);
         assertEquals(experience, account.getExperience());
-    }
-    
-    @Test
-    public void getExperienceWithTeacherAccountReturnExperience() {
-        Account account = createOneTeacherAccount();
-        Double experience =  accountService.getExperience(account.getId());
-        assertNotNull(experience);
-        assertEquals(experience, 0d);
     }
 }

@@ -66,13 +66,8 @@ public class AccountService {
 		return student;
 	}
 
-    public Double getExperience(Long accountId) {
-        Account account = accountRepository.findById(accountId).get();
-        if(account instanceof StudentAccount) {
-            StudentAccount studentAccount = (StudentAccount) account;
-            return studentAccount.getExperience();
-        } else {
-            return 0d;
-        }
+    public Double getExperience(Long accountId) throws StudentAccountNotFoundException {
+    	StudentAccount account = findStudentById(accountId);
+        return account.getExperience();
     }
 }

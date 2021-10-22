@@ -41,10 +41,6 @@ public class AuthenticationUserService {
         AccountTypeDTO accountType = mapperUtil.getMapper().map(account.getAccountType(), AccountTypeDTO.class);
         accountVO.setAccountId(account.getId());
         accountVO.setAccountType(accountType);
-        if (account instanceof StudentAccount) {
-            StudentAccount studentAccount = (StudentAccount) account;
-            accountVO.setExperience(studentAccount.getExperience());
-        }
         return accountVO;
     }
 
