@@ -10,7 +10,6 @@ import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
 import ar.edu.unq.virtuaula.dto.AuthRequestDTO;
 import ar.edu.unq.virtuaula.dto.JwtResponseDTO;
 import ar.edu.unq.virtuaula.model.Account;
-import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.util.JwtTokenUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
