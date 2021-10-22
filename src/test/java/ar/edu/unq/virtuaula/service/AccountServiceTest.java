@@ -15,6 +15,7 @@ import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.User;
 
 public class AccountServiceTest extends VirtuaulaApplicationTests {
@@ -95,5 +96,21 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void getExperienceWithStudentAccountReturnExperience() {
+        StudentAccount account = (StudentAccount) createOneStudentAccount();
+        Double experience =  accountService.getExperience(account.getId());
+        assertNotNull(experience);
+        assertEquals(experience, account.getExperience());
+    }
+    
+    @Test
+    public void getExperienceWithTeacherAccountReturnExperience() {
+        Account account = createOneTeacherAccount();
+        Double experience =  accountService.getExperience(account.getId());
+        assertNotNull(experience);
+        assertEquals(experience, 0d);
     }
 }
