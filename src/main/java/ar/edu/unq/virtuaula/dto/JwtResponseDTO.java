@@ -6,13 +6,15 @@ import lombok.Data;
 @Data
 public class JwtResponseDTO {
 
+    private Long userId;
     private String username;
     private String token;
     private AccountVO account;
 
-    public JwtResponseDTO(String username, String token, AccountVO account) {
+    public JwtResponseDTO(Long userId, String username, String token, AccountVO account) {
         this.username = username;
         this.token = token;
         this.account = account;
+        this.userId = userId;
     }
 }

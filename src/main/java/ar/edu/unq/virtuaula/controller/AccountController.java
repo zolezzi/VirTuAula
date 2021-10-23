@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.JwtUserDetailsService;
+import ar.edu.unq.virtuaula.vo.AccountVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AccountController {
     @PostMapping("/account/create/{userId}")
     @ApiResponse(code = 200, message = "Successfully create account", response = AccountDTO.class)
     @ApiOperation(value = "Create account by user id", notes = "Create account by user id")
-    public AccountDTO createAccount(@PathVariable("userId") Long userId, @RequestBody AccountDTO account) throws Exception {
+    public AccountVO createAccount(@PathVariable("userId") Long userId, @RequestBody AccountDTO account) throws Exception {
         return accountService.createAccountTeacher(userService.findById(userId), account);
     }
     

@@ -5,74 +5,106 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
+import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.Privilege;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.AccountTypeRepository;
 import ar.edu.unq.virtuaula.util.MapperUtil;
+import ar.edu.unq.virtuaula.vo.AccountVO;
+import java.util.List;
+import static java.util.stream.Collectors.toList;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
-	
-	private final AccountRepository accountRepository;
-	private final AccountTypeRepository accountTypeRepository;
-	private final MapperUtil mapperUtil;
-	private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
 
-	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
-		TeacherAccount teacher = null;
-		try {
-			teacher = (TeacherAccount) accountRepository.findById(accountId).get();
-		}catch (Exception e) {
-			throw new TeacherNotFoundException("Error not found account with id: " + accountId, e);
-		}
-		return teacher;
-	}
-	
-	public Account findById(Long accountId) throws AccountNotFoundException {
-		Account account = null;
-		try {
-			account =  accountRepository.findById(accountId).get();
-		}catch (Exception e) {
-			throw new AccountNotFoundException("Error not found account with id: " + accountId, e);
-		}
-		return account;
-	}
+    private final AccountRepository accountRepository;
+    private final AccountTypeRepository accountTypeRepository;
+    private final MapperUtil mapperUtil;
+    private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
 
-	public AccountDTO createAccountTeacher(User user, AccountDTO account) {
-		TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
-		newAccount.setUser(user);
-		newAccount.setUsername(user.getUsername());
-		newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
-		newAccount = accountRepository.save(newAccount);
-		return  mapperUtil.getMapper().map(newAccount, AccountDTO.class);
-	}
+    public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
+        TeacherAccount teacher = null;
+        try {
+            teacher = (TeacherAccount) accountRepository.findById(accountId).get();
+        } catch (Exception e) {
+            throw new TeacherNotFoundException("Error not found account with id: " + accountId, e);
+        }
+        return teacher;
+    }
 
-	public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
-		StudentAccount student = null;
-		try {
-			student = (StudentAccount) accountRepository.findById(accountId).get();
-		}catch (Exception e) {
-			throw new StudentAccountNotFoundException("Error not found account with id: " + accountId, e);
-		}
-		return student;
-	}
+    public Account findById(Long accountId) throws AccountNotFoundException {
+        Account account = null;
+        try {
+            account = accountRepository.findById(accountId).get();
+        } catch (Exception e) {
+            throw new AccountNotFoundException("Error not found account with id: " + accountId, e);
+        }
+        return account;
+    }
+
+    public AccountVO createAccountTeacher(User user, AccountDTO account) {
+        TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
+        newAccount.setUser(user);
+        newAccount.setUsername(user.getUsername());
+        newAccount.setFirstName(account.getFirstName());
+        newAccount.setLastName(account.getLastName());
+        newAccount.setDni(account.getDni());
+        newAccount.setEmail(user.getEmail());
+        newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
+        newAccount = accountRepository.save(newAccount);
+        return createAccountVo(newAccount);
+    }
+
+    public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
+        StudentAccount student = null;
+        try {
+            student = (StudentAccount) accountRepository.findById(accountId).get();
+        } catch (Exception e) {
+            throw new StudentAccountNotFoundException("Error not found account with id: " + accountId, e);
+        }
+        return student;
+    }
 
     public Double getExperience(Long accountId) {
         Account account = accountRepository.findById(accountId).get();
-        if(account instanceof StudentAccount) {
+        if (account instanceof StudentAccount) {
             StudentAccount studentAccount = (StudentAccount) account;
             return studentAccount.getExperience();
         } else {
             return 0d;
         }
+    }
+
+    private AccountVO createAccountVo(TeacherAccount account) {
+        AccountVO accountVO = new AccountVO();
+        accountVO.setAccountId(account.getId());
+        AccountTypeDTO accountTypeDTO = new AccountTypeDTO();
+        accountTypeDTO.setName(account.getAccountType().getName());
+        List<PrivilegeDTO> privileges = createPrivileges(account.getAccountType().getPrivileges());
+        accountTypeDTO.setPrivileges(privileges);
+        accountVO.setAccountType(accountTypeDTO);
+        return accountVO;
+    }
+
+    private List<PrivilegeDTO> createPrivileges(List<Privilege> privileges) {
+        return privileges.stream().map(privilege -> createPrivilegeDTO(privilege)).collect(toList());
+    }
+
+    private PrivilegeDTO createPrivilegeDTO(Privilege privilege) {
+        PrivilegeDTO privilegeDTO = new PrivilegeDTO();
+        privilegeDTO.setId(privilege.getId());
+        privilegeDTO.setName(privilege.getName());
+        return privilegeDTO;
     }
 }
