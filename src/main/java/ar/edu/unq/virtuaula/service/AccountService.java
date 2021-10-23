@@ -32,26 +32,15 @@ public class AccountService {
     private final AccountTypeRepository accountTypeRepository;
     private final MapperUtil mapperUtil;
     private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
-
-    public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
-        TeacherAccount teacher = null;
-        try {
-            teacher = (TeacherAccount) accountRepository.findById(accountId).get();
-        } catch (Exception e) {
-            throw new TeacherNotFoundException("Error not found account with id: " + accountId, e);
-        }
-        return teacher;
-    }
-
-    public Account findById(Long accountId) throws AccountNotFoundException {
-        Account account = null;
-        try {
-            account = accountRepository.findById(accountId).get();
-        } catch (Exception e) {
-            throw new AccountNotFoundException("Error not found account with id: " + accountId, e);
-        }
-        return account;
-    }
+	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
+		return (TeacherAccount) accountRepository.findById(accountId)
+				.orElseThrow(() -> new TeacherNotFoundException("Error not found account with id: " + accountId));
+	}
+	
+	public Account findById(Long accountId) throws AccountNotFoundException {
+		return accountRepository.findById(accountId)
+				.orElseThrow(() -> new AccountNotFoundException("Error not found account with id: " + accountId));
+	}
 
     public AccountVO createAccountTeacher(User user, AccountDTO account) {
         TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
@@ -66,24 +55,14 @@ public class AccountService {
         return createAccountVo(newAccount);
     }
 
-    public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
-        StudentAccount student = null;
-        try {
-            student = (StudentAccount) accountRepository.findById(accountId).get();
-        } catch (Exception e) {
-            throw new StudentAccountNotFoundException("Error not found account with id: " + accountId, e);
-        }
-        return student;
-    }
+	public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
+		return (StudentAccount) accountRepository.findById(accountId)
+				.orElseThrow(() -> new StudentAccountNotFoundException("Error not found account with id: " + accountId));
+	}
 
-    public Double getExperience(Long accountId) {
-        Account account = accountRepository.findById(accountId).get();
-        if (account instanceof StudentAccount) {
-            StudentAccount studentAccount = (StudentAccount) account;
-            return studentAccount.getExperience();
-        } else {
-            return 0d;
-        }
+    public Double getExperience(Long accountId) throws StudentAccountNotFoundException {
+    	StudentAccount account = findStudentById(accountId);
+        return account.getExperience();
     }
 
     private AccountVO createAccountVo(TeacherAccount account) {

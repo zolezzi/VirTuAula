@@ -131,7 +131,8 @@ public class LessonService {
 
     private void completeState(List<TaskVO> tasks, Long studentId) {
         tasks.stream().forEach(task -> {
-            StudentTask studentTaskSolvedBD = studentTaskRepository.findByTaskIdAndStudentId(task.getId(), studentId).orElseThrow(() -> new NoSuchElementException("Error not found Tasks with id: " + task.getId()));
+            StudentTask studentTaskSolvedBD = studentTaskRepository.findByTaskIdAndStudentId(task.getId(), studentId)
+            		.orElseThrow(() -> new NoSuchElementException("Error not found Tasks with id: " + task.getId()));
             studentTaskSolvedBD.setAnswer(task.getAnswerId());
             studentTaskSolvedBD.complete();
             studentTaskRepository.save(studentTaskSolvedBD);

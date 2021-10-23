@@ -10,7 +10,6 @@ import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
 import ar.edu.unq.virtuaula.dto.AuthRequestDTO;
 import ar.edu.unq.virtuaula.dto.JwtResponseDTO;
 import ar.edu.unq.virtuaula.model.Account;
-import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.util.JwtTokenUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
@@ -41,10 +40,6 @@ public class AuthenticationUserService {
         AccountTypeDTO accountType = mapperUtil.getMapper().map(account.getAccountType(), AccountTypeDTO.class);
         accountVO.setAccountId(account.getId());
         accountVO.setAccountType(accountType);
-        if (account instanceof StudentAccount) {
-            StudentAccount studentAccount = (StudentAccount) account;
-            accountVO.setExperience(studentAccount.getExperience());
-        }
         return accountVO;
     }
 
