@@ -1,5 +1,6 @@
 package ar.edu.unq.virtuaula.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
 
@@ -59,4 +60,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         return user.get();
     }
 
+    public List<User> saveAllUsers(List<User> users) {
+		return userRepository.saveAll(users);
+    }
 }

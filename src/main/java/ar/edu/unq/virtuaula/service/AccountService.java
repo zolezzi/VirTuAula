@@ -1,8 +1,14 @@
 package ar.edu.unq.virtuaula.service;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
@@ -10,17 +16,18 @@ import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Privilege;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.AccountTypeRepository;
+import ar.edu.unq.virtuaula.util.CSVUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.AccountVO;
-import java.util.List;
-import static java.util.stream.Collectors.toList;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,8 +37,10 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountTypeRepository accountTypeRepository;
+    private final JwtUserDetailsService userService;
     private final MapperUtil mapperUtil;
     private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
+    private static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
 	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
 		return (TeacherAccount) accountRepository.findById(accountId)
 				.orElseThrow(() -> new TeacherNotFoundException("Error not found account with id: " + accountId));
@@ -65,7 +74,54 @@ public class AccountService {
         return account.getExperience();
     }
 
-    private AccountVO createAccountVo(TeacherAccount account) {
+	public ResponseMessage uploadFileStudents(TeacherAccount teacherAccount, MultipartFile file) {
+		String message = "";
+		if (CSVUtil.hasCSVFormat(file)) {
+			try {
+				AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
+				List<StudentAccount> students = CSVUtil.csvToStudents(file.getInputStream());
+				students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
+				teacherAccount.getStudents().addAll(students);
+				teacherAccount = accountRepository.save(teacherAccount);
+				List<Integer> dnis = students.stream().map(student-> student.getDni()).collect(Collectors.toList());
+				createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
+		        message = "Uploaded the file successfully: " + file.getOriginalFilename();
+			} catch (Exception e) {
+		        message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+			}
+		}
+		return new ResponseMessage(message);
+	}
+    
+    private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,
+			AccountType accountType, TeacherAccount teacherAccount) {
+    	return students.stream()
+    			.filter(student -> !existsAccount(student))
+    			.map(student -> {
+        			student.setAccountType(accountType);
+        			student.addTeacher(teacherAccount);
+        			return student;
+        			})
+    			.collect(Collectors.toList());
+	}
+
+	private void createUserForStudents(List<StudentAccount> students) {
+    	List<User> users = students.stream().map(student -> {
+    		User user = new User();
+    		user.setPassword(String.valueOf(student.getDni()));
+    		user.setAccount(student);
+    		user.setEmail(student.getEmail());
+    		user.setUsername(String.valueOf(student.getDni()));
+    		return user;
+    	}).collect(Collectors.toList());
+    	userService.saveAllUsers(users);
+	} 
+
+	private Boolean existsAccount(StudentAccount student) {
+		return accountRepository.findByDni(student.getDni()).isPresent();
+	}
+
+	private AccountVO createAccountVo(TeacherAccount account) {
         AccountVO accountVO = new AccountVO();
         accountVO.setAccountId(account.getId());
         AccountTypeDTO accountTypeDTO = new AccountTypeDTO();
@@ -86,4 +142,5 @@ public class AccountService {
         privilegeDTO.setName(privilege.getName());
         return privilegeDTO;
     }
+
 }

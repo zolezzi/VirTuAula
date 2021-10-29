@@ -1,19 +1,24 @@
 package ar.edu.unq.virtuaula.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.JwtUserDetailsService;
 import ar.edu.unq.virtuaula.vo.AccountVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api")
@@ -36,4 +41,10 @@ public class AccountController {
     public Double getExperience(@PathVariable("accountId") Long accountId) throws Exception {
         return accountService.getExperience(accountId);
     }
+    
+    @PostMapping("/account/upload-file-students/{accountId}")
+	@ApiOperation(value="Import list students in CSV", response=ResponseEntity.class)
+    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable("accountId") Long accountId, @RequestParam("file") MultipartFile file) throws TeacherNotFoundException {
+		return ResponseEntity.ok().body(accountService.uploadFileStudents(accountService.findTeacherById(accountId), file));
+	}
 }

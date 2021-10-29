@@ -37,4 +37,10 @@ public class StudentAccount extends Account {
 	public Double calculateExperience(Double note, int multiplier) {
 		return note == null ? this.experience : this.experience + (note * multiplier);
 	}
+
+	public void addTeacher(TeacherAccount teacherAccount) {
+		if(!this.getTeachers().contains(teacherAccount)) {
+			this.getTeachers().add(teacherAccount);
+		}
+	}
 }
