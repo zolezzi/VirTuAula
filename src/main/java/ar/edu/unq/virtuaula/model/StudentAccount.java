@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,6 +33,7 @@ public class StudentAccount extends Account {
     @JsonIgnoreProperties("studentTask")
     private List<StudentTask> resultsTasks = new ArrayList<>();
     
+    @Column(name="experience", columnDefinition="Double(20,2) default '0.00'")
     private Double experience;
 
 	public Double calculateExperience(Double note, int multiplier) {

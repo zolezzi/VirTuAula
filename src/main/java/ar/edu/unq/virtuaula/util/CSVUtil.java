@@ -38,6 +38,7 @@ public class CSVUtil {
 				  StudentAccount student = new StudentAccount();
 				  student.setFirstName(csvRecord.get(CSVFormatConstants.COLUMN_FIRST_NAME));
 				  student.setLastName(csvRecord.get(CSVFormatConstants.COLUMN_LAST_NAME));
+				  student.setUsername(csvRecord.get(CSVFormatConstants.COLUMN_DNI));
 				  student.setDni(Integer.parseInt(csvRecord.get(CSVFormatConstants.COLUMN_DNI)));
 				  student.setEmail(csvRecord.get(CSVFormatConstants.COLUMN_EMAIL));
 				  students.add(student);

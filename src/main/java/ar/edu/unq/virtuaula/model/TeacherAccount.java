@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -23,7 +21,7 @@ public class TeacherAccount extends Account {
 
     private static final long serialVersionUID = -3455382936475619272L;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "teachers_students",
             joinColumns = @JoinColumn(

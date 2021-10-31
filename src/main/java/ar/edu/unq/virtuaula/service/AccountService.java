@@ -81,6 +81,7 @@ public class AccountService {
 				AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
 				List<StudentAccount> students = CSVUtil.csvToStudents(file.getInputStream());
 				students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
+				students = accountRepository.saveAll(students);
 				teacherAccount.getStudents().addAll(students);
 				teacherAccount = accountRepository.save(teacherAccount);
 				List<Integer> dnis = students.stream().map(student-> student.getDni()).collect(Collectors.toList());
