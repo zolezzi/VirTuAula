@@ -39,6 +39,7 @@ public class AccountService {
     private final AccountTypeRepository accountTypeRepository;
     private final JwtUserDetailsService userService;
     private final MapperUtil mapperUtil;
+    private final CSVUtil csvUtil;
     private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
     private static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
 	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
@@ -76,17 +77,22 @@ public class AccountService {
 
 	public ResponseMessage uploadFileStudents(TeacherAccount teacherAccount, MultipartFile file) {
 		String message = "";
-		if (CSVUtil.hasCSVFormat(file)) {
+		if (csvUtil.hasCSVFormat(file)) {
 			try {
 				AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
-				List<StudentAccount> students = CSVUtil.csvToStudents(file.getInputStream());
-				students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
-				students = accountRepository.saveAll(students);
-				teacherAccount.getStudents().addAll(students);
-				teacherAccount = accountRepository.save(teacherAccount);
-				List<Integer> dnis = students.stream().map(student-> student.getDni()).collect(Collectors.toList());
-				createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
-		        message = "Uploaded the file successfully: " + file.getOriginalFilename();
+				List<StudentAccount> students = csvUtil.csvToStudents(file.getInputStream());
+				if(!students.isEmpty()) {
+					students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
+					students = accountRepository.saveAll(students);
+					teacherAccount.getStudents().addAll(students);
+					teacherAccount = accountRepository.save(teacherAccount);
+					List<Integer> dnis = students.stream().map(student-> student.getDni()).collect(Collectors.toList());
+					createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
+			        message = "Uploaded the file successfully: " + file.getOriginalFilename();
+				}else {
+					message = "I do not know loaded any lines from the file: " + file.getOriginalFilename();
+				}
+
 			} catch (Exception e) {
 		        message = "Could not upload the file: " + file.getOriginalFilename() + "!";
 			}

@@ -10,22 +10,24 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.constants.CSVFormatConstants;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 
+@Component
 public class CSVUtil {
 
 	public final static String TYPE = "text/csv";
 	  static final String[] HEADERs = { CSVFormatConstants.COLUMN_FIRST_NAME, CSVFormatConstants.COLUMN_LAST_NAME, 
 			  CSVFormatConstants.COLUMN_DNI, CSVFormatConstants.COLUMN_EMAIL };
 
-	  public static boolean hasCSVFormat(MultipartFile file) {
+	  public boolean hasCSVFormat(MultipartFile file) {
 	    return TYPE.equals(file.getContentType());
 	  }
 	  
-	  public static List<StudentAccount> csvToStudents(InputStream inputStream) {
+	  public List<StudentAccount> csvToStudents(InputStream inputStream) {
 		  try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, 
 				  CSVFormatConstants.TRANSFORMATION_FORMAT));
 				  CSVParser csvParser = new CSVParser(fileReader,
