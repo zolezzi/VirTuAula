@@ -33,7 +33,6 @@ public class StudentAccount extends Account {
     @JsonIgnoreProperties("studentTask")
     private List<StudentTask> resultsTasks = new ArrayList<>();
     
-    @Column(name="experience", columnDefinition="Double(20,2) default '0.00'")
     private Double experience;
 
 	public Double calculateExperience(Double note, int multiplier) {
