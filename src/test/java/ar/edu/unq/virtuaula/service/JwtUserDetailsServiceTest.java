@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +132,16 @@ public class JwtUserDetailsServiceTest extends VirtuaulaApplicationTests {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+    
+    @Test
+    public void testSaveAllListForUsers() throws UserRegisterException, UserNotFoundException {
+        int expected = 1;
+    	User user = createOneUser();
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        List<User> usersResults = UserDetailsService.saveAllUsers(users);
+        assertEquals(expected, usersResults.size());
+        assertNotNull(usersResults);
     }
 }
