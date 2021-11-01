@@ -40,6 +40,11 @@ public class Task implements Serializable {
     private Long answer;
 
     private Long correctAnswer;
+    
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "task_type_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("tasks")
+    private TaskType taskType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")

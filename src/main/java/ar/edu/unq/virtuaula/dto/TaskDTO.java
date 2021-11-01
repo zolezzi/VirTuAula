@@ -12,6 +12,7 @@ public class TaskDTO implements Serializable {
     private Long id;
     private String statement;
     private List<OptionTaskDTO> options;
+    private TaskTypeDTO taskType;
     private Double score;
     private Long answer;
     private Long correctAnswer;

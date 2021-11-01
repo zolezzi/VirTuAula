@@ -14,6 +14,7 @@ import ar.edu.unq.virtuaula.builder.OptionTaskBuilder;
 import ar.edu.unq.virtuaula.builder.StudentAccountBuilder;
 import ar.edu.unq.virtuaula.builder.StudentTaskBuilder;
 import ar.edu.unq.virtuaula.builder.TaskBuilder;
+import ar.edu.unq.virtuaula.builder.TaskTypeBuilder;
 import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
 import ar.edu.unq.virtuaula.model.Account;
@@ -24,11 +25,13 @@ import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.model.TaskType;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
 import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
+import ar.edu.unq.virtuaula.repository.TaskTypeRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
 
 @SpringBootTest
@@ -45,6 +48,9 @@ public class VirtuaulaApplicationTests {
     protected StudentTaskRepository studentTaskRepository;
     
     @Autowired
+    protected TaskTypeRepository taskTypeRepository;
+    
+    @Autowired
     protected UserRepository userRepository;
 
     protected Classroom createOneClassroom() {
@@ -52,6 +58,11 @@ public class VirtuaulaApplicationTests {
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
+    }
+    
+    protected TaskType  createOneTaskType() {
+    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
+        return createTaskType(taskType);
     }
     
     protected Classroom createOneClassroomWithoutLesson() {
@@ -99,6 +110,10 @@ public class VirtuaulaApplicationTests {
         return userRepository.save(user);
     }
 
+    protected TaskType createTaskType(TaskType taskType) {
+        return taskTypeRepository.save(taskType);
+    }
+    
     protected User createOneUser() {
         User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
                 .withEmail("charlie@gmail.com")
