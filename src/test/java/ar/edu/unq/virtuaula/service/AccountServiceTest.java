@@ -45,7 +45,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
             accountService.findTeacherById(10l);
         });
 
-        String expectedMessage = "Error not found account with id: 10";
+        String expectedMessage = "Error not found teacher account with id: 10";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -98,7 +98,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
             accountService.findStudentById(10l);
         });
 
-        String expectedMessage = "Error not found account with id: 10";
+        String expectedMessage = "Error not found student account with id: 10";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
@@ -142,7 +142,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     
     @Test
     public void testWhenLoadCSVFileWithoutStudentsThenReturnMessageEmpty() throws IOException {
-    	String expected = "I do not know loaded any lines from the file: hello.csv";
+    	String expected = "Please review file, i do not know loaded any lines from the file: hello.csv";
         StringBuilder csvBuilder = new StringBuilder();
         csvBuilder.append("Nombre,Apellido,DNI,Email\n");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
@@ -153,4 +153,18 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         assertEquals(expected, message.getMessage());
     }
     
+    @Test
+    public void testWhenLoadCSVFileNotValidThenReturnException() throws IOException {
+    	String expected = "Could not upload the file: hello.csv!";
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        MockMultipartFile file = Mockito.mock(MockMultipartFile.class);
+        Mockito.when(file.getContentType()).thenReturn("text/csv");
+        Mockito.when(file.getOriginalFilename()).thenReturn("hello.csv");
+        Mockito.when(file.getInputStream()).thenReturn(null);
+        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
+        ResponseMessage message = accountService.uploadFileStudents(account, file);
+        assertNotNull(message);
+        assertEquals(expected, message.getMessage());
+    }
 }

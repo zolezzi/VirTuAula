@@ -44,7 +44,7 @@ public class AccountService {
     private static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
 	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
 		return (TeacherAccount) accountRepository.findById(accountId)
-				.orElseThrow(() -> new TeacherNotFoundException("Error not found account with id: " + accountId));
+				.orElseThrow(() -> new TeacherNotFoundException("Error not found teacher account with id: " + accountId));
 	}
 	
 	public Account findById(Long accountId) throws AccountNotFoundException {
@@ -67,7 +67,7 @@ public class AccountService {
 
 	public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
 		return (StudentAccount) accountRepository.findById(accountId)
-				.orElseThrow(() -> new StudentAccountNotFoundException("Error not found account with id: " + accountId));
+				.orElseThrow(() -> new StudentAccountNotFoundException("Error not found student account with id: " + accountId));
 	}
 
     public Double getExperience(Long accountId) throws StudentAccountNotFoundException {
@@ -90,7 +90,7 @@ public class AccountService {
 					createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
 			        message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				}else {
-					message = "I do not know loaded any lines from the file: " + file.getOriginalFilename();
+					message = "Please review file, i do not know loaded any lines from the file: " + file.getOriginalFilename();
 				}
 
 			} catch (Exception e) {
