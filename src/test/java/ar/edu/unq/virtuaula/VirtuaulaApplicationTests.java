@@ -10,6 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
 import ar.edu.unq.virtuaula.builder.ClassroomBuilder;
 import ar.edu.unq.virtuaula.builder.LessonBuilder;
+import ar.edu.unq.virtuaula.builder.LevelBuilder;
 import ar.edu.unq.virtuaula.builder.OptionTaskBuilder;
 import ar.edu.unq.virtuaula.builder.StudentAccountBuilder;
 import ar.edu.unq.virtuaula.builder.StudentTaskBuilder;
@@ -21,6 +22,7 @@ import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.Level;
 import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.StudentTask;
@@ -137,12 +139,19 @@ public class VirtuaulaApplicationTests {
     
     protected Account createOneStudentAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("STUDENT").build();
+    	Level level = LevelBuilder.levelWithName("Principiante").withDescription("Nivel inicial").withImagePath("/images/image.png")
+    			.withNameNextLevel("Aficionado")
+    			.withNumberLevel(1)
+    			.withMinValue(0d)
+    			.withMaxValue(1000d)
+    			.build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie2", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
     	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie2")
         		.accountWithFisrtName("Charlie2")
         		.accountWithLastName("Cardozo2")
         		.accountWithEmail("charlie2@gmail.com")
         		.withAccountType(accountType)
+        		.withLevel(level)
         		.withUser(user)
         		.build();
         account = createStudentAccount(account);

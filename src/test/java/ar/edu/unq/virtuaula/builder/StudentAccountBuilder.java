@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.Level;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.User;
@@ -46,6 +47,11 @@ public class StudentAccountBuilder {
     
     public StudentAccountBuilder withUser(User user) {
         this.instance.setUser(user);
+        return this;
+    }
+    
+    public StudentAccountBuilder withLevel(Level level) {
+        this.instance.setLevel(level);
         return this;
     }
     
