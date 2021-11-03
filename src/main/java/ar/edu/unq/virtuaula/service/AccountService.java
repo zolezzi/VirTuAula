@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.hash.Hashing;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
@@ -19,6 +22,7 @@ import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
+import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Level;
 import ar.edu.unq.virtuaula.model.Privilege;
 import ar.edu.unq.virtuaula.model.StudentAccount;
@@ -26,6 +30,7 @@ import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.AccountTypeRepository;
+import ar.edu.unq.virtuaula.repository.UserRepository;
 import ar.edu.unq.virtuaula.util.CSVUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.AccountVO;
@@ -39,20 +44,21 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountTypeRepository accountTypeRepository;
     private final LevelService levelService;
-    private final JwtUserDetailsService userService;
+    private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
     private final CSVUtil csvUtil;
     private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
     private static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
-	public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
-		return (TeacherAccount) accountRepository.findById(accountId)
-				.orElseThrow(() -> new TeacherNotFoundException("Error not found teacher account with id: " + accountId));
-	}
-	
-	public Account findById(Long accountId) throws AccountNotFoundException {
-		return accountRepository.findById(accountId)
-				.orElseThrow(() -> new AccountNotFoundException("Error not found account with id: " + accountId));
-	}
+
+    public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
+        return (TeacherAccount) accountRepository.findById(accountId)
+                .orElseThrow(() -> new TeacherNotFoundException("Error not found teacher account with id: " + accountId));
+    }
+
+    public Account findById(Long accountId) throws AccountNotFoundException {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Error not found account with id: " + accountId));
+    }
 
     public AccountVO createAccountTeacher(User user, AccountDTO account) {
         TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
@@ -67,72 +73,79 @@ public class AccountService {
         return createAccountVo(newAccount);
     }
 
-	public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
-		return (StudentAccount) accountRepository.findById(accountId)
-				.orElseThrow(() -> new StudentAccountNotFoundException("Error not found student account with id: " + accountId));
-	}
+    public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
+        return (StudentAccount) accountRepository.findById(accountId)
+                .orElseThrow(() -> new StudentAccountNotFoundException("Error not found student account with id: " + accountId));
+    }
 
     public Double getExperience(Long accountId) throws StudentAccountNotFoundException {
-    	StudentAccount account = findStudentById(accountId);
+        StudentAccount account = findStudentById(accountId);
         return account.getExperience();
     }
 
-	public ResponseMessage uploadFileStudents(TeacherAccount teacherAccount, MultipartFile file) {
-		String message = "";
-		if (csvUtil.hasCSVFormat(file)) {
-			try {
-				AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
-				List<StudentAccount> students = csvUtil.csvToStudents(file.getInputStream());
-				if(!students.isEmpty()) {
-					students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
-					students = accountRepository.saveAll(students);
-					teacherAccount.getStudents().addAll(students);
-					teacherAccount = accountRepository.save(teacherAccount);
-					List<Integer> dnis = students.stream().map(student-> student.getDni()).collect(Collectors.toList());
-					createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
-			        message = "Uploaded the file successfully: " + file.getOriginalFilename();
-				}else {
-					message = "Please review file, i do not know loaded any lines from the file: " + file.getOriginalFilename();
-				}
+    public ResponseMessage uploadFileStudents(TeacherAccount teacherAccount, MultipartFile file) {
+        String message = "";
+        if (csvUtil.hasCSVFormat(file)) {
+            try {
+                AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
+                List<StudentAccount> students = csvUtil.csvToStudents(file.getInputStream());
+                if (!students.isEmpty()) {
+                    students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
+                    students = accountRepository.saveAll(students);
+                    teacherAccount.getStudents().addAll(students);
+                    teacherAccount = accountRepository.save(teacherAccount);
+                    List<Integer> dnis = students.stream().map(student -> student.getDni()).collect(Collectors.toList());
+                    createUserForStudents(teacherAccount.getStudentsByDNIs(dnis), teacherAccount.getClassrooms());
+                    message = "Uploaded the file successfully: " + file.getOriginalFilename();
+                } else {
+                    message = "Please review file, i do not know loaded any lines from the file: " + file.getOriginalFilename();
+                }
 
-			} catch (Exception e) {
-		        message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-			}
-		}
-		return new ResponseMessage(message);
-	}
-    
+            } catch (Exception e) {
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            }
+        }
+        return new ResponseMessage(message);
+    }
+
     private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,
-			AccountType accountType, TeacherAccount teacherAccount) {
+            AccountType accountType, TeacherAccount teacherAccount) {
     	Level Level = levelService.getInitialLevel();
-    	return students.stream()
-    			.filter(student -> !existsAccount(student))
-    			.map(student -> {
-        			student.setAccountType(accountType);
-        			student.addTeacher(teacherAccount);
-        			student.setLevel(Level);
-        			return student;
-        			})
-    			.collect(Collectors.toList());
-	}
+        return students.stream()
+                .filter(student -> !existsAccount(student))
+                .map(student -> {
+                    student.setAccountType(accountType);
+                    student.addTeacher(teacherAccount);
+                    student.setLevel(Level);
+                    return student;
+                })
+                .collect(Collectors.toList());
+    }
 
-	private void createUserForStudents(List<StudentAccount> students) {
-    	List<User> users = students.stream().map(student -> {
-    		User user = new User();
-    		user.setPassword(String.valueOf(student.getDni()));
-    		user.setAccount(student);
-    		user.setEmail(student.getEmail());
-    		user.setUsername(String.valueOf(student.getDni()));
-    		return user;
-    	}).collect(Collectors.toList());
-    	userService.saveAllUsers(users);
-	} 
+    private void createUserForStudents(List<StudentAccount> students, List<Classroom> classrooms) {
+        students.forEach(student -> {
+            User user = new User();
+            String password = Hashing.sha256()
+                    .hashString(student.getDni().toString(), StandardCharsets.UTF_8)
+                    .toString();
+            user.setPassword(password);
+            user.setAccount(student);
+            user.setEmail(student.getEmail());
+            user.setUsername(String.valueOf(student.getDni()));
+            User userSaved = userRepository.save(user);
+            student.setUser(userSaved);
+            classrooms.forEach(classroom -> {
+                student.addClassroom(classroom);
+            });
+            accountRepository.save(student);
+        });
+    }
 
-	private Boolean existsAccount(StudentAccount student) {
-		return accountRepository.findByDni(student.getDni()).isPresent();
-	}
+    private Boolean existsAccount(StudentAccount student) {
+        return accountRepository.findByDni(student.getDni()).isPresent();
+    }
 
-	private AccountVO createAccountVo(TeacherAccount account) {
+    private AccountVO createAccountVo(TeacherAccount account) {
         AccountVO accountVO = new AccountVO();
         accountVO.setAccountId(account.getId());
         AccountTypeDTO accountTypeDTO = new AccountTypeDTO();
