@@ -266,6 +266,20 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     	assertNotNull(result);
     }
     
+    @Test
+    public void completeTaskWithTaskProgressCompleteAndIncrementLevel() throws LessonNotFoundException {
+        int expected = 100;
+        Classroom classroom = createOneClassroom();
+        createLevelProfesional();
+        Lesson lesson = getFirstLesson(classroom);
+        Task task = getFirstTask(lesson);
+        StudentAccount studentAccount = (StudentAccount) createOneStudentAccount();
+        StudentAccount account = (StudentAccount) createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, studentAccount);
+        List<TaskVO> tasks = createTaskVO(lesson.getTasks());
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, lesson.getId(), account, tasks);
+        assertEquals(expected, lessonVo.getProgress());
+    }
+    
     private List<OptionTaskDTO> createOptions(){
     	OptionTaskDTO taskOption1 = new OptionTaskDTO();
     	OptionTaskDTO taskOption2 = new OptionTaskDTO();

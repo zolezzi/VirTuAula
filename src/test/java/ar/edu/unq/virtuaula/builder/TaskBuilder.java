@@ -27,6 +27,11 @@ public class TaskBuilder {
         this.instance.addOption(optionTask);
         return this;
     }
+    
+    public TaskBuilder withScore(Double score) {
+        this.instance.setScore(score);;
+        return this;
+    }
 
     public Task build() {
         return this.instance;

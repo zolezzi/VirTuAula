@@ -24,6 +24,11 @@ public class LessonBuilder {
         this.instance.addTask(task);
         return this;
     }
+    
+    public LessonBuilder withMaxNote(int note) {
+        this.instance.setMaxNote(note);
+        return this;
+    }
 
     public Lesson build() {
         return this.instance;

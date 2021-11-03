@@ -32,6 +32,7 @@ import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.LevelRepository;
 import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.repository.TaskTypeRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
@@ -54,10 +55,13 @@ public class VirtuaulaApplicationTests {
     
     @Autowired
     protected UserRepository userRepository;
+    
+    @Autowired
+    protected LevelRepository levelRepository;
 
     protected Classroom createOneClassroom() {
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).build();
-        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).build();
+        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d).build();
+        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
     }
@@ -116,12 +120,27 @@ public class VirtuaulaApplicationTests {
         return taskTypeRepository.save(taskType);
     }
     
+    protected Level createLevel(Level level) {
+    	return levelRepository.save(level);
+    }
+    
     protected User createOneUser() {
         User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
                 .withEmail("charlie@gmail.com")
                 .build();
         return createUser(user);
     }
+    
+	
+	protected Level createLevelProfesional() {
+		Level level = LevelBuilder.levelWithName("Profesional").withDescription("Nivel profesional").withImagePath("/images/image.png")
+    			.withNameNextLevel(null)
+    			.withNumberLevel(2)
+    			.withMinValue(0d)
+    			.withMaxValue(2000d)
+    			.build();
+		return createLevel(level);
+	}
 
     protected Account createOneTeacherAccount() {
         AccountType accountType = AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
@@ -235,4 +254,5 @@ public class VirtuaulaApplicationTests {
         account = createTeacherAccount(account);
         return account;
     }
+
 }
