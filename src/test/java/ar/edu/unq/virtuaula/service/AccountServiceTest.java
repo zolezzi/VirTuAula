@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
@@ -166,5 +167,14 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         ResponseMessage message = accountService.uploadFileStudents(account, file);
         assertNotNull(message);
         assertEquals(expected, message.getMessage());
+    }
+    
+    @Test
+    public void getLevelWithStudentAccountReturnLevel() throws StudentAccountNotFoundException {
+        String expected = "Principiante";
+    	StudentAccount account = (StudentAccount) createOneStudentAccount();
+        LevelDTO result = accountService.getLevel(account.getId());
+        assertNotNull(result);
+        assertEquals(expected, result.getName());
     }
 }

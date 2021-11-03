@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;
@@ -47,4 +48,11 @@ public class AccountController {
     public ResponseEntity<ResponseMessage> uploadFile(@PathVariable("accountId") Long accountId, @RequestParam("file") MultipartFile file) throws TeacherNotFoundException {
 		return ResponseEntity.ok().body(accountService.uploadFileStudents(accountService.findTeacherById(accountId), file));
 	}
+    
+    @GetMapping("/account/level/{accountId}")
+    @ApiResponse(code = 200, message = "Sucessfully get level", response = LevelDTO.class)
+    @ApiOperation(value = "Get level by account id", notes = "Get level by account id")
+    public LevelDTO getLevel(@PathVariable("accountId") Long accountId) throws Exception {
+        return accountService.getLevel(accountId);
+    }
 }

@@ -15,6 +15,7 @@ import com.google.common.hash.Hashing;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
+import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
@@ -107,6 +108,12 @@ public class AccountService {
         }
         return new ResponseMessage(message);
     }
+    
+
+	public LevelDTO getLevel(Long accountId) throws StudentAccountNotFoundException {
+		StudentAccount account = findStudentById(accountId);
+		return  mapperUtil.getMapper().map(account.getLevel(), LevelDTO.class);
+	}
 
     private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,
             AccountType accountType, TeacherAccount teacherAccount) {
