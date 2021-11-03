@@ -19,6 +19,7 @@ import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
+import ar.edu.unq.virtuaula.model.Level;
 import ar.edu.unq.virtuaula.model.Privilege;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
@@ -37,6 +38,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountTypeRepository accountTypeRepository;
+    private final LevelService levelService;
     private final JwtUserDetailsService userService;
     private final MapperUtil mapperUtil;
     private final CSVUtil csvUtil;
@@ -102,11 +104,13 @@ public class AccountService {
     
     private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,
 			AccountType accountType, TeacherAccount teacherAccount) {
+    	Level Level = levelService.getInitialLevel();
     	return students.stream()
     			.filter(student -> !existsAccount(student))
     			.map(student -> {
         			student.setAccountType(accountType);
         			student.addTeacher(teacherAccount);
+        			student.setLevel(Level);
         			return student;
         			})
     			.collect(Collectors.toList());

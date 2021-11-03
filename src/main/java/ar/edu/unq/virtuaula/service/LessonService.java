@@ -20,6 +20,7 @@ import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
+import ar.edu.unq.virtuaula.util.ExperienceUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
 import ar.edu.unq.virtuaula.vo.TaskVO;
@@ -33,6 +34,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final StudentTaskRepository studentTaskRepository;
     private final MapperUtil mapperUtil;
+    private final LevelService levelService;
     private final static int FULL_PROGRESS = 100;
     private final static int MULTIPLIER = 100;
 
@@ -60,6 +62,9 @@ public class LessonService {
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lesson, studentAccount.getId());
         studentAccount.setExperience(studentAccount.calculateExperience(lessonVO.getNote(), MULTIPLIER));
+        if(ExperienceUtil.isChangeLevel(studentAccount.getLevel().getMaxValue(), studentAccount.getExperience())) {
+        	studentAccount.setLevel(levelService.getNextLevel(studentAccount.getLevel()));
+        }
         return lessonVO;
     }
 

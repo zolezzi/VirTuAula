@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,6 +32,10 @@ public class StudentAccount extends Account {
     @JoinColumn(name = "student_task_id")
     @JsonIgnoreProperties("studentTask")
     private List<StudentTask> resultsTasks = new ArrayList<>();
+    
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "level_id", referencedColumnName = "id")
+    private Level level;
     
     private Double experience;
 
