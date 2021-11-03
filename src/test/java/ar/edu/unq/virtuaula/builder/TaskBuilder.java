@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.builder;
 
 import ar.edu.unq.virtuaula.model.OptionTask;
 import ar.edu.unq.virtuaula.model.Task;
+import ar.edu.unq.virtuaula.model.TaskType;
 
 public class TaskBuilder {
 
@@ -30,6 +31,11 @@ public class TaskBuilder {
     
     public TaskBuilder withScore(Double score) {
         this.instance.setScore(score);;
+        return this;
+    }
+    
+    public TaskBuilder withTaskType(TaskType taskType) {
+        this.instance.setTaskType(taskType);
         return this;
     }
 

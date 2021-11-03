@@ -5,21 +5,25 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.LessonDTO;
+import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
 import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.StudentTask;
+import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.LessonRepository;
 import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
+import ar.edu.unq.virtuaula.repository.TaskTypeRepository;
 import ar.edu.unq.virtuaula.util.ExperienceUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.LessonVO;
@@ -33,6 +37,7 @@ public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final StudentTaskRepository studentTaskRepository;
+    private final TaskTypeRepository taskTypeRepository;
     private final MapperUtil mapperUtil;
     private final LevelService levelService;
     private final static int FULL_PROGRESS = 100;
@@ -69,7 +74,7 @@ public class LessonService {
     }
 
     public LessonDTO create(Classroom classroom, TeacherAccount teacherUser, LessonDTO lesson) throws Exception {
-        Lesson newLesson = mapperUtil.getMapper().map(lesson, Lesson.class);
+        Lesson newLesson = mapperLesson(lesson);
         if (!teacherUser.containsClassroom(classroom)) {
             throw new ClassroomNotFoundException("Error not found classroom with id: " + classroom.getId());
         }
@@ -81,7 +86,24 @@ public class LessonService {
         return mapperUtil.getMapper().map(newLesson, LessonDTO.class);
     }
 
-    private void createStudentTaskForAllStudent(Lesson newLesson, TeacherAccount teacher) {
+    private Lesson mapperLesson(LessonDTO lessonDto) {
+    	List<Task> listTasks = convertTask(lessonDto.getTasks());
+    	Lesson lesson = mapperUtil.getMapper().map(lessonDto, Lesson.class);
+    	lesson.setTasks(listTasks);
+    	return lesson;
+	}
+
+
+	private List<Task> convertTask(List<TaskDTO> listTaskDTOs) {
+		return listTaskDTOs.stream().map(taskDTO -> {
+			 Task task = mapperUtil.getMapper().map(taskDTO, Task.class);
+			 task.setTaskType(taskTypeRepository.findById(taskDTO.getTaskTypeId()).get());
+			 return task;
+		}).collect(Collectors.toList());
+	}
+
+
+	private void createStudentTaskForAllStudent(Lesson newLesson, TeacherAccount teacher) {
 		teacher.getStudents().forEach(student -> createStudentTaskForAllByLesson(newLesson, student));
 		
 	}

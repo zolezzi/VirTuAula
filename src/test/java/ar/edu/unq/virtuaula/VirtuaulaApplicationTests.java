@@ -60,7 +60,10 @@ public class VirtuaulaApplicationTests {
     protected LevelRepository levelRepository;
 
     protected Classroom createOneClassroom() {
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d).build();
+    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
+        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withTaskType(taskType)
+        		.build();
         Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);

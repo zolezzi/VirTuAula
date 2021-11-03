@@ -138,6 +138,11 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         Classroom classroom = createOneClassroom();
         Classroom classroom2 = createOneClassroom();
         LessonDTO lesson = new LessonDTO();
+        TaskDTO taskDTO = new TaskDTO();
+        taskDTO.setId(1l);
+        taskDTO.setTaskTypeId(1l);
+        List<TaskDTO> tasks = Arrays.asList(taskDTO);
+        lesson.setTasks(tasks);
         TeacherAccount account = (TeacherAccount) createOneTeacherAccountWithClassroom(classroom);
 
         Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
@@ -155,7 +160,11 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         Classroom classroom = createOneClassroom();
         LessonDTO lesson = new LessonDTO();
         TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-
+        TaskDTO taskDTO = new TaskDTO();
+        taskDTO.setId(1l);
+        taskDTO.setTaskTypeId(1l);
+        List<TaskDTO> tasks = Arrays.asList(taskDTO);
+        lesson.setTasks(tasks);
         Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
             guestLessonService.create(classroom, account, lesson);
         });
@@ -232,12 +241,14 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void whenCreateNewLessonByTeacherThenReturnLessonDTOWithId() throws Exception {
     	Classroom classroom = createOneClassroom();
+    	createOneTaskType();
     	LessonDTO lesson = new LessonDTO();
     	TaskDTO task = new TaskDTO();
     	task.setCorrectAnswer(1l);
     	task.setScore(5d);
     	task.setStatement("test 1");
     	task.setOptions(createOptions());
+    	task.setTaskTypeId(1l);
     	lesson.setMaxNote(10);
     	lesson.setName("Test");
     	List<TaskDTO> tasks = Arrays.asList(task);
@@ -250,12 +261,14 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void whenCreateNewLessonByTeacherWithStudentThenReturnLessonDTOWithId() throws Exception {
     	Classroom classroom = createOneClassroom();
+    	createOneTaskType();
     	LessonDTO lesson = new LessonDTO();
     	TaskDTO task = new TaskDTO();
     	task.setCorrectAnswer(1l);
     	task.setScore(5d);
     	task.setStatement("test 1");
     	task.setOptions(createOptions());
+    	task.setTaskTypeId(1l);
     	lesson.setMaxNote(10);
     	lesson.setName("Test");
     	List<TaskDTO> tasks = Arrays.asList(task);
