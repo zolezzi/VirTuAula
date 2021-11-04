@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class TaskTypeController {
+public class TaskTypeRestController {
 	
 	private final TaskTypeService taskTypeService;
 

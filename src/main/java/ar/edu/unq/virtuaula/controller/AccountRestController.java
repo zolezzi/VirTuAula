@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class AccountController {
+public class AccountRestController {
 
     private final AccountService accountService;
     private final JwtUserDetailsService userService;
