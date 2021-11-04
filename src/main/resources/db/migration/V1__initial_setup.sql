@@ -1,7 +1,9 @@
+drop table if exists teams_students;
 drop table if exists accounts_classrooms;
 drop table if exists teachers_students;
 drop table if exists account_types_privileges;
 drop table if exists student_task;
+drop table if exists team;
 drop table if exists level;
 drop table if exists account;
 drop table if exists user;
@@ -26,3 +28,5 @@ create table account_types_privileges(id bigint primary key AUTO_INCREMENT, acco
 create table teachers_students(id bigint primary key AUTO_INCREMENT, teacher_id bigint, student_id bigint, constraint fk_teacher FOREIGN KEY (teacher_id) REFERENCES account(id), constraint fk_student FOREIGN KEY (student_id) REFERENCES account(id));
 create table accounts_classrooms(id bigint primary key AUTO_INCREMENT, account_id bigint, classroom_id bigint, constraint fk_account_classroom FOREIGN KEY (account_id) REFERENCES account(id), constraint fk_classroom_account FOREIGN KEY (classroom_id) REFERENCES classroom(id));
 create table student_task(id bigint primary key AUTO_INCREMENT, answer bigint, state varchar(15) default 'UNCOMPLETED', lesson_id bigint, account_id bigint, task_id bigint, constraint fk_student_task_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id), constraint fk_student_task_account FOREIGN KEY (account_id) REFERENCES account(id), constraint fk_student_task FOREIGN KEY (task_id) REFERENCES task(id));
+create table team(id bigint primary key AUTO_INCREMENT, name varchar(255), classroom_id bigint, teacher_id bigint, constraint fk_classroom_team FOREIGN KEY (classroom_id) REFERENCES classroom(id), constraint fk_teacher_team FOREIGN KEY (teacher_id) REFERENCES account(id));
+create table teams_students(id bigint primary key AUTO_INCREMENT, team_id bigint, student_id bigint, constraint fk_team FOREIGN KEY (team_id) REFERENCES team(id), constraint fk_student_team FOREIGN KEY (student_id) REFERENCES account(id));
