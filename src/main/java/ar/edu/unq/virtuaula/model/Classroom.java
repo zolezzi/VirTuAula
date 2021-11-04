@@ -38,7 +38,7 @@ public class Classroom implements Serializable {
     private List<Lesson> lessons = new ArrayList<>();
 
     @ManyToMany(mappedBy = "classrooms")
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
     public void addLesson(Lesson lesson) {
         this.lessons.add(lesson);

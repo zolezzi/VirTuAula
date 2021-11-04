@@ -108,7 +108,10 @@ public class AccountService {
         }
         return new ResponseMessage(message);
     }
-    
+
+	public List<StudentAccount> findAllStudentByIds(List<Long> studentIds) {
+		return accountRepository.findAllStudentByIds(studentIds);
+	}
 
 	public LevelDTO getLevel(Long accountId) throws StudentAccountNotFoundException {
 		StudentAccount account = findStudentById(accountId);
