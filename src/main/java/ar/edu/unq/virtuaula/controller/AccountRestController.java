@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
-import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
-import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;

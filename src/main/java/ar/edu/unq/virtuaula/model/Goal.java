@@ -2,10 +2,12 @@ package ar.edu.unq.virtuaula.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
@@ -21,5 +23,8 @@ public class Goal implements Serializable {
     
 	private String name;
 	private String description;
+	
+    @ManyToOne
+    private Level level;
 
 }
