@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
-import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
@@ -122,10 +121,8 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
     @Test
     public void whenCreateNewClassroomWithTeacherAccountThenClassroomWithId() {
     	int expected = 2;
-    	List<AccountDTO> accounts = new ArrayList<>();
-    	AccountDTO account = new AccountDTO();
-    	account.setAccountId(1l);
-    	accounts.add(account);
+    	List<Long> accounts = new ArrayList<>();
+    	accounts.add(1l);
     	Classroom classroom = createOneClassroom();
     	StudentAccount student = (StudentAccount) createOneStudentAccount();
     	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);

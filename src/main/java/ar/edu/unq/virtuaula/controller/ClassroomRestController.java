@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
@@ -37,7 +36,7 @@ public class ClassroomRestController {
     @PostMapping("/classrooms/create/{accountId}")
     @ApiResponse(code = 200, message = "Successfully create classroom", response = LessonDTO.class)
     @ApiOperation(value = "Post create classroom for teacher by account id", notes = "Post create classroom for a teacher")
-    public ClassroomDTO create(@PathVariable("accountId") Long accountId, @RequestBody ClassroomDTO classroom, @RequestBody List<AccountDTO> accounts) throws Exception {
-        return classromService.create(accountService.findTeacherById(accountId), classroom, accounts);
+    public ClassroomDTO create(@PathVariable("accountId") Long accountId, @RequestBody ClassroomDTO classroom, @RequestBody List<Long> ids) throws Exception {
+        return classromService.create(accountService.findTeacherById(accountId), classroom, ids);
     }
 }

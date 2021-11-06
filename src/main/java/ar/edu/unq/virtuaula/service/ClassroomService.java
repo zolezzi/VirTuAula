@@ -3,13 +3,11 @@ package ar.edu.unq.virtuaula.service;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
@@ -45,9 +43,10 @@ public class ClassroomService {
         return classromRepository.findById(id).get();
     }
 
-	public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO, List<AccountDTO> studentsDtos) {
+	public ClassroomDTO create(TeacherAccount teacherAccount, ClassroomDTO classroomDTO, List<Long> ids) {
 		final Classroom newClassroom = mapperUtil.getMapper().map(classroomDTO, Classroom.class);
-		List<StudentAccount> students = accountService.findAllStudentByIds(studentsDtos.stream().map(student -> student.getAccountId()).collect(Collectors.toList()));
+		List<StudentAccount> students = accountService.findAllStudentByIds(ids);
+		//Agregar validacion de student valido para un teacher
 		Classroom classroomBD = classromRepository.save(newClassroom);
 		teacherAccount.getClassrooms().add(classroomBD);
 		students.stream().forEach(student -> student.getClassrooms().add(classroomBD));
