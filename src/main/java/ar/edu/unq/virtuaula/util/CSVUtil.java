@@ -44,6 +44,7 @@ public class CSVUtil {
 				  student.setDni(Integer.parseInt(csvRecord.get(CSVFormatConstants.COLUMN_DNI)));
 				  student.setEmail(csvRecord.get(CSVFormatConstants.COLUMN_EMAIL));
 				  student.setExperience(Double.valueOf(0.0d));
+				  student.setLife(3);
 				  students.add(student);
 			  }
 			  

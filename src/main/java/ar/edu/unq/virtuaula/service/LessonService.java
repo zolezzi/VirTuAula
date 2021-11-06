@@ -40,8 +40,8 @@ public class LessonService {
     private final TaskTypeRepository taskTypeRepository;
     private final MapperUtil mapperUtil;
     private final LevelService levelService;
+    private final ManagementBufferService bufferService; 
     private final static int FULL_PROGRESS = 100;
-    private final static int MULTIPLIER = 100;
 
     public List<LessonVO> getAllByClassroom(Classroom classroom) {
         List<Lesson> lessons = classroom.getLessons();
@@ -66,7 +66,7 @@ public class LessonService {
         Lesson lesson = lessonBD.get();
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lesson, studentAccount.getId());
-        studentAccount.setExperience(studentAccount.calculateExperience(lessonVO.getNote(), MULTIPLIER));
+        bufferService.ApplyBufferInStudentAccount(studentAccount.getLevel(), studentAccount, lessonVO.getNote());
         if(ExperienceUtil.isChangeLevel(studentAccount.getLevel().getMaxValue(), studentAccount.getExperience())) {
         	studentAccount.setLevel(levelService.getNextLevel(studentAccount.getLevel()));
         }

@@ -16,7 +16,6 @@ import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
-import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.util.CalculatedProgressUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class ClassroomService {
 
     private final ClassroomRepository classromRepository;
-    private final StudentTaskRepository studentTaskRepository;
     private final AccountService accountService;
     private final TeamService teamService;
     private final MapperUtil mapperUtil;
@@ -57,20 +55,12 @@ public class ClassroomService {
         return mapperUtil.getMapper().map(classroomBD, ClassroomDTO.class);
 	}
 	
-	private int calculateProgress(Classroom classroom, Long accountId) {
-        int completed = classroom.getLessons().stream()
-        		.mapToInt(lesson -> lesson.progress(studentTaskRepository.findByLessonAndStudent(lesson.getId(), accountId)))
-        		.sum();
-        return classroom.getLessons().isEmpty() ? 0 : completed / classroom.getLessons().size();
-	}
-	
     private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {
         return classrooms.stream().map(classroom -> {
             ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
             return classroomDTO;
         }).collect(toList());
 	}
-
 
     private List<ClassroomDTO> transformToDTO(List<Classroom> classrooms, Long accountId) {
         return classrooms.stream().map(classroom -> {

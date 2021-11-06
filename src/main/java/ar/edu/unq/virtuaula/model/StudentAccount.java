@@ -38,14 +38,21 @@ public class StudentAccount extends Account {
     private Level level;
     
     private Double experience;
+    
+    private Integer life;
 
-	public Double calculateExperience(Double note, int multiplier) {
-		return note == null ? this.experience : this.experience + (note * multiplier);
+	public Double calculateExperience(Double experienceActual, Double experienceCalculated) {
+		return experienceActual == null || experienceCalculated == null 
+				? this.experience : experienceActual + experienceCalculated;
 	}
 
 	public void addTeacher(TeacherAccount teacherAccount) {
 		if(!this.getTeachers().contains(teacherAccount)) {
 			this.getTeachers().add(teacherAccount);
 		}
+	}
+
+	public Integer lifeSum(Integer life, Integer calculatedValue) {
+		return life + calculatedValue;
 	}
 }
