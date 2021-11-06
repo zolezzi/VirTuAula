@@ -35,6 +35,7 @@ import ar.edu.unq.virtuaula.repository.UserRepository;
 import ar.edu.unq.virtuaula.util.CSVUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.AccountVO;
+import ar.edu.unq.virtuaula.vo.StudentAccountVO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -116,6 +117,21 @@ public class AccountService {
 	public LevelDTO getLevel(Long accountId) throws StudentAccountNotFoundException {
 		StudentAccount account = findStudentById(accountId);
 		return  mapperUtil.getMapper().map(account.getLevel(), LevelDTO.class);
+	}
+
+	public List<StudentAccountVO> findAllStudentsByTeacher(TeacherAccount teacher) {
+		return transformToStudentVO(teacher.getStudents());
+	}
+	
+	private List<StudentAccountVO> transformToStudentVO(List<StudentAccount> students) {
+		return students.stream().map(student -> {
+			StudentAccountVO studentVO = new StudentAccountVO();
+			studentVO.setFirstName(student.getFirstName());
+			studentVO.setUsername(student.getUsername());
+			studentVO.setExperience(student.getExperience());
+			studentVO.setLevel(mapperUtil.getMapper().map(student.getLevel(), LevelDTO.class));
+            return studentVO;
+        }).collect(toList());
 	}
 
     private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,

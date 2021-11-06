@@ -41,14 +41,10 @@ public class Level implements Serializable {
     
     private String imagePath;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "level_id")
-    @JsonIgnoreProperties("level")
+    @OneToMany
     private List<Buffer> buffers = new ArrayList<>();
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "level_id")
-    @JsonIgnoreProperties("level")
+    @OneToMany
     private List<Goal> goals = new ArrayList<>();
 
 }

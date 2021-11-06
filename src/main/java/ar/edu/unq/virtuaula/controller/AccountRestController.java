@@ -1,5 +1,7 @@
 package ar.edu.unq.virtuaula.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,12 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.ClassroomDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
+import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.JwtUserDetailsService;
 import ar.edu.unq.virtuaula.vo.AccountVO;
+import ar.edu.unq.virtuaula.vo.StudentAccountVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,5 +59,12 @@ public class AccountRestController {
     @ApiOperation(value = "Get level by account id", notes = "Get level by account id")
     public LevelDTO getLevel(@PathVariable("accountId") Long accountId) throws Exception {
         return accountService.getLevel(accountId);
+    }
+    
+    @GetMapping("/account/students/{accountId}")
+    @ApiResponse(code = 200, message = "Success", response = StudentAccountVO.class, responseContainer = "List")
+    @ApiOperation(value = "Get all students by teacher", notes = "Get all students of a teacher account")
+    public List<StudentAccountVO> findAllStudentsByAccountId(@PathVariable("accountId") Long accountId) throws TeacherNotFoundException {
+        return accountService.findAllStudentsByTeacher(accountService.findTeacherById(accountId));
     }
 }
