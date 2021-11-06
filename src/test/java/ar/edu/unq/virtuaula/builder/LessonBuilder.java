@@ -1,5 +1,7 @@
 package ar.edu.unq.virtuaula.builder;
 
+import java.util.Date;
+
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Task;
 
@@ -27,6 +29,11 @@ public class LessonBuilder {
     
     public LessonBuilder withMaxNote(int note) {
         this.instance.setMaxNote(note);
+        return this;
+    }
+    
+    public LessonBuilder withDeliveryDate(Date date) {
+        this.instance.setDeliveryDate(date);
         return this;
     }
 

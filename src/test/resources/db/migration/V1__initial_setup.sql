@@ -17,7 +17,7 @@ drop table if exists task;
 drop table if exists lesson;
 drop table if exists classroom;
 create table classroom(id bigint primary key AUTO_INCREMENT, name varchar(255) not null, description varchar(255));
-create table lesson(id bigint primary key AUTO_INCREMENT, name varchar(255) not null, max_note int(10), classroom_id bigint, constraint fk_lesson_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id));
+create table lesson(id bigint primary key AUTO_INCREMENT, name varchar(255) not null, max_note int(10), classroom_id bigint, delivery_date DATETIME, constraint fk_lesson_classroom FOREIGN KEY (classroom_id) REFERENCES classroom(id));
 create table task_type(id bigint primary key AUTO_INCREMENT, name varchar(255) not null);
 create table task(id bigint primary key AUTO_INCREMENT, statement varchar(255) not null, answer bigint, correct_answer bigint, score int(10), lesson_id bigint, task_type_id bigint, constraint fk_task_lesson FOREIGN KEY (lesson_id) REFERENCES lesson(id), constraint fk_task_type FOREIGN KEY (task_type_id) REFERENCES task_type(id));
 create table option_task(id bigint primary key AUTO_INCREMENT, response_value varchar(255) not null, task_id bigint, is_correct boolean not null default 0, constraint fk_option_task FOREIGN KEY (task_id) REFERENCES task(id));
