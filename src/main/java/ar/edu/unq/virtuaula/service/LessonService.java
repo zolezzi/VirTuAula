@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -58,11 +59,16 @@ public class LessonService {
     }
 
     public LessonVO completeTasks(Classroom classroom, Long lessonId, StudentAccount studentAccount, List<TaskVO> tasks) throws LessonNotFoundException {
+       	Date date = new Date();
     	Optional<Lesson> lessonBD = lessonRepository.findById(lessonId);
     	if(!lessonBD.isPresent() || !classroom.containsLesson(lessonBD.get().getId())) {
     		throw new LessonNotFoundException("Error not found lesson id: " + lessonId + " for classroom id: " + classroom.getId());
     	}
-        Lesson lesson = lessonBD.get();
+    	Lesson lesson = lessonBD.get();
+    	
+    	if(!date.after(lesson.getDeliveryDate())){
+    		throw new LessonNotFoundException("Expired that lesson id: " + lessonId + " for classroom id: " + classroom.getId());
+    	}   
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lesson, studentAccount.getId());
         bufferService.ApplyBufferInStudentAccount(studentAccount.getLevel(), studentAccount, lessonVO.getNote());

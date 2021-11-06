@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,6 +33,8 @@ public class Lesson implements Serializable {
     private String name;
 
     private int maxNote;
+    
+    private Date deliveryDate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id")

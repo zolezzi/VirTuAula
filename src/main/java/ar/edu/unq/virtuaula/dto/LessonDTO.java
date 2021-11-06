@@ -1,7 +1,10 @@
 package ar.edu.unq.virtuaula.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -14,5 +17,8 @@ public class LessonDTO implements Serializable {
     private Long classroomId;
     private int maxNote;
     private List<TaskDTO> tasks;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="America/Argentina/Buenos_Aires")
+    private Date deliveryDate;
 
 }
