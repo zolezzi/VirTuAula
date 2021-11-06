@@ -1,6 +1,9 @@
 package ar.edu.unq.virtuaula;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +67,10 @@ public class VirtuaulaApplicationTests {
         Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
         		.withTaskType(taskType)
         		.build();
-        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).build();
-        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-        return createClassroom(classroom);
+		Date date = getDate();
+		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).withDeliveryDate(date).build();
+		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
+		return createClassroom(classroom);
     }
     
     protected TaskType  createOneTaskType() {
@@ -82,7 +86,8 @@ public class VirtuaulaApplicationTests {
     protected Classroom createOneClassroomWithTwoTasks() {
         Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
         Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
-        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
+        Date date = getDate();
+        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).withDeliveryDate(date).build();
         Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
         return createClassroom(classroom);
     }
@@ -257,5 +262,18 @@ public class VirtuaulaApplicationTests {
         account = createTeacherAccount(account);
         return account;
     }
+	
+	private Date getDate() {
+		Date date = null;
+		try {
+			String dateString = "2021-11-13 23:59:59";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date = sdf.parse(dateString + " UTC");
+			return date;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
 
 }

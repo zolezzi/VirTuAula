@@ -187,10 +187,10 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     		guestLessonService.completeTasks(classroom, 10L, studentAccount, tasks);
         });
 
-        String expectedMessage = "Error not found lesson id: 10 for classroom id: 1";
+        String expectedMessage = "Error not found lesson with id: 10";
         String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+       
+        assertEquals(expectedMessage, actualMessage);
     }
     
     @Test
