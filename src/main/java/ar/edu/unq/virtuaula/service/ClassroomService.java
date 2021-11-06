@@ -3,15 +3,20 @@ package ar.edu.unq.virtuaula.service;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
+import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
 import ar.edu.unq.virtuaula.util.CalculatedProgressUtil;
@@ -54,7 +59,40 @@ public class ClassroomService {
         return mapperUtil.getMapper().map(classroomBD, ClassroomDTO.class);
 	}
 	
-    private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {
+
+	public ResponseMessage assign(TeacherAccount findTeacherById, Long classroomId, List<Long> ids) throws ClassroomNotFoundException {
+		Classroom classroomBD = classromRepository.findById(classroomId)
+				.orElseThrow(() -> new ClassroomNotFoundException("Error not found classroom id: " + classroomId));
+		List<StudentAccount> students = accountService.findAllStudentByIds(ids);
+		return createAllStudentTask(classroomBD, students);
+	}
+	
+    private ResponseMessage createAllStudentTask(Classroom classroomBD, List<StudentAccount> students) {
+    	classroomBD.getLessons().stream()
+		.forEach(lesson -> createStudentTaskAllByStudent(lesson, students));
+		return new ResponseMessage("the assignment to the classroom was successful");
+	}
+
+	private List<StudentTask> createStudentTaskAllByStudent(Lesson lesson, List<StudentAccount> students) {
+		return students.stream()
+		.map(student -> createStudentTaskByLessonAndStudent(lesson, student))
+		.flatMap(studentTasks -> studentTasks.stream()).collect(Collectors.toList());
+	}
+	
+	private List<StudentTask> createStudentTaskByLessonAndStudent(Lesson newLesson, StudentAccount student) {
+		List<StudentTask> listStudentTasks = newLesson.getTasks().stream().map(task -> {
+			StudentTask studentTask = new StudentTask();
+			studentTask.uncomplete();
+			studentTask.setTask(task);
+			studentTask.setLesson(newLesson);
+			studentTask.setStudentAccount(student);
+			return studentTask;
+		}).collect(toList());
+		student.getResultsTasks().addAll(listStudentTasks);
+		return listStudentTasks;
+	}
+
+	private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {
         return classrooms.stream().map(classroom -> {
             ClassroomDTO classroomDTO = mapperUtil.getMapper().map(classroom, ClassroomDTO.class);
             return classroomDTO;
@@ -68,4 +106,5 @@ public class ClassroomService {
             return classroomDTO;
         }).collect(toList());
     }
+
 }

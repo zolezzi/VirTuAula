@@ -48,7 +48,6 @@ public class LessonService {
         return transformToLessonVO(lessons, classroom.getId());
     }
     
-
 	public List<LessonVO> getAllByClassroomAndStudent(Classroom classroom, StudentAccount studentAccount) {
 		List<Lesson> lessons = classroom.getLessons();
 		return transformToVO(lessons, classroom.getId(), studentAccount);
@@ -93,7 +92,6 @@ public class LessonService {
     	return lesson;
 	}
 
-
 	private List<Task> convertTask(List<TaskDTO> listTaskDTOs) {
 		return listTaskDTOs.stream().map(taskDTO -> {
 			 Task task = mapperUtil.getMapper().map(taskDTO, Task.class);
@@ -102,10 +100,8 @@ public class LessonService {
 		}).collect(Collectors.toList());
 	}
 
-
 	private void createStudentTaskForAllStudent(Lesson newLesson, TeacherAccount teacher) {
 		teacher.getStudents().forEach(student -> createStudentTaskForAllByLesson(newLesson, student));
-		
 	}
 
 	private void createStudentTaskForAllByLesson(Lesson newLesson, StudentAccount student) {
