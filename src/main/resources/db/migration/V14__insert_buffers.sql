@@ -1,0 +1,2 @@
+INSERT INTO buffer ( name, description, operator, buffer_type, experience_value, life_value, level_id) VALUES ('multiplier', 'Multiply the experience player when completing a campaign', '*', 'BufferExperience', 10.00, null, 1);
+INSERT INTO buffer ( name, description, operator, buffer_type, experience_value, life_value, level_id) VALUES ('sum', 'Add experience a player when completing a campaign', '+', 'BufferExperience', 100, null, 1);
