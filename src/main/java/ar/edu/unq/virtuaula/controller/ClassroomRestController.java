@@ -15,6 +15,7 @@ import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.ClassroomService;
+import ar.edu.unq.virtuaula.vo.ClassroomVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,8 @@ public class ClassroomRestController {
     @PostMapping("/classrooms/create/{accountId}")
     @ApiResponse(code = 200, message = "Successfully create classroom", response = LessonDTO.class)
     @ApiOperation(value = "Post create classroom for teacher by account id", notes = "Post create classroom for a teacher")
-    public ClassroomDTO create(@PathVariable("accountId") Long accountId, @RequestBody ClassroomDTO classroom, @RequestBody List<Long> ids) throws Exception {
-        return classromService.create(accountService.findTeacherById(accountId), classroom, ids);
+    public ClassroomDTO create(@PathVariable("accountId") Long accountId, @RequestBody ClassroomVO classroomVO) throws Exception {
+        return classromService.create(accountService.findTeacherById(accountId), classroomVO.getClassroom(), classroomVO.getStudents());
     }
     
     @PostMapping("/classrooms/assign/{classroomId}/{accountId}")

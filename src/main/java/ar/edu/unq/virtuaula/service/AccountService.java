@@ -126,6 +126,7 @@ public class AccountService {
 	private List<StudentAccountVO> transformToStudentVO(List<StudentAccount> students) {
 		return students.stream().map(student -> {
 			StudentAccountVO studentVO = new StudentAccountVO();
+                        studentVO.setId(student.getId());
 			studentVO.setFirstName(student.getFirstName());
 			studentVO.setUsername(student.getUsername());
 			studentVO.setExperience(student.getExperience());
