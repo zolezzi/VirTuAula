@@ -317,6 +317,18 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         assertEquals(expectedMessage, assertThrows.getMessage());
     }
     
+	@Test
+    public void completeAllTaskThenReturnLessonVOWithLevelUp() throws Exception {
+        Classroom classroom = createOneClassroomWithLessonScore(3000d);
+        Lesson lesson = getFirstLesson(classroom);
+        Task task = getFirstTask(lesson);
+        StudentAccount studentAccount = (StudentAccount) createOneStudentAccount();
+        studentAccount = (StudentAccount) createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, studentAccount);
+        List<TaskVO> tasks = createTaskVO(lesson.getTasks());
+        LessonVO lessonVo = guestLessonService.completeTasks(classroom, lesson.getId(), studentAccount, tasks);
+        assertNotNull(lessonVo.getNote());
+    }
+    
     private List<OptionTaskDTO> createOptions(){
     	OptionTaskDTO taskOption1 = new OptionTaskDTO();
     	OptionTaskDTO taskOption2 = new OptionTaskDTO();

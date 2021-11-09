@@ -84,6 +84,17 @@ public class VirtuaulaApplicationTests {
 		return createClassroom(classroom);
     }
     
+    protected Classroom createOneClassroomWithLessonScore(Double score) {
+    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
+        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(score)
+        		.withTaskType(taskType)
+        		.build();
+		Date date = getDate();
+		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(3000).withDeliveryDate(date).build();
+		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
+		return createClassroom(classroom);
+    }
+    
     protected Classroom createOneClassroomWithoutDateExpired(Date date){
     	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
         Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
@@ -241,11 +252,26 @@ public class VirtuaulaApplicationTests {
     
     protected Account createOneStudentAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("STUDENT").build();
+		BufferExperience bufferExprience = BufferExperienceBuilder.bufferExperienceWithName("Buffer experience")
+				.withDescription("Buffer suma experiencia")
+				.withExperienceValue(10d)
+				.withOperator("+")
+				.build();
+		
+		BufferLife bufferlife = BufferLifeBuilder.bufferLifeWithName("Buffer life")
+				.withDescription("Buffer suma life")
+				.withLifeValue(1)
+				.withOperator("+")
+				.build();
+		List<Buffer> buffers = new ArrayList<>();
+		buffers.add(bufferExprience);
+		buffers.add(bufferlife);
     	Level level = LevelBuilder.levelWithName("Principiante").withDescription("Nivel inicial").withImagePath("/images/image.png")
     			.withNameNextLevel("Aficionado")
     			.withNumberLevel(1)
     			.withMinValue(0d)
     			.withMaxValue(1000d)
+    			.withBuffers(buffers)
     			.build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie2", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
     	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie2")
