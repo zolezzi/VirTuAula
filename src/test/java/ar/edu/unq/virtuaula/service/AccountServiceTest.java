@@ -49,7 +49,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         String expectedMessage = "Error not found teacher account with id: 10";
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         String expectedMessage = "Error not found account with id: 10";
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         String expectedMessage = "Error not found student account with id: 10";
         String actualMessage = exception.getMessage();
 
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
