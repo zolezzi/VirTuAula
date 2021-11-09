@@ -298,7 +298,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
     
     @Test
-    public void dssadsafds() throws ParseException {
+    public void completeTaskWithLessonWithDateExpiredThenReturnExceptionDateExpired() throws ParseException {
     	String dateString = "2021-11-08 23:59:59";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = sdf.parse(dateString + " UTC");
