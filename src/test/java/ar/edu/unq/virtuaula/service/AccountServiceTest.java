@@ -3,11 +3,11 @@ package ar.edu.unq.virtuaula.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,10 +22,12 @@ import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
+import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.vo.AccountVO;
+import ar.edu.unq.virtuaula.vo.StudentAccountVO;
 
 public class AccountServiceTest extends VirtuaulaApplicationTests {
 
@@ -177,4 +179,17 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result);
         assertEquals(expected, result.getName());
     }
+    
+    @Test
+    public void dasdasda() throws StudentAccountNotFoundException {
+    	Integer expected = 1;
+    	Classroom classroom = createOneClassroom();
+    	StudentAccount account = (StudentAccount) createOneStudentAccount();
+    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, account);
+        List<StudentAccountVO> result = accountService.findAllStudentsByTeacher(teacher);
+        assertNotNull(result);
+        assertEquals(expected, result.size());
+    }
+    
+    
 }
