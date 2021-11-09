@@ -3,6 +3,7 @@ package ar.edu.unq.virtuaula.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -135,8 +136,9 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result);
         assertEquals(expected, teacher.getClassrooms().size());
     }
+   
     @Test
-    public void whenAssignClassroomWithTeacherAccountThenClassroomWithId() throws ClassroomNotFoundException {
+    public void whenAssignClassroomWithTeacherAccountThenReturnClassroomWithId() throws ClassroomNotFoundException {
     	List<Long> accounts = new ArrayList<>();
     	accounts.add(1l);
     	accounts.add(2l);
@@ -147,7 +149,29 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
     	student = (StudentAccount) createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, student);
     	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);
 	    ResponseMessage result = guestClassroomService.assign(teacher, 1l, accounts);
-        assertNotNull(result);
+	    String expectedMessage = "the assignment to the classroom was successful";
+	    assertNotNull(result);
+        assertEquals(expectedMessage, result.getMessage());
     }
 
+    @Test
+    public void whenAssignClassroomWithTeacherAccountThenReturnThrowsExceptionClassroomNotFound() throws ClassroomNotFoundException {
+    	List<Long> accounts = new ArrayList<>();
+    	accounts.add(1l);
+    	accounts.add(2l);
+    	Classroom classroom = createOneClassroom();
+        Lesson lesson = classroom.getLessons().get(0);
+        Task task = lesson.getTasks().get(0);
+        StudentAccount student = (StudentAccount) createOneStudentAccount();
+    	student = (StudentAccount) createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, student);
+    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);
+    	Exception exception = assertThrows(ClassroomNotFoundException.class, () -> {
+    		guestClassroomService.assign(teacher, 2l, accounts);
+        });
+
+        String expectedMessage = "Error not found classroom id: 2";
+        String actualMessage = exception.getMessage();
+       
+        assertEquals(expectedMessage, actualMessage);
+    }
 }
