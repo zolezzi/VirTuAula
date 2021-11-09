@@ -84,6 +84,16 @@ public class VirtuaulaApplicationTests {
 		return createClassroom(classroom);
     }
     
+    protected Classroom createOneClassroomWithoutDateExpired(Date date){
+    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
+        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withTaskType(taskType)
+        		.build();
+		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).withDeliveryDate(date).build();
+		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
+		return createClassroom(classroom);
+    }
+    
     protected TaskType  createOneTaskType() {
     	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
         return createTaskType(taskType);
@@ -332,7 +342,7 @@ public class VirtuaulaApplicationTests {
 	private Date getDate() {
 		Date date = null;
 		try {
-			String dateString = "2021-11-13 23:59:59";
+			String dateString = "2021-12-31 23:59:59";
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			date = sdf.parse(dateString + " UTC");
 			return date;

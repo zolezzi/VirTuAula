@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,6 +22,7 @@ import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.dto.OptionTaskDTO;
 import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
+import ar.edu.unq.virtuaula.exception.LessonDateExpiredException;
 import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
@@ -76,7 +80,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
-    public void completeTaskWithTaskProgressComplete() throws LessonNotFoundException {
+    public void completeTaskWithTaskProgressComplete() throws Exception {
         int expected = 100;
         Classroom classroom = createOneClassroom();
         Lesson lesson = getFirstLesson(classroom);
@@ -89,7 +93,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
 
 	@Test
-    public void completeTaskWithTaskProgressCompleteSetNote() throws LessonNotFoundException {
+    public void completeTaskWithTaskProgressCompleteSetNote() throws Exception {
         Classroom classroom = createOneClassroom();
         Lesson lesson = getFirstLesson(classroom);
         Task task = getFirstTask(lesson);
@@ -101,7 +105,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
-    public void completeTaskWithTaskProgressUncompleteDontAddNote() throws LessonNotFoundException {
+    public void completeTaskWithTaskProgressUncompleteDontAddNote() throws Exception {
         Classroom classroom = createOneClassroomWithTwoTasks();
         TaskVO taskVO = new TaskVO();
         Lesson lesson = getFirstLesson(classroom);
@@ -280,7 +284,7 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
     }
     
     @Test
-    public void completeTaskWithTaskProgressCompleteAndIncrementLevel() throws LessonNotFoundException {
+    public void completeTaskWithTaskProgressCompleteAndIncrementLevel() throws Exception {
         int expected = 100;
         Classroom classroom = createOneClassroom();
         createLevelProfesional();
@@ -291,6 +295,26 @@ public class LessonServiceTest extends VirtuaulaApplicationTests {
         List<TaskVO> tasks = createTaskVO(lesson.getTasks());
         LessonVO lessonVo = guestLessonService.completeTasks(classroom, lesson.getId(), account, tasks);
         assertEquals(expected, lessonVo.getProgress());
+    }
+    
+    @Test
+    public void dssadsafds() throws ParseException {
+    	String dateString = "2021-11-08 23:59:59";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = sdf.parse(dateString + " UTC");
+        Classroom classroom = createOneClassroomWithoutDateExpired(date);
+        Lesson lesson = getFirstLesson(classroom);
+        StudentAccount studentAccount = (StudentAccount) createOneStudentAccount();
+        TaskVO taskVO = new TaskVO();
+        taskVO.setId(1l);
+        taskVO.setAnswerId(1l);
+        List<TaskVO> tasks = Arrays.asList(taskVO);
+        LessonDateExpiredException assertThrows = assertThrows(LessonDateExpiredException.class, () -> {
+        	guestLessonService.completeTasks(classroom, lesson.getId(), studentAccount, tasks);
+        });
+        String expectedMessage = "Expired that lesson id: 1 for classroom id: 1";
+        
+        assertEquals(expectedMessage, assertThrows.getMessage());
     }
     
     private List<OptionTaskDTO> createOptions(){

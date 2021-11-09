@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ar.edu.unq.virtuaula.dto.LessonDTO;
 import ar.edu.unq.virtuaula.dto.TaskDTO;
 import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
+import ar.edu.unq.virtuaula.exception.LessonDateExpiredException;
 import ar.edu.unq.virtuaula.exception.LessonNotFoundException;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
@@ -57,17 +58,15 @@ public class LessonService {
         return lessonRepository.findById(lessonId).get();
     }
 
-    public LessonVO completeTasks(Classroom classroom, Long lessonId, StudentAccount studentAccount, List<TaskVO> tasks) throws LessonNotFoundException {
+    public LessonVO completeTasks(Classroom classroom, Long lessonId, StudentAccount studentAccount, List<TaskVO> tasks) throws Exception {
        	Date date = new Date();
     	Lesson lessonBD = lessonRepository.findById(lessonId)
     			.orElseThrow(() -> new LessonNotFoundException("Error not found lesson with id: " + lessonId));
-    	
     	if(!classroom.containsLesson(lessonBD.getId())) {
     		throw new LessonNotFoundException("Error not found lesson id: " + lessonId + " for classroom id: " + classroom.getId());
     	}
-    	System.out.print("date: " + lessonBD.getDeliveryDate());
     	if(!date.before(lessonBD.getDeliveryDate())){
-    		throw new LessonNotFoundException("Expired that lesson id: " + lessonId + " for classroom id: " + classroom.getId());
+    		throw new LessonDateExpiredException("Expired that lesson id: " + lessonId + " for classroom id: " + classroom.getId());
     	}
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lessonBD, studentAccount.getId());
