@@ -42,6 +42,8 @@ public class StudentTask implements Serializable{
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @JsonIgnoreProperties("resultsTasks")
     private StudentAccount studentAccount;
+    
+    private String story;
 
 
     public void complete() {

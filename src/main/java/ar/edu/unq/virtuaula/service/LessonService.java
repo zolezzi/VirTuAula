@@ -164,6 +164,7 @@ public class LessonService {
             		.orElseThrow(() -> new NoSuchElementException("Error not found Tasks with id: " + task.getId()));
             studentTaskSolvedBD.setAnswer(task.getAnswerId());
             studentTaskSolvedBD.complete();
+            studentTaskSolvedBD.setStory(task.getStory());
             studentTaskRepository.save(studentTaskSolvedBD);
         });
     }
