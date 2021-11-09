@@ -12,8 +12,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -30,7 +28,6 @@ public class StudentAccount extends Account {
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "student_task_id")
-    @JsonIgnoreProperties("studentTask")
     private List<StudentTask> resultsTasks = new ArrayList<>();
     
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

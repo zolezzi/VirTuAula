@@ -54,6 +54,10 @@ public class StudentAccountBuilder {
         this.instance.setLevel(level);
         return this;
     }
+    public StudentAccountBuilder withLife(Integer life) {
+        this.instance.setLife(life);
+        return this;
+    }
     
     public StudentAccountBuilder withClassroom(List<Classroom> classrooms) {
         this.instance.setClassrooms(classrooms);

@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Data;
 
 @Data
@@ -40,7 +38,6 @@ public class StudentTask implements Serializable{
     
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("resultsTasks")
     private StudentAccount studentAccount;
 
 

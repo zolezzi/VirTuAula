@@ -1,5 +1,8 @@
 package ar.edu.unq.virtuaula.builder;
 
+import java.util.List;
+
+import ar.edu.unq.virtuaula.model.Buffer;
 import ar.edu.unq.virtuaula.model.Level;
 
 public class LevelBuilder {
@@ -40,6 +43,11 @@ public class LevelBuilder {
     public LevelBuilder withMaxValue(Double maxValue) {
         this.instance.setMaxValue(maxValue);
         return this;
+    }
+    
+    public LevelBuilder withBuffers(List<Buffer> buffers) {
+    	 this.instance.setBuffers(buffers);
+    	 return this;
     }
     
     public Level build() {

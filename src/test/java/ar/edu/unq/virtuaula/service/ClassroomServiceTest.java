@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.ClassroomDTO;
+import ar.edu.unq.virtuaula.exception.ClassroomNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
@@ -132,6 +134,20 @@ public class ClassroomServiceTest extends VirtuaulaApplicationTests {
 	    ClassroomDTO result = guestClassroomService.create(teacher, classroomDTO, accounts);
         assertNotNull(result);
         assertEquals(expected, teacher.getClassrooms().size());
+    }
+    @Test
+    public void whenAssignClassroomWithTeacherAccountThenClassroomWithId() throws ClassroomNotFoundException {
+    	List<Long> accounts = new ArrayList<>();
+    	accounts.add(1l);
+    	accounts.add(2l);
+    	Classroom classroom = createOneClassroom();
+        Lesson lesson = classroom.getLessons().get(0);
+        Task task = lesson.getTasks().get(0);
+        StudentAccount student = (StudentAccount) createOneStudentAccount();
+    	student = (StudentAccount) createOneStudentTasktWithLessonAndTaskAndStudentAccount(lesson, task, student);
+    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);
+	    ResponseMessage result = guestClassroomService.assign(teacher, 1l, accounts);
+        assertNotNull(result);
     }
 
 }

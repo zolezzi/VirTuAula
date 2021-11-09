@@ -2,8 +2,8 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -17,8 +17,10 @@ import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.StudentAccount;
 import ar.edu.unq.virtuaula.model.StudentTask;
+import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.util.CalculatedProgressUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class ClassroomService {
     private final ClassroomRepository classromRepository;
     private final AccountService accountService;
     private final TeamService teamService;
+    private final StudentTaskRepository studentTaskRepository;
     private final MapperUtil mapperUtil;
     private final CalculatedProgressUtil progressUtil;
 
@@ -73,23 +76,22 @@ public class ClassroomService {
 		return new ResponseMessage("the assignment to the classroom was successful");
 	}
 
-	private List<StudentTask> createStudentTaskAllByStudent(Lesson lesson, List<StudentAccount> students) {
-		return students.stream()
-		.map(student -> createStudentTaskByLessonAndStudent(lesson, student))
-		.flatMap(studentTasks -> studentTasks.stream()).collect(Collectors.toList());
+	private void createStudentTaskAllByStudent(Lesson lesson, List<StudentAccount> students) {
+		students.stream()
+		.forEach(student -> createStudentTaskByLessonAndStudent(lesson, student));
 	}
 	
-	private List<StudentTask> createStudentTaskByLessonAndStudent(Lesson newLesson, StudentAccount student) {
-		List<StudentTask> listStudentTasks = newLesson.getTasks().stream().map(task -> {
+	private void createStudentTaskByLessonAndStudent(Lesson newLesson, StudentAccount student) {
+		List<StudentTask> listStudentTasks = new ArrayList<>();
+		for(Task task : newLesson.getTasks()) {
 			StudentTask studentTask = new StudentTask();
 			studentTask.uncomplete();
 			studentTask.setTask(task);
 			studentTask.setLesson(newLesson);
 			studentTask.setStudentAccount(student);
-			return studentTask;
-		}).collect(toList());
-		student.getResultsTasks().addAll(listStudentTasks);
-		return listStudentTasks;
+			listStudentTasks.add(studentTask);
+		}
+		studentTaskRepository.saveAll(listStudentTasks);
 	}
 
 	private List<ClassroomDTO> transformToClassroomDTO(List<Classroom> classrooms) {

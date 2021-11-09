@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
+import ar.edu.unq.virtuaula.builder.BufferExperienceBuilder;
+import ar.edu.unq.virtuaula.builder.BufferLifeBuilder;
 import ar.edu.unq.virtuaula.builder.ClassroomBuilder;
 import ar.edu.unq.virtuaula.builder.LessonBuilder;
 import ar.edu.unq.virtuaula.builder.LevelBuilder;
@@ -20,9 +22,13 @@ import ar.edu.unq.virtuaula.builder.StudentTaskBuilder;
 import ar.edu.unq.virtuaula.builder.TaskBuilder;
 import ar.edu.unq.virtuaula.builder.TaskTypeBuilder;
 import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
+import ar.edu.unq.virtuaula.builder.TeamBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
+import ar.edu.unq.virtuaula.model.Buffer;
+import ar.edu.unq.virtuaula.model.BufferExperience;
+import ar.edu.unq.virtuaula.model.BufferLife;
 import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Lesson;
 import ar.edu.unq.virtuaula.model.Level;
@@ -32,12 +38,14 @@ import ar.edu.unq.virtuaula.model.StudentTask;
 import ar.edu.unq.virtuaula.model.Task;
 import ar.edu.unq.virtuaula.model.TaskType;
 import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.model.Team;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.ClassroomRepository;
 import ar.edu.unq.virtuaula.repository.LevelRepository;
 import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
 import ar.edu.unq.virtuaula.repository.TaskTypeRepository;
+import ar.edu.unq.virtuaula.repository.TeamRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
 
 @SpringBootTest
@@ -61,6 +69,9 @@ public class VirtuaulaApplicationTests {
     
     @Autowired
     protected LevelRepository levelRepository;
+    
+    @Autowired
+    protected TeamRepository teamRepository;
 
     protected Classroom createOneClassroom() {
     	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
@@ -132,6 +143,24 @@ public class VirtuaulaApplicationTests {
     	return levelRepository.save(level);
     }
     
+    protected Team createTeam(Team team) {
+    	return teamRepository.save(team);
+    }
+    
+    protected Team createOneTeam(){
+    	List<StudentAccount> students = new ArrayList<>();
+    	Classroom classroom = createOneClassroom();
+    	StudentAccount student = (StudentAccount) createOneStudentAccount();
+    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);
+    	students.add(student);
+    	Team team = TeamBuilder.teamWithName("Team de equipo de matemaica")
+    			.withClassroom(classroom)
+    			.withTeacher(teacher)
+    			.withStudents(students)
+    			.build();
+    	return createTeam(team);
+    }
+    
     protected User createOneUser() {
         User user = UserBuilder.userWithUsernameAndPassword("charly2", "1234567n")
                 .withEmail("charlie@gmail.com")
@@ -146,6 +175,42 @@ public class VirtuaulaApplicationTests {
     			.withNumberLevel(2)
     			.withMinValue(0d)
     			.withMaxValue(2000d)
+    			.build();
+		return createLevel(level);
+	}
+	
+	protected Level createLevelBeginner() {
+		Level level = LevelBuilder.levelWithName("Beginner").withDescription("Nivel principiante").withImagePath("/images/image.png")
+    			.withNameNextLevel("Profesional")
+    			.withNumberLevel(1)
+    			.withMinValue(0d)
+    			.withMaxValue(2000d)
+    			.build();
+		return createLevel(level);
+	}
+	
+	protected Level createLevelWithTwoBuffer(){
+		BufferExperience bufferExprience = BufferExperienceBuilder.bufferExperienceWithName("Buffer experience")
+				.withDescription("Buffer suma experiencia")
+				.withExperienceValue(10d)
+				.withOperator("+")
+				.build();
+		
+		BufferLife bufferlife = BufferLifeBuilder.bufferLifeWithName("Buffer life")
+				.withDescription("Buffer suma life")
+				.withLifeValue(1)
+				.withOperator("+")
+				.build();
+		List<Buffer> buffers = new ArrayList<>();
+		buffers.add(bufferExprience);
+		buffers.add(bufferlife);
+		
+		Level level = LevelBuilder.levelWithName("Beginner").withDescription("Nivel principiante").withImagePath("/images/image.png")
+    			.withNameNextLevel("Profesional")
+    			.withNumberLevel(1)
+    			.withMinValue(0d)
+    			.withMaxValue(2000d)
+    			.withBuffers(buffers)
     			.build();
 		return createLevel(level);
 	}
@@ -180,6 +245,7 @@ public class VirtuaulaApplicationTests {
         		.withAccountType(accountType)
         		.withLevel(level)
         		.withUser(user)
+        		.withLife(3)
         		.build();
         account = createStudentAccount(account);
         return account;
