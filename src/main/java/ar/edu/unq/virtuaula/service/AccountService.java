@@ -23,7 +23,6 @@ import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
-import ar.edu.unq.virtuaula.model.Classroom;
 import ar.edu.unq.virtuaula.model.Level;
 import ar.edu.unq.virtuaula.model.Privilege;
 import ar.edu.unq.virtuaula.model.StudentAccount;
@@ -97,7 +96,7 @@ public class AccountService {
                     teacherAccount.getStudents().addAll(students);
                     teacherAccount = accountRepository.save(teacherAccount);
                     List<Integer> dnis = students.stream().map(student -> student.getDni()).collect(Collectors.toList());
-                    createUserForStudents(teacherAccount.getStudentsByDNIs(dnis), teacherAccount.getClassrooms());
+                    createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
                     message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 } else {
                     message = "Please review file, i do not know loaded any lines from the file: " + file.getOriginalFilename();
@@ -149,7 +148,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    private void createUserForStudents(List<StudentAccount> students, List<Classroom> classrooms) {
+    private void createUserForStudents(List<StudentAccount> students) {
         students.forEach(student -> {
             User user = new User();
             String password = Hashing.sha256()
@@ -161,9 +160,6 @@ public class AccountService {
             user.setUsername(String.valueOf(student.getDni()));
             User userSaved = userRepository.save(user);
             student.setUser(userSaved);
-            classrooms.forEach(classroom -> {
-                student.addClassroom(classroom);
-            });
             accountRepository.save(student);
         });
     }

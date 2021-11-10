@@ -57,7 +57,4 @@ public class Account implements Serializable {
                     name = "classroom_id", referencedColumnName = "id"))
     private List<Classroom> classrooms = new ArrayList<>();
 
-    public void addClassroom(Classroom classroom) {
-        this.classrooms.add(classroom);
-    }
 }
