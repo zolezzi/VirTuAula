@@ -20,7 +20,7 @@ public class ManagementBufferServiceTest extends VirtuaulaApplicationTests {
 		Integer expectedLife  = 4;
 		Level level = createLevelWithTwoBuffer();
 		StudentAccount student = (StudentAccount) createOneStudentAccount();
-		managementBufferService.ApplyBufferInStudentAccount(level, student, 10d);
+		managementBufferService.applyBufferInStudentAccount(level, student, 10d);
 		assertEquals(expected , student.getExperience());
 		assertEquals(expectedLife , student.getLife());
 	}

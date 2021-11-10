@@ -70,7 +70,7 @@ public class LessonService {
     	}
         completeState(tasks, studentAccount.getId());
         LessonVO lessonVO = createLessonVO(lessonBD, studentAccount.getId());
-        bufferService.ApplyBufferInStudentAccount(studentAccount.getLevel(), studentAccount, lessonVO.getNote());
+        bufferService.applyBufferInStudentAccount(studentAccount.getLevel(), studentAccount, lessonVO.getNote());
         if(ExperienceUtil.isChangeLevel(studentAccount.getLevel().getMaxValue(), studentAccount.getExperience())) {
         	studentAccount.setLevel(levelService.getNextLevel(studentAccount.getLevel()));
         }

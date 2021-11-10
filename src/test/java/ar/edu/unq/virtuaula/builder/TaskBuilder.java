@@ -30,7 +30,7 @@ public class TaskBuilder {
     }
     
     public TaskBuilder withScore(Double score) {
-        this.instance.setScore(score);;
+        this.instance.setScore(score);
         return this;
     }
     

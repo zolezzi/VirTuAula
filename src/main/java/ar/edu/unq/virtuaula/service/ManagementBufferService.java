@@ -18,12 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class ManagementBufferService {
 
 	
-	public void ApplyBufferInStudentAccount(Level level, StudentAccount student, Double note) {
+	public void applyBufferInStudentAccount(Level level, StudentAccount student, Double note) {
 		applyBufferExprience(level.getBuffers().stream().filter( buffer -> buffer.isExperience()).collect(Collectors.toList()), student, note);
-		applyBufferLife(level, level.getBuffers().stream().filter( buffer -> buffer.isLife()).collect(Collectors.toList()), student);
+		applyBufferLife(level.getBuffers().stream().filter( buffer -> buffer.isLife()).collect(Collectors.toList()), student);
 	}
 
-	private void applyBufferLife(Level level, List<Buffer> buffers, StudentAccount student) {
+	private void applyBufferLife(List<Buffer> buffers, StudentAccount student) {
 		final int lifeCalculated = 0;
 		buffers.stream().forEach(buffer -> buffer.apply(student, Double.valueOf(lifeCalculated)));
 	}
