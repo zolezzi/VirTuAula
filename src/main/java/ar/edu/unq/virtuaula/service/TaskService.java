@@ -53,8 +53,10 @@ public class TaskService {
             taskVO.setId(task.getId());
             taskVO.setStatement(task.getStatement());
             taskVO.setScore(task.getScore());
+            taskVO.setTaskTypeId(task.getTaskType().getId());
             if (studentTask.isPresent()) {
                 taskVO.setAnswer(studentTask.get().getAnswer());
+                taskVO.setStory(studentTask.get().getStory());
             } else {
                 taskVO.setAnswer(task.getAnswer());
             }

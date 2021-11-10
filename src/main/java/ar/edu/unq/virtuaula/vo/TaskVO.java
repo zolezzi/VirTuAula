@@ -7,4 +7,5 @@ public class TaskVO {
 
     private Long id;
     private Long answerId;
+    private String story;
 }

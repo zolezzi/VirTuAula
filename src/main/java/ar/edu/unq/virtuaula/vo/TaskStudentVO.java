@@ -12,4 +12,6 @@ public class TaskStudentVO {
     private List<OptionTaskVO> options;
     private Double score;
     private Long answer;
+    private Long taskTypeId;
+    private String story;
 }
