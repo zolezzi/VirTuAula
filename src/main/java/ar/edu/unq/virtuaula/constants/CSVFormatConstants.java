@@ -3,10 +3,10 @@ package ar.edu.unq.virtuaula.constants;
 public class CSVFormatConstants {
 
     /** The Constant COLUMN_FIRST_NAME. */
-    public static final String COLUMN_FIRST_NAME 	 = "Nombre";
+    public static final String COLUMN_FIRST_NAME 	 = "First Name";
     
     /** The Constant COLUMN_LAST_NAME. */
-    public static final String COLUMN_LAST_NAME	 	 = "Apellido";
+    public static final String COLUMN_LAST_NAME	 	 = "Last Name";
     
     /** The Constant COLUMN_DNI. */
     public static final String COLUMN_DNI		     = "DNI";
