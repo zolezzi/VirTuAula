@@ -119,7 +119,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     public void testWhenLoadCSVFileWithPlayersValidThenReturnMessageSuccess() throws IOException {
     	String expected = "Uploaded the file successfully: hello.csv";
         StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        csvBuilder.append("First Name,Last Name,DNI,Email\n");
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
@@ -133,7 +133,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     public void testWhenLoadCSVFileWithFormatNoValidThenReturnMessageEmpty() throws IOException {
     	String expected = "";
         StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        csvBuilder.append("First Name,Last Name,DNI,Email\n");
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.html", "text/html", is);
@@ -147,7 +147,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     public void testWhenLoadCSVFileWithoutPlayersThenReturnMessageEmpty() throws IOException {
     	String expected = "Please review file, i do not know loaded any lines from the file: hello.csv";
         StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        csvBuilder.append("First Name,Last Name,DNI,Email\n");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
         LeaderAccount account = (LeaderAccount) createOneLeaderAccount();
@@ -160,7 +160,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     public void testWhenLoadCSVFileNotValidThenReturnException() throws IOException {
     	String expected = "Could not upload the file: hello.csv!";
         StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        csvBuilder.append("First Name,Last Name,DNI,Email\n");
         MockMultipartFile file = Mockito.mock(MockMultipartFile.class);
         Mockito.when(file.getContentType()).thenReturn("text/csv");
         Mockito.when(file.getOriginalFilename()).thenReturn("hello.csv");

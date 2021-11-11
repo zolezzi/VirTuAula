@@ -41,7 +41,7 @@ public class CSVUtilTest extends VirtuaulaApplicationTests {
     public void testLoadCSVWithOneLineThenReturnListNotEmpty() throws IOException {
     	int expected = 1;
         StringBuilder csvBuilder = new StringBuilder();
-        csvBuilder.append("Nombre,Apellido,DNI,Email\n");
+        csvBuilder.append("First Name,Last Name,DNI,Email\n");
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
