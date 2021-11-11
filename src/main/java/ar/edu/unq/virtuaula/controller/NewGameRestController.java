@@ -25,27 +25,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NewGameRestController {
 
-    private final NewGameService classromService;
+    private final NewGameService newGameService;
     private final AccountService accountService;
 
     @GetMapping("/new-games/{accountId}")
     @ApiResponse(code = 200, message = "Success", response = NewGameDTO.class, responseContainer = "List")
     @ApiOperation(value = "Get all new games by account id", notes = "Get all new games of a account")
     public List<NewGameDTO> findByAccountId(@PathVariable("accountId") Long accountId) throws AccountNotFoundException {
-        return classromService.findByAccount(accountService.findById(accountId));
+        return newGameService.findByAccount(accountService.findById(accountId));
     }
 
     @PostMapping("/new-games/create/{accountId}")
     @ApiResponse(code = 200, message = "Successfully create new game", response = CampaignDTO.class)
     @ApiOperation(value = "Post create new game for leader by account id", notes = "Post create new game for a leader")
     public NewGameDTO create(@PathVariable("accountId") Long accountId, @RequestBody NewGameVO newGameVO) throws Exception {
-        return classromService.create(accountService.findLeaderById(accountId), newGameVO.getNewGame(), newGameVO.getPlayers());
+        return newGameService.create(accountService.findLeaderById(accountId), newGameVO.getNewGame(), newGameVO.getPlayers());
     }
     
     @PostMapping("/new-games/assign/{newGameId}/{accountId}")
     @ApiResponse(code = 200, message = "Successfully create new game", response = ResponseMessage.class)
     @ApiOperation(value = "Post create new game for leader by account id", notes = "Post create new game for a leader")
     public ResponseMessage assign(@PathVariable("accountId") Long accountId, @PathVariable("newGameId") Long newGameId, @RequestBody List<Long> ids) throws Exception {
-        return classromService.assign(accountService.findLeaderById(accountId), newGameId, ids);
+        return newGameService.assign(accountService.findLeaderById(accountId), newGameId, ids);
     }
 }
