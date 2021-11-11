@@ -28,9 +28,9 @@ public class BufferLife extends Buffer{
 	}
 
 	@Override
-	public void apply(PlayerAccount student, Double lifeGained) {
+	public void apply(PlayerAccount player, Double lifeGained) {
 		Integer calculatedLife = OperatorUtil.operatorWithInteger(getOperator(), lifeGained.intValue(), this.lifeValue);
-		student.setLife(student.lifeSum(student.getLife(), calculatedLife));
+		player.setLife(player.lifeSum(player.getLife(), calculatedLife));
 	}
 
 }

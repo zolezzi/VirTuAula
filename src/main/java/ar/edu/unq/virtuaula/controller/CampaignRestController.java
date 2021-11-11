@@ -46,7 +46,7 @@ public class CampaignRestController {
 
     @PostMapping("/campaigns/{newGameId}/{missionId}/{accountId}")
     @ApiResponse(code = 200, message = "Successfully complete mission", response = CampaignVO.class)
-    @ApiOperation(value = "Post complete task for player by new game id, campaign id and list missions list", notes = "Post complete mission for a player")
+    @ApiOperation(value = "Post complete mission for player by new game id, campaign id and list missions list", notes = "Post complete mission for a player")
     public CampaignVO completeMissions(@PathVariable("newGameId") Long newGameId, @PathVariable("missionId") Long missionId, @PathVariable("accountId") Long accountId, @RequestBody List<MissionVO> missions) throws Exception {
         NewGame newGame = newGameService.findById(newGameId);
         return campaignService.completeMissions(newGame, missionId, accountService.findPlayerById(accountId), missions);
