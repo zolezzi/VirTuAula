@@ -50,11 +50,11 @@ public class Account implements Serializable {
 
     @ManyToMany
     @JoinTable(
-            name = "accounts_classrooms",
+            name = "accounts_new_games",
             joinColumns = @JoinColumn(
                     name = "account_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
-                    name = "classroom_id", referencedColumnName = "id"))
-    private List<Classroom> classrooms = new ArrayList<>();
+                    name = "new_game_id", referencedColumnName = "id"))
+    private List<NewGame> newGames = new ArrayList<>();
 
 }

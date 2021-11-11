@@ -18,16 +18,16 @@ import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.exception.PlayerAccountNotFoundException;
+import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
-import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.model.StudentAccount;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.vo.AccountVO;
-import ar.edu.unq.virtuaula.vo.StudentAccountVO;
+import ar.edu.unq.virtuaula.vo.PlayerAccountVO;
 
 public class AccountServiceTest extends VirtuaulaApplicationTests {
 
@@ -35,20 +35,20 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     private AccountService accountService;
     
     @Test
-    public void findTeacherAccountReturnAccountWithId() throws TeacherNotFoundException {
-        Account account = createOneTeacherAccount();
-        Account result = (Account) accountService.findTeacherById(1l);
+    public void findLeaderAccountReturnAccountWithId() throws LeaderAccountNotFoundException {
+        Account account = createOneLeaderAccount();
+        Account result = (Account) accountService.findLeaderById(1l);
         assertNotNull(result);
         assertEquals(result.getId(), account.getId());
     }
 
     @Test
-    public void whenfindTeacherAccountWithUsernameNotExistsThenThrowExpetion() {
-        Exception exception = assertThrows(TeacherNotFoundException.class, () -> {
-            accountService.findTeacherById(10l);
+    public void whenfindLeaderAccountWithUsernameNotExistsThenThrowExpetion() {
+        Exception exception = assertThrows(LeaderAccountNotFoundException.class, () -> {
+            accountService.findLeaderById(10l);
         });
 
-        String expectedMessage = "Error not found teacher account with id: 10";
+        String expectedMessage = "Error not found leader account with id: 10";
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
@@ -56,7 +56,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
 
     @Test
     public void findAccountReturnAccountWithId() throws AccountNotFoundException {
-        Account account = createOneTeacherAccount();
+        Account account = createOneLeaderAccount();
         Account result = (Account) accountService.findById(1l);
         assertNotNull(result);
         assertEquals(result.getId(), account.getId());
@@ -75,7 +75,7 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
-    public void createTeacherAccountReturnAccountWithId() throws TeacherNotFoundException {
+    public void createLeaderAccountReturnAccountWithId() throws LeaderAccountNotFoundException {
         User user = createOneUser();
         AccountDTO account = Mockito.mock(AccountDTO.class);
         Mockito.when(account.getFirstName()).thenReturn("Charlie");
@@ -83,48 +83,48 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         Mockito.when(account.getEmail()).thenReturn("charlie@virtuaula.com");
         Mockito.when(account.getDni()).thenReturn(36001002);
 
-        AccountVO result = accountService.createAccountTeacher(user, account);
+        AccountVO result = accountService.createAccountLeader(user, account);
         assertNotNull(result);
     }
 
     @Test
-    public void findStudentAccountReturnAccountWithId() throws StudentAccountNotFoundException {
-        Account account = createOneStudentAccount();
-        Account result = (Account) accountService.findStudentById(1l);
+    public void findPlayerAccountReturnAccountWithId() throws PlayerAccountNotFoundException {
+        Account account = createOnePlayerAccount();
+        Account result = (Account) accountService.findPlayerById(1l);
         assertNotNull(result);
         assertEquals(result.getId(), account.getId());
     }
 
     @Test
-    public void whenFindStudentAccountWithUsernameNotExistsThenThrowExpetion() {
-        Exception exception = assertThrows(StudentAccountNotFoundException.class, () -> {
-            accountService.findStudentById(10l);
+    public void whenFindPlayerAccountWithUsernameNotExistsThenThrowExpetion() {
+        Exception exception = assertThrows(PlayerAccountNotFoundException.class, () -> {
+            accountService.findPlayerById(10l);
         });
 
-        String expectedMessage = "Error not found student account with id: 10";
+        String expectedMessage = "Error not found player account with id: 10";
         String actualMessage = exception.getMessage();
 
         assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    public void getExperienceWithStudentAccountReturnExperience() throws StudentAccountNotFoundException {
-        StudentAccount account = (StudentAccount) createOneStudentAccount();
+    public void getExperienceWithPlayerAccountReturnExperience() throws PlayerAccountNotFoundException {
+        PlayerAccount account = (PlayerAccount) createOnePlayerAccount();
         Double experience = accountService.getExperience(account.getId());
         assertNotNull(experience);
         assertEquals(experience, account.getExperience());
     }
     
     @Test
-    public void testWhenLoadCSVFileWithStudentsValidThenReturnMessageSuccess() throws IOException {
+    public void testWhenLoadCSVFileWithPlayersValidThenReturnMessageSuccess() throws IOException {
     	String expected = "Uploaded the file successfully: hello.csv";
         StringBuilder csvBuilder = new StringBuilder();
         csvBuilder.append("Nombre,Apellido,DNI,Email\n");
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
-        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-        ResponseMessage message = accountService.uploadFileStudents(account, file);
+        LeaderAccount account = (LeaderAccount) createOneLeaderAccount();
+        ResponseMessage message = accountService.uploadFilePlayers(account, file);
         assertNotNull(message);
         assertEquals(expected, message.getMessage());
     }
@@ -137,21 +137,21 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.html", "text/html", is);
-        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-        ResponseMessage message = accountService.uploadFileStudents(account, file);
+        LeaderAccount account = (LeaderAccount) createOneLeaderAccount();
+        ResponseMessage message = accountService.uploadFilePlayers(account, file);
         assertNotNull(message);
         assertEquals(expected, message.getMessage());
     }
     
     @Test
-    public void testWhenLoadCSVFileWithoutStudentsThenReturnMessageEmpty() throws IOException {
+    public void testWhenLoadCSVFileWithoutPlayersThenReturnMessageEmpty() throws IOException {
     	String expected = "Please review file, i do not know loaded any lines from the file: hello.csv";
         StringBuilder csvBuilder = new StringBuilder();
         csvBuilder.append("Nombre,Apellido,DNI,Email\n");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
-        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-        ResponseMessage message = accountService.uploadFileStudents(account, file);
+        LeaderAccount account = (LeaderAccount) createOneLeaderAccount();
+        ResponseMessage message = accountService.uploadFilePlayers(account, file);
         assertNotNull(message);
         assertEquals(expected, message.getMessage());
     }
@@ -165,28 +165,28 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         Mockito.when(file.getContentType()).thenReturn("text/csv");
         Mockito.when(file.getOriginalFilename()).thenReturn("hello.csv");
         Mockito.when(file.getInputStream()).thenReturn(null);
-        TeacherAccount account = (TeacherAccount) createOneTeacherAccount();
-        ResponseMessage message = accountService.uploadFileStudents(account, file);
+        LeaderAccount account = (LeaderAccount) createOneLeaderAccount();
+        ResponseMessage message = accountService.uploadFilePlayers(account, file);
         assertNotNull(message);
         assertEquals(expected, message.getMessage());
     }
     
     @Test
-    public void getLevelWithStudentAccountReturnLevel() throws StudentAccountNotFoundException {
+    public void getLevelWithPlayerAccountReturnLevel() throws PlayerAccountNotFoundException {
         String expected = "Principiante";
-    	StudentAccount account = (StudentAccount) createOneStudentAccount();
+    	PlayerAccount account = (PlayerAccount) createOnePlayerAccount();
         LevelDTO result = accountService.getLevel(account.getId());
         assertNotNull(result);
         assertEquals(expected, result.getName());
     }
     
     @Test
-    public void dasdasda() throws StudentAccountNotFoundException {
+    public void whenLeaderFindAllPlayerByLeaderThenReturnAllPlayersAssociate() throws PlayerAccountNotFoundException {
     	Integer expected = 1;
-    	Classroom classroom = createOneClassroom();
-    	StudentAccount account = (StudentAccount) createOneStudentAccount();
-    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, account);
-        List<StudentAccountVO> result = accountService.findAllStudentsByTeacher(teacher);
+    	NewGame newGame = createOneNewGame();
+    	PlayerAccount account = (PlayerAccount) createOnePlayerAccount();
+    	LeaderAccount leader = (LeaderAccount) createOneLeaderAccountWithNewGameAndPlayer(newGame, account);
+        List<PlayerAccountVO> result = accountService.findAllPlayersByLeader(leader);
         assertNotNull(result);
         assertEquals(expected, result.size());
     }

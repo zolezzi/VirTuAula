@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ar.edu.unq.virtuaula.model.Buffer;
 import ar.edu.unq.virtuaula.model.Level;
-import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,17 +18,17 @@ import lombok.RequiredArgsConstructor;
 public class ManagementBufferService {
 
 	
-	public void applyBufferInStudentAccount(Level level, StudentAccount student, Double note) {
-		applyBufferExprience(level.getBuffers().stream().filter( buffer -> buffer.isExperience()).collect(Collectors.toList()), student, note);
-		applyBufferLife(level.getBuffers().stream().filter( buffer -> buffer.isLife()).collect(Collectors.toList()), student);
+	public void applyBufferInPlayerAccount(Level level, PlayerAccount player, Double note) {
+		applyBufferExprience(level.getBuffers().stream().filter( buffer -> buffer.isExperience()).collect(Collectors.toList()), player, note);
+		applyBufferLife(level.getBuffers().stream().filter( buffer -> buffer.isLife()).collect(Collectors.toList()), player);
 	}
 
-	private void applyBufferLife(List<Buffer> buffers, StudentAccount student) {
+	private void applyBufferLife(List<Buffer> buffers, PlayerAccount player) {
 		final int lifeCalculated = 0;
-		buffers.stream().forEach(buffer -> buffer.apply(student, Double.valueOf(lifeCalculated)));
+		buffers.stream().forEach(buffer -> buffer.apply(player, Double.valueOf(lifeCalculated)));
 	}
 
-	private void applyBufferExprience(List<Buffer> buffers, StudentAccount student, Double note) {
-		buffers.stream().forEach(buffer -> buffer.apply(student, note));
+	private void applyBufferExprience(List<Buffer> buffers, PlayerAccount player, Double note) {
+		buffers.stream().forEach(buffer -> buffer.apply(player, note));
 	}
 }

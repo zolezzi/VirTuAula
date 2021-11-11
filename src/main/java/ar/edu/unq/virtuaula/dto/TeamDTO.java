@@ -9,7 +9,7 @@ import lombok.Data;
 public class TeamDTO implements Serializable{
 
 	private static final long serialVersionUID = 1113313701062314510L;
-	private ClassroomDTO classroom;
-	private AccountDTO teacher;
-	private List<AccountDTO> studentAccounts;
+	private NewGameDTO newGame;
+	private AccountDTO leader;
+	private List<AccountDTO> playerAccounts;
 }

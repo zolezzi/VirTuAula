@@ -27,19 +27,19 @@ public class Team implements Serializable{
     private String name;
     
     @OneToOne
-    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
-    TeacherAccount teacher;
+    @JoinColumn(name = "leader_id", referencedColumnName = "id")
+    LeaderAccount leader;
     
     @OneToOne
-    @JoinColumn(name = "classroom_id", referencedColumnName = "id")
-    Classroom classroom;
+    @JoinColumn(name = "new_game_id", referencedColumnName = "id")
+    NewGame newGame;
     
     @ManyToMany
     @JoinTable(
-            name = "teams_students",
+            name = "teams_players",
             joinColumns = @JoinColumn(
                     name = "team_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
-                    name = "student_id", referencedColumnName = "id"))
-    private List<StudentAccount> students;
+                    name = "player_id", referencedColumnName = "id"))
+    private List<PlayerAccount> players;
 }

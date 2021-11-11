@@ -29,10 +29,10 @@ public class BufferExperience extends Buffer {
 	}
 
 	@Override
-	public void apply(StudentAccount student, Double experienceGained) {
+	public void apply(PlayerAccount player, Double experienceGained) {
 		if(experienceGained != null) {
 			Double calculatedExperience = OperatorUtil.operatorWithDouble(getOperator(), experienceGained, this.experienceValue);
-			student.setExperience(student.calculateExperience(student.getExperience(), calculatedExperience));
+			player.setExperience(player.calculateExperience(player.getExperience(), calculatedExperience));
 		}
 	}
 

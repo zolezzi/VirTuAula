@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
-import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.util.CSVUtil;
 
 public class CSVUtilTest extends VirtuaulaApplicationTests {
@@ -31,7 +31,7 @@ public class CSVUtilTest extends VirtuaulaApplicationTests {
         csvBuilder.append("Nombre,Apellido,DNI,Email\n");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
-		List<StudentAccount> result = util.csvToStudents(file.getInputStream());
+		List<PlayerAccount> result = util.csvToPlayers(file.getInputStream());
         assertNotNull(result);
         assertEquals(expected, result.size());
     }
@@ -45,7 +45,7 @@ public class CSVUtilTest extends VirtuaulaApplicationTests {
         csvBuilder.append("Carlos,Cardozo,36000001,carlos@gmail.com");
         InputStream is = new ByteArrayInputStream(csvBuilder.toString().getBytes());
         MockMultipartFile file = new MockMultipartFile("file", "hello.csv", "text/csv", is);
-        List<StudentAccount> result = util.csvToStudents(file.getInputStream());
+        List<PlayerAccount> result = util.csvToPlayers(file.getInputStream());
         assertNotNull(result);
         assertEquals(expected, result.size());
     }

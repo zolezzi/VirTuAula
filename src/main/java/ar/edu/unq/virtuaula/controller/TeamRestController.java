@@ -25,7 +25,7 @@ public class TeamRestController {
     @GetMapping("/teams/{accountId}")
     @ApiResponse(code = 200, message = "Success", response = TeamVO.class, responseContainer = "List")
     @ApiOperation(value = "Get all teams by account id", notes = "Get all teams of a account")
-    public List<TeamVO> findAllTeamsByTeacher(@PathVariable("accountId") Long accountId) throws Exception {
-        return teamService.findByTeacherAccount(accountService.findTeacherById(accountId));
+    public List<TeamVO> findAllTeamsByLeader(@PathVariable("accountId") Long accountId) throws Exception {
+        return teamService.findByLeaderAccount(accountService.findLeaderById(accountId));
     }
 }

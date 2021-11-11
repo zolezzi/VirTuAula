@@ -35,7 +35,7 @@ public abstract class Buffer implements Serializable {
     
     public abstract boolean isLife();
     
-    public abstract void apply(StudentAccount student, Double value);
+    public abstract void apply(PlayerAccount player, Double value);
     
     @ManyToOne
     private Level level;

@@ -2,9 +2,9 @@ package ar.edu.unq.virtuaula.builder;
 
 import java.util.List;
 
-import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.model.StudentAccount;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Team;
 
 public class TeamBuilder {
@@ -17,18 +17,18 @@ public class TeamBuilder {
 		return teamBuilder;
 	}
 	
-    public TeamBuilder withClassroom(Classroom classroom) {
-        this.instance.setClassroom(classroom);
+    public TeamBuilder withNewGame(NewGame newGame) {
+        this.instance.setNewGame(newGame);
         return this;
     }
 	
-    public TeamBuilder withStudents(List<StudentAccount> students) {
-        this.instance.setStudents(students);
+    public TeamBuilder withPlayers(List<PlayerAccount> players) {
+        this.instance.setPlayers(players);
         return this;
     }
     
-    public TeamBuilder withTeacher(TeacherAccount teacher) {
-        this.instance.setTeacher(teacher);
+    public TeamBuilder withLeader(LeaderAccount leader) {
+        this.instance.setLeader(leader);
         return this;
     }
     

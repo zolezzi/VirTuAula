@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.AuthRequestDTO;
 import ar.edu.unq.virtuaula.dto.JwtResponseDTO;
-import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
 
 public class AuthenticationUserServiceTest extends VirtuaulaApplicationTests {
 
@@ -16,8 +16,8 @@ public class AuthenticationUserServiceTest extends VirtuaulaApplicationTests {
     private AuthenticationUserService authenticationUserService;
 
     @Test
-    public void whenLoginUserAccountValidReturnJwtResponse() throws TeacherNotFoundException {
-        createOneUserWithTeacherAccount();
+    public void whenLoginUserAccountValidReturnJwtResponse() throws LeaderAccountNotFoundException {
+        createOneUserWithLeaderAccount();
         AuthRequestDTO authRequest = new AuthRequestDTO();
         authRequest.setUsername("charlie");
         authRequest.setPassword("03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4");
@@ -26,7 +26,7 @@ public class AuthenticationUserServiceTest extends VirtuaulaApplicationTests {
     }
 
     @Test
-    public void whenLoginUserWithoutAccountValidReturnJwtResponse() throws TeacherNotFoundException {
+    public void whenLoginUserWithoutAccountValidReturnJwtResponse() throws LeaderAccountNotFoundException {
         createOneUser();
         AuthRequestDTO authRequest = new AuthRequestDTO();
         authRequest.setUsername("charly2");

@@ -4,14 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
-import ar.edu.unq.virtuaula.dto.ClassroomDTO;
-import ar.edu.unq.virtuaula.dto.OptionTaskDTO;
-import ar.edu.unq.virtuaula.dto.TaskDTO;
-import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.model.OptionTask;
-import ar.edu.unq.virtuaula.model.Task;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
-import ar.edu.unq.virtuaula.vo.TaskVO;
+import ar.edu.unq.virtuaula.dto.NewGameDTO;
+import ar.edu.unq.virtuaula.dto.OptionMissionDTO;
+import ar.edu.unq.virtuaula.dto.MissionDTO;
+import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.model.OptionMission;
+import ar.edu.unq.virtuaula.model.Mission;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
+import ar.edu.unq.virtuaula.vo.MissionVO;
 
 @Component
 public class MapperUtil {
@@ -28,48 +28,48 @@ public class MapperUtil {
     }
 
     private void configure() {
-        // ClassroomDTO config
-        this.modelMapper.typeMap(Classroom.class, ClassroomDTO.class).addMappings(mapper -> {
-            mapper.map(Classroom::getId, ClassroomDTO::setId);
-            mapper.map(Classroom::getName, ClassroomDTO::setName);
+        // NewGameDTO config
+        this.modelMapper.typeMap(NewGame.class, NewGameDTO.class).addMappings(mapper -> {
+            mapper.map(NewGame::getId, NewGameDTO::setId);
+            mapper.map(NewGame::getName, NewGameDTO::setName);
         });
-        // TaskDTO config
-        this.modelMapper.typeMap(Task.class, TaskDTO.class).addMappings(mapper -> {
-            mapper.map(Task::getId, TaskDTO::setId);
-            mapper.map(Task::getStatement, TaskDTO::setStatement);
-            mapper.map(Task::getAnswer, TaskDTO::setAnswer);
-            mapper.map(Task::getCorrectAnswer, TaskDTO::setCorrectAnswer);
-        });
-
-        // OptionTaskDTO config
-        this.modelMapper.typeMap(OptionTask.class, OptionTaskDTO.class).addMappings(mapper -> {
-            mapper.map(OptionTask::getId, OptionTaskDTO::setId);
-            mapper.map(OptionTask::isCorrect, OptionTaskDTO::setIsCorrect);
-            mapper.map(OptionTask::getResponseValue, OptionTaskDTO::setResponseValue);
+        // MissionDTO config
+        this.modelMapper.typeMap(Mission.class, MissionDTO.class).addMappings(mapper -> {
+            mapper.map(Mission::getId, MissionDTO::setId);
+            mapper.map(Mission::getStatement, MissionDTO::setStatement);
+            mapper.map(Mission::getAnswer, MissionDTO::setAnswer);
+            mapper.map(Mission::getCorrectAnswer, MissionDTO::setCorrectAnswer);
         });
 
-        // Task config
-        this.modelMapper.typeMap(TaskDTO.class, Task.class).addMappings(mapper -> {
-            mapper.map(TaskDTO::getId, Task::setId);
-            mapper.map(TaskDTO::getStatement, Task::setStatement);
-            mapper.map(TaskDTO::getAnswer, Task::setAnswer);
-            mapper.map(TaskDTO::getCorrectAnswer, Task::setCorrectAnswer);
+        // OptionMissionDTO config
+        this.modelMapper.typeMap(OptionMission.class, OptionMissionDTO.class).addMappings(mapper -> {
+            mapper.map(OptionMission::getId, OptionMissionDTO::setId);
+            mapper.map(OptionMission::isCorrect, OptionMissionDTO::setIsCorrect);
+            mapper.map(OptionMission::getResponseValue, OptionMissionDTO::setResponseValue);
+        });
+
+        // Mission config
+        this.modelMapper.typeMap(MissionDTO.class, Mission.class).addMappings(mapper -> {
+            mapper.map(MissionDTO::getId, Mission::setId);
+            mapper.map(MissionDTO::getStatement, Mission::setStatement);
+            mapper.map(MissionDTO::getAnswer, Mission::setAnswer);
+            mapper.map(MissionDTO::getCorrectAnswer, Mission::setCorrectAnswer);
 
         });
 
-        // TaskVO config
-        this.modelMapper.typeMap(Task.class, TaskVO.class).addMappings(mapper -> {
-            mapper.map(Task::getId, TaskVO::setId);
-            mapper.map(Task::getAnswer, TaskVO::setAnswerId);
+        // MissionVO config
+        this.modelMapper.typeMap(Mission.class, MissionVO.class).addMappings(mapper -> {
+            mapper.map(Mission::getId, MissionVO::setId);
+            mapper.map(Mission::getAnswer, MissionVO::setAnswerId);
         });
 
-        // ClassroomDTO config
-        this.modelMapper.typeMap(TeacherAccount.class, AccountDTO.class).addMappings(mapper -> {
-            mapper.map(TeacherAccount::getId, AccountDTO::setAccountId);
-            mapper.map(TeacherAccount::getFirstName, AccountDTO::setFirstName);
-            mapper.map(TeacherAccount::getLastName, AccountDTO::setLastName);
-            mapper.map(TeacherAccount::getEmail, AccountDTO::setEmail);
-            mapper.map(TeacherAccount::getDni, AccountDTO::setDni);
+        // NewGameDTO config
+        this.modelMapper.typeMap(LeaderAccount.class, AccountDTO.class).addMappings(mapper -> {
+            mapper.map(LeaderAccount::getId, AccountDTO::setAccountId);
+            mapper.map(LeaderAccount::getFirstName, AccountDTO::setFirstName);
+            mapper.map(LeaderAccount::getLastName, AccountDTO::setLastName);
+            mapper.map(LeaderAccount::getEmail, AccountDTO::setEmail);
+            mapper.map(LeaderAccount::getDni, AccountDTO::setDni);
         });
     }
 }

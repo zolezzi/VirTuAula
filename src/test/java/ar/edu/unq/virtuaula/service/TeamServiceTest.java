@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.exception.TeamNotFoundException;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Team;
 import ar.edu.unq.virtuaula.vo.TeamVO;
 
@@ -20,22 +20,22 @@ public class TeamServiceTest extends VirtuaulaApplicationTests{
     private TeamService teamService;
     
     @Test
-    public void whenTeacherConsultedByATeamThatDoesNotBelongToHimThenReturnExceptioNotFoundTeam() {
+    public void whenLeaderConsultedByATeamThatDoesNotBelongToHimThenReturnExceptioNotFoundTeam() {
     	createOneTeam();
-    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccount();
+    	LeaderAccount leader = (LeaderAccount) createOneLeaderAccount();
         Exception exception = assertThrows(TeamNotFoundException.class, () -> {
-        	teamService.findByTeacherAccount(teacher);
+        	teamService.findByLeaderAccount(leader);
         });
-        String expectedMessage = "Error not found team for teacher id: 3";
+        String expectedMessage = "Error not found team for leader id: 3";
         assertEquals(expectedMessage, exception.getMessage());
     }
     
     @Test
-    public void  whenTeacherConsultedByATeamThenReturnTeamAssociate() throws TeamNotFoundException {
+    public void  whenLeaderConsultedByATeamThenReturnTeamAssociate() throws TeamNotFoundException {
     	int expected = 1;
     	Team team = createOneTeam();
-    	TeacherAccount teacher = team.getTeacher(); 
-        List<TeamVO> result = teamService.findByTeacherAccount(teacher);
+    	LeaderAccount leader = team.getLeader(); 
+        List<TeamVO> result = teamService.findByLeaderAccount(leader);
         assertEquals(expected, result.size());
     }
     

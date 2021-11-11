@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.model.Level;
-import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 
 public class ManagementBufferServiceTest extends VirtuaulaApplicationTests {
 
@@ -15,13 +15,13 @@ public class ManagementBufferServiceTest extends VirtuaulaApplicationTests {
 	private ManagementBufferService managementBufferService;
 	
 	@Test
-	public void whenStudentApplyBuffersOfALevelThenReturnStudentWithIncrementExperienceAndLife() {
+	public void whenPlayerApplyBuffersOfALevelThenReturnPlayerWithIncrementExperienceAndLife() {
 		Double expected  = 20d;
 		Integer expectedLife  = 4;
 		Level level = createLevelWithTwoBuffer();
-		StudentAccount student = (StudentAccount) createOneStudentAccount();
-		managementBufferService.applyBufferInStudentAccount(level, student, 10d);
-		assertEquals(expected , student.getExperience());
-		assertEquals(expectedLife , student.getLife());
+		PlayerAccount player = (PlayerAccount) createOnePlayerAccount();
+		managementBufferService.applyBufferInPlayerAccount(level, player, 10d);
+		assertEquals(expected , player.getExperience());
+		assertEquals(expectedLife , player.getLife());
 	}
 }

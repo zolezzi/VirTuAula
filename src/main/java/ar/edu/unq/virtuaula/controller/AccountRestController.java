@@ -14,12 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
-import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.service.AccountService;
 import ar.edu.unq.virtuaula.service.JwtUserDetailsService;
 import ar.edu.unq.virtuaula.vo.AccountVO;
-import ar.edu.unq.virtuaula.vo.StudentAccountVO;
+import ar.edu.unq.virtuaula.vo.PlayerAccountVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class AccountRestController {
     @ApiResponse(code = 200, message = "Successfully create account", response = AccountDTO.class)
     @ApiOperation(value = "Create account by user id", notes = "Create account by user id")
     public AccountVO createAccount(@PathVariable("userId") Long userId, @RequestBody AccountDTO account) throws Exception {
-        return accountService.createAccountTeacher(userService.findById(userId), account);
+        return accountService.createAccountLeader(userService.findById(userId), account);
     }
     
     @GetMapping("/account/experience/{accountId}")
@@ -46,10 +46,10 @@ public class AccountRestController {
         return accountService.getExperience(accountId);
     }
     
-    @PostMapping("/account/upload-file-students/{accountId}")
-	@ApiOperation(value="Import list students in CSV", response=ResponseEntity.class)
-    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable("accountId") Long accountId, @RequestParam("file") MultipartFile file) throws TeacherNotFoundException {
-		return ResponseEntity.ok().body(accountService.uploadFileStudents(accountService.findTeacherById(accountId), file));
+    @PostMapping("/account/upload-file-players/{accountId}")
+	@ApiOperation(value="Import list players in CSV", response=ResponseEntity.class)
+    public ResponseEntity<ResponseMessage> uploadFile(@PathVariable("accountId") Long accountId, @RequestParam("file") MultipartFile file) throws LeaderAccountNotFoundException {
+		return ResponseEntity.ok().body(accountService.uploadFilePlayers(accountService.findLeaderById(accountId), file));
 	}
     
     @GetMapping("/account/level/{accountId}")
@@ -59,10 +59,10 @@ public class AccountRestController {
         return accountService.getLevel(accountId);
     }
     
-    @GetMapping("/account/students/{accountId}")
-    @ApiResponse(code = 200, message = "Success", response = StudentAccountVO.class, responseContainer = "List")
-    @ApiOperation(value = "Get all students by teacher", notes = "Get all students of a teacher account")
-    public List<StudentAccountVO> findAllStudentsByAccountId(@PathVariable("accountId") Long accountId) throws TeacherNotFoundException {
-        return accountService.findAllStudentsByTeacher(accountService.findTeacherById(accountId));
+    @GetMapping("/account/players/{accountId}")
+    @ApiResponse(code = 200, message = "Success", response = PlayerAccountVO.class, responseContainer = "List")
+    @ApiOperation(value = "Get all players by leader", notes = "Get all players of a leader account")
+    public List<PlayerAccountVO> findAllPlayersByAccountId(@PathVariable("accountId") Long accountId) throws LeaderAccountNotFoundException {
+        return accountService.findAllPlayersByLeader(accountService.findLeaderById(accountId));
     }
 }

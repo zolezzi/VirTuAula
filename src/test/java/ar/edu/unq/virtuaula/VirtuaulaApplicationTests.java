@@ -13,15 +13,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
 import ar.edu.unq.virtuaula.builder.BufferExperienceBuilder;
 import ar.edu.unq.virtuaula.builder.BufferLifeBuilder;
-import ar.edu.unq.virtuaula.builder.ClassroomBuilder;
-import ar.edu.unq.virtuaula.builder.LessonBuilder;
+import ar.edu.unq.virtuaula.builder.NewGameBuilder;
+import ar.edu.unq.virtuaula.builder.CampaignBuilder;
 import ar.edu.unq.virtuaula.builder.LevelBuilder;
-import ar.edu.unq.virtuaula.builder.OptionTaskBuilder;
-import ar.edu.unq.virtuaula.builder.StudentAccountBuilder;
-import ar.edu.unq.virtuaula.builder.StudentTaskBuilder;
-import ar.edu.unq.virtuaula.builder.TaskBuilder;
-import ar.edu.unq.virtuaula.builder.TaskTypeBuilder;
-import ar.edu.unq.virtuaula.builder.TeacherAccountBuilder;
+import ar.edu.unq.virtuaula.builder.OptionMissionBuilder;
+import ar.edu.unq.virtuaula.builder.PlayerAccountBuilder;
+import ar.edu.unq.virtuaula.builder.PlayerMissionBuilder;
+import ar.edu.unq.virtuaula.builder.MissionBuilder;
+import ar.edu.unq.virtuaula.builder.MissionTypeBuilder;
+import ar.edu.unq.virtuaula.builder.LeaderAccountBuilder;
 import ar.edu.unq.virtuaula.builder.TeamBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
 import ar.edu.unq.virtuaula.model.Account;
@@ -29,22 +29,22 @@ import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Buffer;
 import ar.edu.unq.virtuaula.model.BufferExperience;
 import ar.edu.unq.virtuaula.model.BufferLife;
-import ar.edu.unq.virtuaula.model.Classroom;
-import ar.edu.unq.virtuaula.model.Lesson;
+import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.model.Campaign;
 import ar.edu.unq.virtuaula.model.Level;
-import ar.edu.unq.virtuaula.model.OptionTask;
-import ar.edu.unq.virtuaula.model.StudentAccount;
-import ar.edu.unq.virtuaula.model.StudentTask;
-import ar.edu.unq.virtuaula.model.Task;
-import ar.edu.unq.virtuaula.model.TaskType;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
+import ar.edu.unq.virtuaula.model.OptionMission;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
+import ar.edu.unq.virtuaula.model.PlayerMission;
+import ar.edu.unq.virtuaula.model.Mission;
+import ar.edu.unq.virtuaula.model.MissionType;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Team;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
-import ar.edu.unq.virtuaula.repository.ClassroomRepository;
+import ar.edu.unq.virtuaula.repository.NewGameRepository;
 import ar.edu.unq.virtuaula.repository.LevelRepository;
-import ar.edu.unq.virtuaula.repository.StudentTaskRepository;
-import ar.edu.unq.virtuaula.repository.TaskTypeRepository;
+import ar.edu.unq.virtuaula.repository.PlayerMissionRepository;
+import ar.edu.unq.virtuaula.repository.MissionTypeRepository;
 import ar.edu.unq.virtuaula.repository.TeamRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
 
@@ -53,16 +53,16 @@ import ar.edu.unq.virtuaula.repository.UserRepository;
 public class VirtuaulaApplicationTests {
 
     @Autowired
-    protected ClassroomRepository classroomRepository;
+    protected NewGameRepository newGameRepository;
 
     @Autowired
     protected AccountRepository accountRepository;
 
     @Autowired
-    protected StudentTaskRepository studentTaskRepository;
+    protected PlayerMissionRepository playerMissionRepository;
     
     @Autowired
-    protected TaskTypeRepository taskTypeRepository;
+    protected MissionTypeRepository missionTypeRepository;
     
     @Autowired
     protected UserRepository userRepository;
@@ -73,93 +73,93 @@ public class VirtuaulaApplicationTests {
     @Autowired
     protected TeamRepository teamRepository;
 
-    protected Classroom createOneClassroom() {
-    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
-        		.withTaskType(taskType)
+    protected NewGame createOneNewGame() {
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+        Mission mission = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withMissionType(missionType)
         		.build();
 		Date date = getDate();
-		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).withDeliveryDate(date).build();
-		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-		return createClassroom(classroom);
+		Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission).withMaxNote(1000).withDeliveryDate(date).build();
+		NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+		return createNewGame(newGame);
     }
     
-    protected Classroom createOneClassroomWithLessonScore(Double score) {
-    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(score)
-        		.withTaskType(taskType)
+    protected NewGame createOneNewGameWithCampaignScore(Double score) {
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+        Mission mission = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(score)
+        		.withMissionType(missionType)
         		.build();
 		Date date = getDate();
-		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(3000).withDeliveryDate(date).build();
-		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-		return createClassroom(classroom);
+		Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission).withMaxNote(3000).withDeliveryDate(date).build();
+		NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+		return createNewGame(newGame);
     }
     
-    protected Classroom createOneClassroomWithoutDateExpired(Date date){
-    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
-        Task task = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
-        		.withTaskType(taskType)
+    protected NewGame createOneNewGameWithoutDateExpired(Date date){
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+        Mission mission = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withMissionType(missionType)
         		.build();
-		Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task).withMaxNote(1000).withDeliveryDate(date).build();
-		Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-		return createClassroom(classroom);
+		Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission).withMaxNote(1000).withDeliveryDate(date).build();
+		NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+		return createNewGame(newGame);
     }
     
-    protected TaskType  createOneTaskType() {
-    	TaskType taskType = TaskTypeBuilder.taskTypeWithName("Multiple choise").build();
-        return createTaskType(taskType);
+    protected MissionType  createOneMissionType() {
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+        return createMissionType(missionType);
     }
     
-    protected Classroom createOneClassroomWithoutLesson() {
-        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").build();
-        return createClassroom(classroom);
+    protected NewGame createOneNewGameWithoutCampaign() {
+        NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").build();
+        return createNewGame(newGame);
     }
 
-    protected Classroom createOneClassroomWithTwoTasks() {
-        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
-        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
+    protected NewGame createOneNewGameWithTwoMissions() {
+        Mission mission1 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
+        Mission mission2 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
         Date date = getDate();
-        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).withDeliveryDate(date).build();
-        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-        return createClassroom(classroom);
+        Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission1).withMission(mission2).withDeliveryDate(date).build();
+        NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+        return createNewGame(newGame);
     }
 
-    protected Classroom createOneClassroomWithTwoTasksAndTwoOptionTasks() {
-        TaskType taskType = new TaskType();
-        taskType.setName("Multiple choice");
-    	OptionTask option1 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
-    	OptionTask option2 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
-    	OptionTask option3 = OptionTaskBuilder.taskWithReponseValue("2").withIsCorrect(true).build();
-    	OptionTask option4 = OptionTaskBuilder.taskWithReponseValue("1").withIsCorrect(false).build();
-        Task task1 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionTask(option1).withOptionTask(option2).withTaskType(taskType).build();
-        Task task2 = TaskBuilder.taskWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionTask(option3).withOptionTask(option4).withTaskType(taskType).build();
-        Lesson lesson = LessonBuilder.lessonWithName("Ecuaciones").withTask(task1).withTask(task2).build();
-        Classroom classroom = ClassroomBuilder.classroomWithName("Matematicas").withLesson(lesson).build();
-        return createClassroom(classroom);
+    protected NewGame createOneNewGameWithTwoMissionsAndTwoOptionMissions() {
+        MissionType missionType = new MissionType();
+        missionType.setName("Multiple choice");
+    	OptionMission option1 = OptionMissionBuilder.missionWithReponseValue("2").withIsCorrect(true).build();
+    	OptionMission option2 = OptionMissionBuilder.missionWithReponseValue("1").withIsCorrect(false).build();
+    	OptionMission option3 = OptionMissionBuilder.missionWithReponseValue("2").withIsCorrect(true).build();
+    	OptionMission option4 = OptionMissionBuilder.missionWithReponseValue("1").withIsCorrect(false).build();
+        Mission mission1 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionMission(option1).withOptionMission(option2).withMissionType(missionType).build();
+        Mission mission2 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withOptionMission(option3).withOptionMission(option4).withMissionType(missionType).build();
+        Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission1).withMission(mission2).build();
+        NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+        return createNewGame(newGame);
     }
 
-    protected Classroom createClassroom(Classroom classroom) {
-        return classroomRepository.save(classroom);
+    protected NewGame createNewGame(NewGame newGame) {
+        return newGameRepository.save(newGame);
     }
 
-    protected TeacherAccount createTeacherAccount(TeacherAccount account) {
+    protected LeaderAccount createLeaderAccount(LeaderAccount account) {
         return accountRepository.save(account);
     }
     
-    protected StudentAccount createStudentAccount(StudentAccount account) {
+    protected PlayerAccount createPlayerAccount(PlayerAccount account) {
         return accountRepository.save(account);
     }
     
-    protected User createOneUserWithTeacherAccount() {
-        return createOneTeacherAccount().getUser();
+    protected User createOneUserWithLeaderAccount() {
+        return createOneLeaderAccount().getUser();
     }
 
     protected User createUser(User user) {
         return userRepository.save(user);
     }
 
-    protected TaskType createTaskType(TaskType taskType) {
-        return taskTypeRepository.save(taskType);
+    protected MissionType createMissionType(MissionType missionType) {
+        return missionTypeRepository.save(missionType);
     }
     
     protected Level createLevel(Level level) {
@@ -171,15 +171,15 @@ public class VirtuaulaApplicationTests {
     }
     
     protected Team createOneTeam(){
-    	List<StudentAccount> students = new ArrayList<>();
-    	Classroom classroom = createOneClassroom();
-    	StudentAccount student = (StudentAccount) createOneStudentAccount();
-    	TeacherAccount teacher = (TeacherAccount) createOneTeacherAccountWithClassroomAndStudent(classroom, student);
-    	students.add(student);
+    	List<PlayerAccount> players = new ArrayList<>();
+    	NewGame newGame = createOneNewGame();
+    	PlayerAccount player = (PlayerAccount) createOnePlayerAccount();
+    	LeaderAccount leader = (LeaderAccount) createOneLeaderAccountWithNewGameAndPlayer(newGame, player);
+    	players.add(player);
     	Team team = TeamBuilder.teamWithName("Team de equipo de matemaica")
-    			.withClassroom(classroom)
-    			.withTeacher(teacher)
-    			.withStudents(students)
+    			.withNewGame(newGame)
+    			.withLeader(leader)
+    			.withPlayers(players)
     			.build();
     	return createTeam(team);
     }
@@ -238,22 +238,22 @@ public class VirtuaulaApplicationTests {
 		return createLevel(level);
 	}
 
-    protected Account createOneTeacherAccount() {
-        AccountType accountType = AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+    protected Account createOneLeaderAccount() {
+        AccountType accountType = AccountTypeBuilder.accountTypeWithUsername("LEADER").build();
         User user = UserBuilder.userWithUsernameAndPassword("charlie", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
-        TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+        LeaderAccount account = LeaderAccountBuilder.accountWithUsername("charlie")
                 .accountWithFisrtName("Charlie")
                 .accountWithLastName("Cardozo")
                 .accountWithEmail("charlie@gmail.com")
                 .withAccountType(accountType)
                 .withUser(user)
                 .build();
-        account = createTeacherAccount(account);
+        account = createLeaderAccount(account);
         return account;
     }
     
-    protected Account createOneStudentAccount() {
-    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("STUDENT").build();
+    protected Account createOnePlayerAccount() {
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("PLAYER").build();
 		BufferExperience bufferExprience = BufferExperienceBuilder.bufferExperienceWithName("Buffer experience")
 				.withDescription("Buffer suma experiencia")
 				.withExperienceValue(10d)
@@ -276,7 +276,7 @@ public class VirtuaulaApplicationTests {
     			.withBuffers(buffers)
     			.build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie2", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
-    	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie2")
+    	PlayerAccount account = PlayerAccountBuilder.accountWithUsername("charlie2")
         		.accountWithFisrtName("Charlie2")
         		.accountWithLastName("Cardozo2")
         		.accountWithEmail("charlie2@gmail.com")
@@ -285,85 +285,85 @@ public class VirtuaulaApplicationTests {
         		.withUser(user)
         		.withLife(3)
         		.build();
-        account = createStudentAccount(account);
+        account = createPlayerAccount(account);
         return account;
     }
     
-    protected Account createOneStudentTasktWithLessonAndTaskAndStudentAccount(Lesson lesson, Task task, StudentAccount studentAccount) {
-    	StudentTask studentTask = StudentTaskBuilder.createStudentTask()
-    			.withLesson(lesson)
-    			.withTask(task)
-    			.withStudentAccount(studentAccount)
+    protected Account createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(Campaign campaign, Mission mission, PlayerAccount playerAccount) {
+    	PlayerMission PlayerMission = PlayerMissionBuilder.createPlayerMission()
+    			.withCampaign(campaign)
+    			.withMission(mission)
+    			.withPlayerAccount(playerAccount)
     			.completed()
     			.build();
-    	studentTask = createStudentTask(studentTask);
-        return studentTask.getStudentAccount();
+    	PlayerMission = createPlayerMission(PlayerMission);
+        return PlayerMission.getPlayerAccount();
     }
     
-    protected Account createOneStudentTaskUncompletedtWithLessonAndTaskAndStudentAccount(Lesson lesson, Task task, StudentAccount studentAccount) {
-    	StudentTask studentTask = StudentTaskBuilder.createStudentTask()
-    			.withLesson(lesson)
-    			.withTask(task)
-    			.withStudentAccount(studentAccount)
+    protected Account createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(Campaign campaign, Mission mission, PlayerAccount playerAccount) {
+    	PlayerMission PlayerMission = PlayerMissionBuilder.createPlayerMission()
+    			.withCampaign(campaign)
+    			.withMission(mission)
+    			.withPlayerAccount(playerAccount)
     			.uncompleted()
     			.build();
-    	studentTask = createStudentTask(studentTask);
-        return studentTask.getStudentAccount();
+    	PlayerMission = createPlayerMission(PlayerMission);
+        return PlayerMission.getPlayerAccount();
     }
     
-    private StudentTask createStudentTask(StudentTask studentTask) {
-		return studentTaskRepository.save(studentTask);
+    private PlayerMission createPlayerMission(PlayerMission playerMission) {
+		return playerMissionRepository.save(playerMission);
 	}
 
-	protected Account createOneTeacherAccountWithClassroom(Classroom classroom) {
-    	List<Classroom> classrooms = new ArrayList<>();
-    	classrooms.add(classroom);
-    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+	protected Account createOneLeaderAccountWithNewGame(NewGame newGame) {
+    	List<NewGame> newGames = new ArrayList<>();
+    	newGames.add(newGame);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("LEADER").build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
-    	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+    	LeaderAccount account = LeaderAccountBuilder.accountWithUsername("charlie")
         		.accountWithFisrtName("Charlie")
         		.accountWithLastName("Cardozo")
         		.accountWithEmail("charlie@gmail.com")
         		.withAccountType(accountType)
         		.withUser(user)
-        		.withClassroom(classrooms)
+        		.withNewGames(newGames)
         		.build();
-        account = createTeacherAccount(account);
+        account = createLeaderAccount(account);
         return account;
     }
 	
-	protected Account createOneStudentAccountWithClassroom(Classroom classroom) {
-    	List<Classroom> classrooms = new ArrayList<>();
-    	classrooms.add(classroom);
-    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+	protected Account createOnePlayerAccountWithNewGame(NewGame newGame) {
+    	List<NewGame> newGames = new ArrayList<>();
+    	newGames.add(newGame);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("LEADER").build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
-    	StudentAccount account = StudentAccountBuilder.accountWithUsername("charlie")
+    	PlayerAccount account = PlayerAccountBuilder.accountWithUsername("charlie")
         		.accountWithFisrtName("Charlie")
         		.accountWithLastName("Cardozo")
         		.accountWithEmail("charlie@gmail.com")
         		.withAccountType(accountType)
         		.withUser(user)
-        		.withClassroom(classrooms)
+        		.withNewGames(newGames)
         		.build();
-        account = createStudentAccount(account);
+        account = createPlayerAccount(account);
         return account;
     }
 	
-	protected Account createOneTeacherAccountWithClassroomAndStudent(Classroom classroom, StudentAccount student) {
-    	List<Classroom> classrooms = new ArrayList<>();
-    	classrooms.add(classroom);
-    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("TEACHER").build();
+	protected Account createOneLeaderAccountWithNewGameAndPlayer(NewGame newGame, PlayerAccount player) {
+    	List<NewGame> newGames = new ArrayList<>();
+    	newGames.add(newGame);
+    	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("LEADER").build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie", "1234").build();
-    	TeacherAccount account = TeacherAccountBuilder.accountWithUsername("charlie")
+    	LeaderAccount account = LeaderAccountBuilder.accountWithUsername("charlie")
         		.accountWithFisrtName("Charlie")
         		.accountWithLastName("Cardozo")
         		.accountWithEmail("charlie@gmail.com")
         		.withAccountType(accountType)
         		.withUser(user)
-        		.addStudent(student)
-        		.withClassroom(classrooms)
+        		.addPlayer(player)
+        		.withNewGames(newGames)
         		.build();
-        account = createTeacherAccount(account);
+        account = createLeaderAccount(account);
         return account;
     }
 	

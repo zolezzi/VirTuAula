@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.constants.CSVFormatConstants;
-import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 
 @Component
 public class CSVUtil {
@@ -27,28 +27,28 @@ public class CSVUtil {
 	    return TYPE.equals(file.getContentType());
 	  }
 	  
-	  public List<StudentAccount> csvToStudents(InputStream inputStream) {
+	  public List<PlayerAccount> csvToPlayers(InputStream inputStream) {
 		  try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream, 
 				  CSVFormatConstants.TRANSFORMATION_FORMAT));
 				  CSVParser csvParser = new CSVParser(fileReader,
 						  CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
 
-			  List<StudentAccount> students = new ArrayList<>();
+			  List<PlayerAccount> players = new ArrayList<>();
 			  Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 
 			  for (CSVRecord csvRecord : csvRecords) {
-				  StudentAccount student = new StudentAccount();
-				  student.setFirstName(csvRecord.get(CSVFormatConstants.COLUMN_FIRST_NAME));
-				  student.setLastName(csvRecord.get(CSVFormatConstants.COLUMN_LAST_NAME));
-				  student.setUsername(csvRecord.get(CSVFormatConstants.COLUMN_DNI));
-				  student.setDni(Integer.parseInt(csvRecord.get(CSVFormatConstants.COLUMN_DNI)));
-				  student.setEmail(csvRecord.get(CSVFormatConstants.COLUMN_EMAIL));
-				  student.setExperience(Double.valueOf(0.0d));
-				  student.setLife(3);
-				  students.add(student);
+				  PlayerAccount player = new PlayerAccount();
+				  player.setFirstName(csvRecord.get(CSVFormatConstants.COLUMN_FIRST_NAME));
+				  player.setLastName(csvRecord.get(CSVFormatConstants.COLUMN_LAST_NAME));
+				  player.setUsername(csvRecord.get(CSVFormatConstants.COLUMN_DNI));
+				  player.setDni(Integer.parseInt(csvRecord.get(CSVFormatConstants.COLUMN_DNI)));
+				  player.setEmail(csvRecord.get(CSVFormatConstants.COLUMN_EMAIL));
+				  player.setExperience(Double.valueOf(0.0d));
+				  player.setLife(3);
+				  players.add(player);
 			  }
 			  
-			  return students;
+			  return players;
 			   
 		  } catch (IOException e) {
 			  throw new RuntimeException("fail to parse CSV file: " + e.getMessage());

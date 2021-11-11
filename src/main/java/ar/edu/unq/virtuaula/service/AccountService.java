@@ -18,15 +18,15 @@ import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.StudentAccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.TeacherNotFoundException;
+import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
+import ar.edu.unq.virtuaula.exception.PlayerAccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Account;
 import ar.edu.unq.virtuaula.model.AccountType;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Level;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.model.Privilege;
-import ar.edu.unq.virtuaula.model.StudentAccount;
-import ar.edu.unq.virtuaula.model.TeacherAccount;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.AccountTypeRepository;
@@ -34,7 +34,7 @@ import ar.edu.unq.virtuaula.repository.UserRepository;
 import ar.edu.unq.virtuaula.util.CSVUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.AccountVO;
-import ar.edu.unq.virtuaula.vo.StudentAccountVO;
+import ar.edu.unq.virtuaula.vo.PlayerAccountVO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,12 +48,12 @@ public class AccountService {
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
     private final CSVUtil csvUtil;
-    private static final String ACCOUNT_TYPE_TEACHER = "TEACHER";
-    private static final String ACCOUNT_TYPE_STUDENT = "STUDENT";
+    private static final String ACCOUNT_TYPE_LEADER = "LEADER";
+    private static final String ACCOUNT_TYPE_PLAYER = "PLAYER";
 
-    public TeacherAccount findTeacherById(Long accountId) throws TeacherNotFoundException {
-        return (TeacherAccount) accountRepository.findById(accountId)
-                .orElseThrow(() -> new TeacherNotFoundException("Error not found teacher account with id: " + accountId));
+    public LeaderAccount findLeaderById(Long accountId) throws LeaderAccountNotFoundException {
+        return (LeaderAccount) accountRepository.findById(accountId)
+                .orElseThrow(() -> new LeaderAccountNotFoundException("Error not found leader account with id: " + accountId));
     }
 
     public Account findById(Long accountId) throws AccountNotFoundException {
@@ -61,42 +61,42 @@ public class AccountService {
                 .orElseThrow(() -> new AccountNotFoundException("Error not found account with id: " + accountId));
     }
 
-    public AccountVO createAccountTeacher(User user, AccountDTO account) {
-        TeacherAccount newAccount = mapperUtil.getMapper().map(account, TeacherAccount.class);
+    public AccountVO createAccountLeader(User user, AccountDTO account) {
+        LeaderAccount newAccount = mapperUtil.getMapper().map(account, LeaderAccount.class);
         newAccount.setUser(user);
         newAccount.setUsername(user.getUsername());
         newAccount.setFirstName(account.getFirstName());
         newAccount.setLastName(account.getLastName());
         newAccount.setDni(account.getDni());
         newAccount.setEmail(user.getEmail());
-        newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_TEACHER));
+        newAccount.setAccountType(accountTypeRepository.findByName(ACCOUNT_TYPE_LEADER));
         newAccount = accountRepository.save(newAccount);
         return createAccountVo(newAccount);
     }
 
-    public StudentAccount findStudentById(Long accountId) throws StudentAccountNotFoundException {
-        return (StudentAccount) accountRepository.findById(accountId)
-                .orElseThrow(() -> new StudentAccountNotFoundException("Error not found student account with id: " + accountId));
+    public PlayerAccount findPlayerById(Long accountId) throws PlayerAccountNotFoundException {
+        return (PlayerAccount) accountRepository.findById(accountId)
+                .orElseThrow(() -> new PlayerAccountNotFoundException("Error not found player account with id: " + accountId));
     }
 
-    public Double getExperience(Long accountId) throws StudentAccountNotFoundException {
-        StudentAccount account = findStudentById(accountId);
+    public Double getExperience(Long accountId) throws PlayerAccountNotFoundException {
+        PlayerAccount account = findPlayerById(accountId);
         return account.getExperience();
     }
 
-    public ResponseMessage uploadFileStudents(TeacherAccount teacherAccount, MultipartFile file) {
+    public ResponseMessage uploadFilePlayers(LeaderAccount leaderAccount, MultipartFile file) {
         String message = "";
         if (csvUtil.hasCSVFormat(file)) {
             try {
-                AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_STUDENT);
-                List<StudentAccount> students = csvUtil.csvToStudents(file.getInputStream());
-                if (!students.isEmpty()) {
-                    students = validateStudentsAndSetTeacherAndAccountType(students, accountType, teacherAccount);
-                    students = accountRepository.saveAll(students);
-                    teacherAccount.getStudents().addAll(students);
-                    teacherAccount = accountRepository.save(teacherAccount);
-                    List<Integer> dnis = students.stream().map(student -> student.getDni()).collect(Collectors.toList());
-                    createUserForStudents(teacherAccount.getStudentsByDNIs(dnis));
+                AccountType accountType = accountTypeRepository.findByName(ACCOUNT_TYPE_PLAYER);
+                List<PlayerAccount> players = csvUtil.csvToPlayers(file.getInputStream());
+                if (!players.isEmpty()) {
+                	players = validatePlayersAndSetLeaderAndAccountType(players, accountType, leaderAccount);
+                	players = accountRepository.saveAll(players);
+                    leaderAccount.getPlayers().addAll(players);
+                    leaderAccount = accountRepository.save(leaderAccount);
+                    List<Integer> dnis = players.stream().map(player -> player.getDni()).collect(Collectors.toList());
+                    createUserForPlayers(leaderAccount.getPlayersByDNIs(dnis));
                     message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 } else {
                     message = "Please review file, i do not know loaded any lines from the file: " + file.getOriginalFilename();
@@ -109,66 +109,66 @@ public class AccountService {
         return new ResponseMessage(message);
     }
 
-	public List<StudentAccount> findAllStudentByIds(List<Long> studentIds) {
-		return accountRepository.findAllStudentByIds(studentIds);
+	public List<PlayerAccount> findAllPlayerByIds(List<Long> playerIds) {
+		return accountRepository.findAllPlayerByIds(playerIds);
 	}
 
-	public LevelDTO getLevel(Long accountId) throws StudentAccountNotFoundException {
-		StudentAccount account = findStudentById(accountId);
+	public LevelDTO getLevel(Long accountId) throws PlayerAccountNotFoundException {
+		PlayerAccount account = findPlayerById(accountId);
 		return  mapperUtil.getMapper().map(account.getLevel(), LevelDTO.class);
 	}
 
-	public List<StudentAccountVO> findAllStudentsByTeacher(TeacherAccount teacher) {
-		return transformToStudentVO(teacher.getStudents());
+	public List<PlayerAccountVO> findAllPlayersByLeader(LeaderAccount leader) {
+		return transformToPlayerVO(leader.getPlayers());
 	}
 	
-	private List<StudentAccountVO> transformToStudentVO(List<StudentAccount> students) {
-		return students.stream().map(student -> {
-			StudentAccountVO studentVO = new StudentAccountVO();
-                        studentVO.setId(student.getId());
-			studentVO.setFirstName(student.getFirstName());
-			studentVO.setUsername(student.getUsername());
-			studentVO.setExperience(student.getExperience());
-			studentVO.setLevel(mapperUtil.getMapper().map(student.getLevel(), LevelDTO.class));
-            return studentVO;
+	private List<PlayerAccountVO> transformToPlayerVO(List<PlayerAccount> players) {
+		return players.stream().map(player -> {
+			PlayerAccountVO playerVO = new PlayerAccountVO();
+                        playerVO.setId(player.getId());
+			playerVO.setFirstName(player.getFirstName());
+			playerVO.setUsername(player.getUsername());
+			playerVO.setExperience(player.getExperience());
+			playerVO.setLevel(mapperUtil.getMapper().map(player.getLevel(), LevelDTO.class));
+            return playerVO;
         }).collect(toList());
 	}
 
-    private List<StudentAccount> validateStudentsAndSetTeacherAndAccountType(List<StudentAccount> students,
-            AccountType accountType, TeacherAccount teacherAccount) {
+    private List<PlayerAccount> validatePlayersAndSetLeaderAndAccountType(List<PlayerAccount> players,
+            AccountType accountType, LeaderAccount leaderAccount) {
     	Level Level = levelService.getInitialLevel();
-        return students.stream()
-                .filter(student -> !existsAccount(student))
-                .map(student -> {
-                    student.setAccountType(accountType);
-                    student.addTeacher(teacherAccount);
-                    student.setLevel(Level);
-                    return student;
+        return players.stream()
+                .filter(player -> !existsAccount(player))
+                .map(player -> {
+                	player.setAccountType(accountType);
+                	player.addLeader(leaderAccount);
+                	player.setLevel(Level);
+                    return player;
                 })
                 .collect(Collectors.toList());
     }
 
-    private void createUserForStudents(List<StudentAccount> students) {
-        students.forEach(student -> {
+    private void createUserForPlayers(List<PlayerAccount> players) {
+    	players.forEach(player -> {
             User user = new User();
             String password = Hashing.sha256()
-                    .hashString(student.getDni().toString(), StandardCharsets.UTF_8)
+                    .hashString(player.getDni().toString(), StandardCharsets.UTF_8)
                     .toString();
             user.setPassword(password);
-            user.setAccount(student);
-            user.setEmail(student.getEmail());
-            user.setUsername(String.valueOf(student.getDni()));
+            user.setAccount(player);
+            user.setEmail(player.getEmail());
+            user.setUsername(String.valueOf(player.getDni()));
             User userSaved = userRepository.save(user);
-            student.setUser(userSaved);
-            accountRepository.save(student);
+            player.setUser(userSaved);
+            accountRepository.save(player);
         });
     }
 
-    private Boolean existsAccount(StudentAccount student) {
-        return accountRepository.findByDni(student.getDni()).isPresent();
+    private Boolean existsAccount(PlayerAccount player) {
+        return accountRepository.findByDni(player.getDni()).isPresent();
     }
 
-    private AccountVO createAccountVo(TeacherAccount account) {
+    private AccountVO createAccountVo(LeaderAccount account) {
         AccountVO accountVO = new AccountVO();
         accountVO.setAccountId(account.getId());
         AccountTypeDTO accountTypeDTO = new AccountTypeDTO();

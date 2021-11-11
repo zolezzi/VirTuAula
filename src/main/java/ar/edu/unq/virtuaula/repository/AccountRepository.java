@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import ar.edu.unq.virtuaula.model.Account;
-import ar.edu.unq.virtuaula.model.StudentAccount;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	public Optional<Account> findByDni(Integer dni);
 	
-	@Query("SELECT sa FROM StudentAccount sa WHERE sa.id in (:studentIds)")
-	public List<StudentAccount> findAllStudentByIds(@Param("studentIds") List<Long> studentIds);
+	@Query("SELECT pa FROM PlayerAccount pa WHERE pa.id in (:playerIds)")
+	public List<PlayerAccount> findAllPlayerByIds(@Param("playerIds") List<Long> playerIds);
 
 }

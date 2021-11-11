@@ -1,2 +1,2 @@
-INSERT INTO account_type(name) VALUES ('STUDENT');
-INSERT INTO account_type(name) VALUES ('TEACHER');
+INSERT INTO account_type(name) VALUES ('PLAYER');
+INSERT INTO account_type(name) VALUES ('LEADER');
