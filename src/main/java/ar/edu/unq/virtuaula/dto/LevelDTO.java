@@ -11,6 +11,7 @@ public class LevelDTO implements Serializable {
 	private Long id;
     private String name;
     private Integer numberLevel;
+    private Double maxValue;
     private String description;
     private String imagePath;
 }
