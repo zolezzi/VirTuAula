@@ -42,4 +42,8 @@ public class Team implements Serializable{
             inverseJoinColumns = @JoinColumn(
                     name = "player_id", referencedColumnName = "id"))
     private List<PlayerAccount> players;
+    
+    public void addPlayer(PlayerAccount player) {
+        this.players.add(player);
+    }
 }

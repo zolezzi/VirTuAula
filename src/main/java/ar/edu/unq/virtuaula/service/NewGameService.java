@@ -62,14 +62,16 @@ public class NewGameService {
         return mapperUtil.getMapper().map(newGameBD, NewGameDTO.class);
 	}
 
-	public ResponseMessage assign(LeaderAccount leaderId, Long newGameId, List<Long> ids) throws NewGameNotFoundException {
+	public ResponseMessage assign(LeaderAccount leaderAccount, Long newGameId, List<Long> ids) throws NewGameNotFoundException {
 		NewGame newGameBD = newGameRepository.findById(newGameId)
 				.orElseThrow(() -> new NewGameNotFoundException("Error not found new game id: " + newGameId));
 		List<PlayerAccount> players = accountService.findAllPlayerByIds(ids);
+                teamService.addToTeam(newGameBD, leaderAccount, players);
 		return createAllPlayerMission(newGameBD, players);
 	}
 	
     private ResponseMessage createAllPlayerMission(NewGame newGameBD, List<PlayerAccount> players) {
+        players.forEach(player -> player.addNewGame(newGameBD));
     	newGameBD.getCampaigns().stream()
 		.forEach(campaign -> createPlayerMissionAllByPlayer(campaign, players));
 		return new ResponseMessage("the assignment to the new game was successful");

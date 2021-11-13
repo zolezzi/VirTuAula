@@ -30,7 +30,7 @@ public class PlayerAccount extends Account {
     @JoinColumn(name = "player_mission_id")
     private List<PlayerMission> resultsMissions = new ArrayList<>();
     
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "level_id", referencedColumnName = "id")
     private Level level;
     
@@ -52,4 +52,8 @@ public class PlayerAccount extends Account {
 	public Integer lifeSum(Integer life, Integer calculatedValue) {
 		return life + calculatedValue;
 	}
+        
+        public void addNewGame(NewGame newGame) {
+            this.newGames.add(newGame);
+        }
 }

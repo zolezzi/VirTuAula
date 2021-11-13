@@ -23,6 +23,7 @@ import ar.edu.unq.virtuaula.model.Campaign;
 import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.model.Mission;
 import ar.edu.unq.virtuaula.model.LeaderAccount;
+import ar.edu.unq.virtuaula.model.Team;
 
 public class NewGameServiceTest extends VirtuaulaApplicationTests {
 
@@ -143,11 +144,16 @@ public class NewGameServiceTest extends VirtuaulaApplicationTests {
     	accounts.add(1l);
     	accounts.add(2l);
     	NewGame newGame = createOneNewGame();
+        Team team = new Team();
         Campaign campaign = newGame.getCampaigns().get(0);
         Mission mission = campaign.getMissions().get(0);
         PlayerAccount player = (PlayerAccount) createOnePlayerAccount();
         player = (PlayerAccount) createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, player);
     	LeaderAccount leader = (LeaderAccount) createOneLeaderAccountWithNewGameAndPlayer(newGame, player);
+        team.setLeader(leader);
+        team.setNewGame(newGame);
+        team.setName("Team X");
+        teamRepository.save(team);
 	    ResponseMessage result = newGameService.assign(leader, 1l, accounts);
 	    String expectedMessage = "the assignment to the new game was successful";
 	    assertNotNull(result);

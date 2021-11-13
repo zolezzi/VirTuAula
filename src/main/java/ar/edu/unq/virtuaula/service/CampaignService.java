@@ -22,6 +22,7 @@ import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.model.PlayerMission;
 import ar.edu.unq.virtuaula.model.Mission;
 import ar.edu.unq.virtuaula.model.LeaderAccount;
+import ar.edu.unq.virtuaula.repository.AccountRepository;
 import ar.edu.unq.virtuaula.repository.CampaignRepository;
 import ar.edu.unq.virtuaula.repository.PlayerMissionRepository;
 import ar.edu.unq.virtuaula.repository.MissionTypeRepository;
@@ -39,6 +40,7 @@ public class CampaignService {
     private final CampaignRepository campaignRepository;
     private final PlayerMissionRepository playerMissionRepository;
     private final MissionTypeRepository missionTypeRepository;
+    private final AccountRepository accountRepository;
     private final MapperUtil mapperUtil;
     private final LevelService levelService;
     private final ManagementBufferService bufferService; 

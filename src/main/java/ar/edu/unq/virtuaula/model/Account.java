@@ -55,6 +55,6 @@ public class Account implements Serializable {
                     name = "account_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "new_game_id", referencedColumnName = "id"))
-    private List<NewGame> newGames = new ArrayList<>();
+    protected List<NewGame> newGames = new ArrayList<>();
 
 }
