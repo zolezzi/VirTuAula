@@ -3,6 +3,7 @@ package ar.edu.unq.virtuaula.service;
 import static java.util.stream.Collectors.toList;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import com.google.common.hash.Hashing;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
+import ar.edu.unq.virtuaula.dto.BufferDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
@@ -120,6 +122,12 @@ public class AccountService {
 
 	public List<PlayerAccountVO> findAllPlayersByLeader(LeaderAccount leader) {
 		return transformToPlayerVO(leader.getPlayers());
+	}
+	
+
+	public List<BufferDTO> getBuffers(Long accountId) throws PlayerAccountNotFoundException {
+		PlayerAccount account = findPlayerById(accountId);
+		return Arrays.asList(mapperUtil.getMapper().map(account.getLevel().getBuffers(), BufferDTO[].class));
 	}
 	
 	private List<PlayerAccountVO> transformToPlayerVO(List<PlayerAccount> players) {

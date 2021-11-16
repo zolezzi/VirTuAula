@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.BufferDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
 import ar.edu.unq.virtuaula.exception.PlayerAccountNotFoundException;
@@ -191,5 +192,12 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         assertEquals(expected, result.size());
     }
     
-    
+    @Test
+    public void whenPlayerGetBufferThenReturnBufferAssociateByLevel() throws PlayerAccountNotFoundException {
+    	Integer expected = 2;
+    	createOnePlayerAccount();
+        List<BufferDTO> result = accountService.getBuffers(1l);
+        assertNotNull(result);
+        assertEquals(expected, result.size());
+    }
 }

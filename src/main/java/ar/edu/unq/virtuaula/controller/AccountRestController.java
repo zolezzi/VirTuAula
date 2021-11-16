@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
+import ar.edu.unq.virtuaula.dto.BufferDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
@@ -64,5 +65,12 @@ public class AccountRestController {
     @ApiOperation(value = "Get all players by leader", notes = "Get all players of a leader account")
     public List<PlayerAccountVO> findAllPlayersByAccountId(@PathVariable("accountId") Long accountId) throws LeaderAccountNotFoundException {
         return accountService.findAllPlayersByLeader(accountService.findLeaderById(accountId));
+    }
+    
+    @GetMapping("/account/buffers/{accountId}")
+    @ApiResponse(code = 200, message = "Sucessfully get buffers", response = LevelDTO.class)
+    @ApiOperation(value = "Get buffers by account id", notes = "Get buffers by account id")
+    public List<BufferDTO> getBuffers(@PathVariable("accountId") Long accountId) throws Exception {
+        return accountService.getBuffers(accountId);
     }
 }
