@@ -13,15 +13,16 @@ import org.springframework.test.annotation.DirtiesContext;
 import ar.edu.unq.virtuaula.builder.AccountTypeBuilder;
 import ar.edu.unq.virtuaula.builder.BufferExperienceBuilder;
 import ar.edu.unq.virtuaula.builder.BufferLifeBuilder;
-import ar.edu.unq.virtuaula.builder.NewGameBuilder;
 import ar.edu.unq.virtuaula.builder.CampaignBuilder;
+import ar.edu.unq.virtuaula.builder.GoalBuilder;
+import ar.edu.unq.virtuaula.builder.LeaderAccountBuilder;
 import ar.edu.unq.virtuaula.builder.LevelBuilder;
+import ar.edu.unq.virtuaula.builder.MissionBuilder;
+import ar.edu.unq.virtuaula.builder.MissionTypeBuilder;
+import ar.edu.unq.virtuaula.builder.NewGameBuilder;
 import ar.edu.unq.virtuaula.builder.OptionMissionBuilder;
 import ar.edu.unq.virtuaula.builder.PlayerAccountBuilder;
 import ar.edu.unq.virtuaula.builder.PlayerMissionBuilder;
-import ar.edu.unq.virtuaula.builder.MissionBuilder;
-import ar.edu.unq.virtuaula.builder.MissionTypeBuilder;
-import ar.edu.unq.virtuaula.builder.LeaderAccountBuilder;
 import ar.edu.unq.virtuaula.builder.TeamBuilder;
 import ar.edu.unq.virtuaula.builder.UserBuilder;
 import ar.edu.unq.virtuaula.model.Account;
@@ -29,22 +30,23 @@ import ar.edu.unq.virtuaula.model.AccountType;
 import ar.edu.unq.virtuaula.model.Buffer;
 import ar.edu.unq.virtuaula.model.BufferExperience;
 import ar.edu.unq.virtuaula.model.BufferLife;
-import ar.edu.unq.virtuaula.model.NewGame;
 import ar.edu.unq.virtuaula.model.Campaign;
+import ar.edu.unq.virtuaula.model.Goal;
+import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Level;
+import ar.edu.unq.virtuaula.model.Mission;
+import ar.edu.unq.virtuaula.model.MissionType;
+import ar.edu.unq.virtuaula.model.NewGame;
 import ar.edu.unq.virtuaula.model.OptionMission;
 import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.model.PlayerMission;
-import ar.edu.unq.virtuaula.model.Mission;
-import ar.edu.unq.virtuaula.model.MissionType;
-import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Team;
 import ar.edu.unq.virtuaula.model.User;
 import ar.edu.unq.virtuaula.repository.AccountRepository;
-import ar.edu.unq.virtuaula.repository.NewGameRepository;
 import ar.edu.unq.virtuaula.repository.LevelRepository;
-import ar.edu.unq.virtuaula.repository.PlayerMissionRepository;
 import ar.edu.unq.virtuaula.repository.MissionTypeRepository;
+import ar.edu.unq.virtuaula.repository.NewGameRepository;
+import ar.edu.unq.virtuaula.repository.PlayerMissionRepository;
 import ar.edu.unq.virtuaula.repository.TeamRepository;
 import ar.edu.unq.virtuaula.repository.UserRepository;
 
@@ -254,6 +256,11 @@ public class VirtuaulaApplicationTests {
     
     protected Account createOnePlayerAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("PLAYER").build();
+    	
+    	Goal goal = GoalBuilder.goalWithName("10% des descuento en la cafeteria")
+    			.withDescription("Te ganaste un 10% de descuento en la cafeteria de la escuela")
+    			.build();
+    	
 		BufferExperience bufferExprience = BufferExperienceBuilder.bufferExperienceWithName("Buffer experience")
 				.withDescription("Buffer suma experiencia")
 				.withExperienceValue(10d)
@@ -268,12 +275,15 @@ public class VirtuaulaApplicationTests {
 		List<Buffer> buffers = new ArrayList<>();
 		buffers.add(bufferExprience);
 		buffers.add(bufferlife);
+		List<Goal> goals = new ArrayList<>();
+		goals.add(goal);
     	Level level = LevelBuilder.levelWithName("Principiante").withDescription("Nivel inicial").withImagePath("/images/image.png")
     			.withNameNextLevel("Aficionado")
     			.withNumberLevel(1)
     			.withMinValue(0d)
     			.withMaxValue(1000d)
     			.withBuffers(buffers)
+    			.withGoals(goals)
     			.build();
     	User user = UserBuilder.userWithUsernameAndPassword("charlie2", "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4").build();
     	PlayerAccount account = PlayerAccountBuilder.accountWithUsername("charlie2")

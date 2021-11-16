@@ -3,6 +3,7 @@ package ar.edu.unq.virtuaula.builder;
 import java.util.List;
 
 import ar.edu.unq.virtuaula.model.Buffer;
+import ar.edu.unq.virtuaula.model.Goal;
 import ar.edu.unq.virtuaula.model.Level;
 
 public class LevelBuilder {
@@ -49,6 +50,11 @@ public class LevelBuilder {
     	 this.instance.setBuffers(buffers);
     	 return this;
     }
+    
+    public LevelBuilder withGoals(List<Goal> goals) {
+   	 this.instance.setGoals(goals);
+   	 return this;
+   }
     
     public Level build() {
         return this.instance;

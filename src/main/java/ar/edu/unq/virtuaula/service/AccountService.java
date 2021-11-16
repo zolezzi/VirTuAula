@@ -17,6 +17,7 @@ import com.google.common.hash.Hashing;
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.AccountTypeDTO;
 import ar.edu.unq.virtuaula.dto.BufferDTO;
+import ar.edu.unq.virtuaula.dto.GoalDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.dto.PrivilegeDTO;
 import ar.edu.unq.virtuaula.exception.AccountNotFoundException;
@@ -128,6 +129,11 @@ public class AccountService {
 	public List<BufferDTO> getBuffers(Long accountId) throws PlayerAccountNotFoundException {
 		PlayerAccount account = findPlayerById(accountId);
 		return Arrays.asList(mapperUtil.getMapper().map(account.getLevel().getBuffers(), BufferDTO[].class));
+	}
+
+	public List<GoalDTO> getGoals(Long accountId) throws PlayerAccountNotFoundException {
+		PlayerAccount account = findPlayerById(accountId);
+		return Arrays.asList(mapperUtil.getMapper().map(account.getLevel().getGoals(), GoalDTO[].class));
 	}
 	
 	private List<PlayerAccountVO> transformToPlayerVO(List<PlayerAccount> players) {

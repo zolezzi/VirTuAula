@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ar.edu.unq.virtuaula.dto.AccountDTO;
 import ar.edu.unq.virtuaula.dto.BufferDTO;
+import ar.edu.unq.virtuaula.dto.GoalDTO;
 import ar.edu.unq.virtuaula.dto.LevelDTO;
 import ar.edu.unq.virtuaula.exception.LeaderAccountNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
@@ -72,5 +73,12 @@ public class AccountRestController {
     @ApiOperation(value = "Get buffers by account id", notes = "Get buffers by account id")
     public List<BufferDTO> getBuffers(@PathVariable("accountId") Long accountId) throws Exception {
         return accountService.getBuffers(accountId);
+    }
+    
+    @GetMapping("/account/goals/{accountId}")
+    @ApiResponse(code = 200, message = "Sucessfully get goals", response = LevelDTO.class)
+    @ApiOperation(value = "Get goals by account id", notes = "Get goals by account id")
+    public List<GoalDTO> getGoals(@PathVariable("accountId") Long accountId) throws Exception {
+        return accountService.getGoals(accountId);
     }
 }
