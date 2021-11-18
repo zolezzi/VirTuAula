@@ -45,6 +45,10 @@ public class PlayerMission implements Serializable{
     public void complete() {
         this.state = State.COMPLETED;
     }
+    
+    public void pending() {
+        this.state = State.PENDING;
+    }
 
     public void uncomplete() {
         this.state = State.UNCOMPLETED;

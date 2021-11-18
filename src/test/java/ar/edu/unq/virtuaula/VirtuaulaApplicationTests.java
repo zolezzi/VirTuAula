@@ -86,6 +86,21 @@ public class VirtuaulaApplicationTests {
 		return createNewGame(newGame);
     }
     
+    protected NewGame createOneNewGameWithTwoMissionType() {
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+    	MissionType missionTypeStory = MissionTypeBuilder.missionTypeWithName("Tell a story").build();
+        Mission mission1 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withMissionType(missionType)
+        		.build();
+        Mission mission2 = MissionBuilder.missionWithStatement("Que es la matematica").withCorrectAnswer(1l).withAnswer(1l).withScore(100d)
+        		.withMissionType(missionTypeStory)
+        		.build();
+		Date date = getDate();
+		Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission1).withMission(mission2).withMaxNote(1000).withDeliveryDate(date).build();
+		NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();
+		return createNewGame(newGame);
+    }
+    
     protected NewGame createOneNewGameWithCampaignScore(Double score) {
     	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
         Mission mission = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withAnswer(1l).withScore(score)
@@ -118,8 +133,9 @@ public class VirtuaulaApplicationTests {
     }
 
     protected NewGame createOneNewGameWithTwoMissions() {
-        Mission mission1 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
-        Mission mission2 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).build();
+    	MissionType missionType = MissionTypeBuilder.missionTypeWithName("Multiple choise").build();
+        Mission mission1 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withMissionType(missionType).build();
+        Mission mission2 = MissionBuilder.missionWithStatement("Cuanto vale x para x = x * 2 + 1").withCorrectAnswer(1l).withMissionType(missionType).build();
         Date date = getDate();
         Campaign campaign = CampaignBuilder.campaignWithName("Ecuaciones").withMission(mission1).withMission(mission2).withDeliveryDate(date).build();
         NewGame newGame = NewGameBuilder.newGameWithName("Matematicas").withCampaign(campaign).build();

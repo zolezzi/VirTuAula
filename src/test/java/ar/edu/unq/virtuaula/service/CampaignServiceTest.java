@@ -328,6 +328,21 @@ public class CampaignServiceTest extends VirtuaulaApplicationTests {
         CampaignVO campaignVo = campaignService.completeMissions(newGame, campaign.getId(), playerAccount, missions);
         assertNotNull(campaignVo.getNote());
     }
+	
+    @Test
+    public void completeMissionWithMissionMultipleChoisesAndMissionTypeIsTellAStoryThenReturnProgressMiddle() throws Exception {
+        int expected = 50;
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        CampaignVO campaignVo = campaignService.completeMissions(newGame, campaign.getId(), account, missions);
+        assertEquals(expected, campaignVo.getProgress());
+    }
     
     private List<OptionMissionDTO> createOptions(){
     	OptionMissionDTO missionOption1 = new OptionMissionDTO();

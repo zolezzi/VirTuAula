@@ -43,6 +43,7 @@ public class CampaignService {
     private final LevelService levelService;
     private final ManagementBufferService bufferService; 
     private final static int FULL_PROGRESS = 100;
+    private final static String TELL_A_STORY_NAME = "Tell a story";
 
     public List<CampaignVO> getAllByNewGame(NewGame newGame) {
         List<Campaign> campaigns = newGame.getCampaigns();
@@ -162,7 +163,11 @@ public class CampaignService {
             PlayerMission playerMissionBD = playerMissionRepository.findByMissionIdAndPlayerId(mission.getId(), playerId)
             		.orElseThrow(() -> new NoSuchElementException("Error not found mission with id: " + mission.getId()));
             playerMissionBD.setAnswer(mission.getAnswerId());
-            playerMissionBD.complete();
+            if(TELL_A_STORY_NAME.equals(playerMissionBD.getMission().getMissionType().getName())) {
+            	playerMissionBD.pending();
+            }else {
+            	playerMissionBD.complete();
+            }
             playerMissionBD.setStory(mission.getStory());
             playerMissionRepository.save(playerMissionBD);
         });
