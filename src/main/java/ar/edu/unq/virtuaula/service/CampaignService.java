@@ -108,7 +108,7 @@ public class CampaignService {
 	}
 
 	public List<String> getAllStates() {
-		return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).toList();
+		return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).collect(toList());
 	}
 	
     private Campaign mapperCampaign(CampaignDTO campaignDto) {
