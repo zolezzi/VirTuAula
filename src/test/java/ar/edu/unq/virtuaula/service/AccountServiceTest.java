@@ -210,4 +210,12 @@ public class AccountServiceTest extends VirtuaulaApplicationTests {
         assertNotNull(result);
         assertEquals(expected, result.size());
     }
+    
+    @Test
+    public void getLifeWithPlayerAccountReturnLife() throws PlayerAccountNotFoundException {
+        PlayerAccount account = (PlayerAccount) createOnePlayerAccount();
+        Integer life  = accountService.getLife(account.getId());
+        assertNotNull(life);
+        assertEquals(life, account.getLife());
+    }
 }
