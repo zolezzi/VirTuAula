@@ -338,7 +338,7 @@ public class CampaignServiceTest extends VirtuaulaApplicationTests {
         Mission mission2 = campaign.getMissions().get(1);
         PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
         createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
-        PlayerAccount account = (PlayerAccount) createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
         List<MissionVO> missions = createMissionVO(campaign.getMissions());
         CampaignVO campaignVo = campaignService.completeMissions(newGame, campaign.getId(), account, missions);
         assertEquals(expected, campaignVo.getProgress());

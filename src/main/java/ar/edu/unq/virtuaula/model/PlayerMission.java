@@ -41,6 +41,8 @@ public class PlayerMission implements Serializable{
     private PlayerAccount playerAccount;
 
     private String story;
+    
+    private String comment;
 
     public void complete() {
         this.state = State.COMPLETED;

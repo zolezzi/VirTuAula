@@ -16,12 +16,15 @@ import ar.edu.unq.virtuaula.dto.MissionDTO;
 import ar.edu.unq.virtuaula.exception.CampaignDateExpiredException;
 import ar.edu.unq.virtuaula.exception.CampaignNotFoundException;
 import ar.edu.unq.virtuaula.exception.NewGameNotFoundException;
+import ar.edu.unq.virtuaula.exception.PlayerMissionNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Campaign;
 import ar.edu.unq.virtuaula.model.LeaderAccount;
 import ar.edu.unq.virtuaula.model.Mission;
 import ar.edu.unq.virtuaula.model.NewGame;
 import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.model.PlayerMission;
+import ar.edu.unq.virtuaula.model.State;
 import ar.edu.unq.virtuaula.repository.CampaignRepository;
 import ar.edu.unq.virtuaula.repository.MissionTypeRepository;
 import ar.edu.unq.virtuaula.repository.PlayerMissionRepository;
@@ -29,6 +32,7 @@ import ar.edu.unq.virtuaula.util.ExperienceUtil;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.CampaignVO;
 import ar.edu.unq.virtuaula.vo.MissionVO;
+import ar.edu.unq.virtuaula.vo.PlayerMissionVO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -71,14 +75,11 @@ public class CampaignService {
     	}
         completeState(missions, playerAccount.getId());
         CampaignVO campaignVO = createCampaignVO(campaignBD, playerAccount.getId());
-        bufferService.applyBufferInPlayerAccount(playerAccount.getLevel(), playerAccount, campaignVO.getNote());
-        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
-        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
-        }
+        applyBuffers(campaignVO, playerAccount);
         return campaignVO;
     }
 
-    public CampaignDTO create(NewGame newGame, LeaderAccount leaderUser, CampaignDTO campaign) throws Exception {
+	public CampaignDTO create(NewGame newGame, LeaderAccount leaderUser, CampaignDTO campaign) throws Exception {
         Campaign newCampaign = mapperCampaign(campaign);
         if (!leaderUser.containsNewGame(newGame)) {
             throw new NewGameNotFoundException("Error not found new game with id: " + newGame.getId());
@@ -90,7 +91,21 @@ public class CampaignService {
         newCampaign = campaignRepository.save(newCampaign);
         return mapperUtil.getMapper().map(newCampaign, CampaignDTO.class);
     }
-
+    
+	public ResponseMessage correctMission(Long campaignId, PlayerAccount playerAccount, PlayerMissionVO playerMissionVO) throws Exception {
+		PlayerMission playerMission = playerMissionRepository.findById(playerMissionVO.getId())
+		.orElseThrow(() -> new PlayerMissionNotFoundException("Error not found campaign with id: " + campaignId));
+		playerMission.setComment(playerMissionVO.getComment());
+		playerMission.setState(State.valueOf(playerMissionVO.getState()));
+    	Campaign campaignBD = campaignRepository.findById(campaignId)
+    			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
+		if(State.COMPLETED.toString().equals(playerMissionVO.getState())) {
+			CampaignVO campaignVO = createCampaignVO(campaignBD, playerAccount.getId());
+	        applyBuffers(campaignVO, playerAccount);
+		}
+		return new ResponseMessage("the correct mission to the campaign was successful");
+	}
+ 
     private Campaign mapperCampaign(CampaignDTO campaignDto) {
     	List<Mission> listMissions = convertMission(campaignDto.getMissions());
     	Campaign campaign = mapperUtil.getMapper().map(campaignDto, Campaign.class);
@@ -163,7 +178,8 @@ public class CampaignService {
             PlayerMission playerMissionBD = playerMissionRepository.findByMissionIdAndPlayerId(mission.getId(), playerId)
             		.orElseThrow(() -> new NoSuchElementException("Error not found mission with id: " + mission.getId()));
             playerMissionBD.setAnswer(mission.getAnswerId());
-            if(TELL_A_STORY_NAME.equals(playerMissionBD.getMission().getMissionType().getName())) {
+            if(TELL_A_STORY_NAME.equals(playerMissionBD.getMission().getMissionType().getName()) 
+            		&& State.UNCOMPLETED.equals(playerMissionBD.getState())) {
             	playerMissionBD.pending();
             }else {
             	playerMissionBD.complete();
@@ -173,4 +189,10 @@ public class CampaignService {
         });
     }
 
+    private void applyBuffers(CampaignVO campaignVO, PlayerAccount playerAccount) {
+        bufferService.applyBufferInPlayerAccount(playerAccount.getLevel(), playerAccount, campaignVO.getNote());
+        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
+        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
+        }	
+	}
 }

@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.CampaignDTO;
 import ar.edu.unq.virtuaula.exception.PlayerAccountNotFoundException;
+import ar.edu.unq.virtuaula.exception.PlayerMissionNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.NewGame;
 import ar.edu.unq.virtuaula.service.AccountService;
-import ar.edu.unq.virtuaula.service.NewGameService;
 import ar.edu.unq.virtuaula.service.CampaignService;
+import ar.edu.unq.virtuaula.service.NewGameService;
 import ar.edu.unq.virtuaula.vo.CampaignVO;
 import ar.edu.unq.virtuaula.vo.MissionVO;
+import ar.edu.unq.virtuaula.vo.PlayerMissionVO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +61,11 @@ public class CampaignRestController {
     public CampaignDTO create(@PathVariable("newGameId") Long newGameId, @PathVariable("accountId") Long accountId, @RequestBody CampaignDTO campaign) throws Exception {
         return campaignService.create(newGameService.findById(newGameId), accountService.findLeaderById(accountId), campaign);
     }
-
+   
+    @PostMapping("/campaigns/correct-mission/{campaignId}/{accountId}")   
+    @ApiResponse(code = 200, message = "Successfully correct mission a campaign " , response = ResponseMessage.class)
+    @ApiOperation(value = "Post correct mission a campaign for player", notes = "Post correct mission a campaign for a player")
+    public ResponseMessage correctMission(@PathVariable("campaignId") Long campaignId, @PathVariable("accountId") Long accountId, @RequestBody PlayerMissionVO playerMission) throws Exception {
+    	return campaignService.correctMission(campaignId, accountService.findPlayerById(accountId), playerMission);
+    }
 }

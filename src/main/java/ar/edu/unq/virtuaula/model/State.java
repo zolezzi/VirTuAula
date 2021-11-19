@@ -4,5 +4,6 @@ public enum State {
 
     COMPLETED,
     PENDING,
+    REWORK,
     UNCOMPLETED
 }

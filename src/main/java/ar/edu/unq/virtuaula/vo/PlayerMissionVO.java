@@ -14,4 +14,6 @@ public class PlayerMissionVO {
     private Long answer;
     private Long missionTypeId;
     private String story;
+    private String comment;
+    private String state;
 }
