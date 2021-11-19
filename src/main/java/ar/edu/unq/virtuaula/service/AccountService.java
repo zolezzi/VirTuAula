@@ -135,6 +135,11 @@ public class AccountService {
 		PlayerAccount account = findPlayerById(accountId);
 		return Arrays.asList(mapperUtil.getMapper().map(account.getLevel().getGoals(), GoalDTO[].class));
 	}
+
+	public Integer getLife(Long accountId) throws PlayerAccountNotFoundException {
+		PlayerAccount account = findPlayerById(accountId);
+		return account.getLife();
+	}
 	
 	private List<PlayerAccountVO> transformToPlayerVO(List<PlayerAccount> players) {
 		return players.stream().map(player -> {

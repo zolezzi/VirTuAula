@@ -81,4 +81,11 @@ public class AccountRestController {
     public List<GoalDTO> getGoals(@PathVariable("accountId") Long accountId) throws Exception {
         return accountService.getGoals(accountId);
     }
+    
+    @GetMapping("/account/life/{accountId}")
+    @ApiResponse(code = 200, message = "Sucessfully get life", response = Integer.class)
+    @ApiOperation(value = "Get life by account id", notes = "Get life by account id")
+    public Integer getLife(@PathVariable("accountId") Long accountId) throws Exception {
+        return accountService.getLife(accountId);
+    }
 }
