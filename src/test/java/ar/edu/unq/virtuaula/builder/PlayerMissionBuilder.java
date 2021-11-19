@@ -39,6 +39,11 @@ public class PlayerMissionBuilder {
         return this;
     }
 
+    public PlayerMissionBuilder pending() {
+        this.instance.pending();
+        return this;
+    }
+    
     public PlayerMission build() {
         return this.instance;
     }

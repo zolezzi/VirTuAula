@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.edu.unq.virtuaula.dto.CampaignDTO;
 import ar.edu.unq.virtuaula.exception.PlayerAccountNotFoundException;
-import ar.edu.unq.virtuaula.exception.PlayerMissionNotFoundException;
 import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.NewGame;
 import ar.edu.unq.virtuaula.service.AccountService;
@@ -67,5 +66,12 @@ public class CampaignRestController {
     @ApiOperation(value = "Post correct mission a campaign for player", notes = "Post correct mission a campaign for a player")
     public ResponseMessage correctMission(@PathVariable("campaignId") Long campaignId, @PathVariable("accountId") Long accountId, @RequestBody PlayerMissionVO playerMission) throws Exception {
     	return campaignService.correctMission(campaignId, accountService.findPlayerById(accountId), playerMission);
+    }
+    
+    @GetMapping("/campaigns/states")
+    @ApiResponse(code = 200, message = "Successfully request" , response = CampaignVO.class, responseContainer = "List")
+    @ApiOperation(value = "Get all states by campaign", notes = "Get all states by campaign")
+    public List<String> getAllStates(){
+        return campaignService.getAllStates();
     }
 }

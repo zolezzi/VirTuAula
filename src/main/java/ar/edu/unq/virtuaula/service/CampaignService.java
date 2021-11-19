@@ -2,6 +2,7 @@ package ar.edu.unq.virtuaula.service;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -94,7 +95,7 @@ public class CampaignService {
     
 	public ResponseMessage correctMission(Long campaignId, PlayerAccount playerAccount, PlayerMissionVO playerMissionVO) throws Exception {
 		PlayerMission playerMission = playerMissionRepository.findById(playerMissionVO.getId())
-		.orElseThrow(() -> new PlayerMissionNotFoundException("Error not found campaign with id: " + campaignId));
+		.orElseThrow(() -> new PlayerMissionNotFoundException("Error not found player mission with id: " + playerMissionVO.getId()));
 		playerMission.setComment(playerMissionVO.getComment());
 		playerMission.setState(State.valueOf(playerMissionVO.getState()));
     	Campaign campaignBD = campaignRepository.findById(campaignId)
@@ -105,7 +106,11 @@ public class CampaignService {
 		}
 		return new ResponseMessage("the correct mission to the campaign was successful");
 	}
- 
+
+	public List<String> getAllStates() {
+		return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).toList();
+	}
+	
     private Campaign mapperCampaign(CampaignDTO campaignDto) {
     	List<Mission> listMissions = convertMission(campaignDto.getMissions());
     	Campaign campaign = mapperUtil.getMapper().map(campaignDto, Campaign.class);
@@ -195,4 +200,5 @@ public class CampaignService {
         	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
         }	
 	}
+
 }

@@ -337,6 +337,17 @@ public class VirtuaulaApplicationTests {
         return PlayerMission.getPlayerAccount();
     }
     
+    protected Account createOnePlayerMissionPendingWithCampaignAndMissionAndPlayerAccount(Campaign campaign, Mission mission, PlayerAccount playerAccount) {
+    	PlayerMission PlayerMission = PlayerMissionBuilder.createPlayerMission()
+    			.withCampaign(campaign)
+    			.withMission(mission)
+    			.withPlayerAccount(playerAccount)
+    			.pending()
+    			.build();
+    	PlayerMission = createPlayerMission(PlayerMission);
+        return PlayerMission.getPlayerAccount();
+    }
+    
     private PlayerMission createPlayerMission(PlayerMission playerMission) {
 		return playerMissionRepository.save(playerMission);
 	}

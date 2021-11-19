@@ -19,19 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ar.edu.unq.virtuaula.VirtuaulaApplicationTests;
 import ar.edu.unq.virtuaula.dto.CampaignDTO;
-import ar.edu.unq.virtuaula.dto.OptionMissionDTO;
 import ar.edu.unq.virtuaula.dto.MissionDTO;
-import ar.edu.unq.virtuaula.exception.NewGameNotFoundException;
+import ar.edu.unq.virtuaula.dto.OptionMissionDTO;
 import ar.edu.unq.virtuaula.exception.CampaignDateExpiredException;
 import ar.edu.unq.virtuaula.exception.CampaignNotFoundException;
-import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.exception.NewGameNotFoundException;
+import ar.edu.unq.virtuaula.exception.PlayerMissionNotFoundException;
+import ar.edu.unq.virtuaula.message.ResponseMessage;
 import ar.edu.unq.virtuaula.model.Campaign;
-import ar.edu.unq.virtuaula.model.PlayerAccount;
-import ar.edu.unq.virtuaula.model.Mission;
 import ar.edu.unq.virtuaula.model.LeaderAccount;
+import ar.edu.unq.virtuaula.model.Mission;
+import ar.edu.unq.virtuaula.model.NewGame;
+import ar.edu.unq.virtuaula.model.PlayerAccount;
 import ar.edu.unq.virtuaula.util.MapperUtil;
 import ar.edu.unq.virtuaula.vo.CampaignVO;
 import ar.edu.unq.virtuaula.vo.MissionVO;
+import ar.edu.unq.virtuaula.vo.PlayerMissionVO;
 
 public class CampaignServiceTest extends VirtuaulaApplicationTests {
 
@@ -344,7 +347,96 @@ public class CampaignServiceTest extends VirtuaulaApplicationTests {
         assertEquals(expected, campaignVo.getProgress());
     }
     
-    private List<OptionMissionDTO> createOptions(){
+    @Test
+    public void testWhenGetAllStatesThenReturnStatesForCampaign() {
+        int expected = 2;
+        List<String> results = campaignService.getAllStates();
+        assertEquals(expected, results.size());
+    }
+    
+    @Test
+    public void testWhenTeacherCorrectMissionThatPlayerThenReturnMessageSuccessful() throws Exception {
+        String expected = "the correct mission to the campaign was successful";
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        createOnePlayerMissionPendingWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        PlayerMissionVO playerMissionVO = createPlayerMissionVO(missions.get(1), "COMPLETED");
+        ResponseMessage responseMessage = campaignService.correctMission(campaign.getId(), playerAccount, playerMissionVO);
+        assertEquals(expected, responseMessage.getMessage());
+    }
+    
+    @Test
+    public void testWhenTeacherCorrectMissionSetStateREWORKThatPlayerThenReturnMessageSuccessful() throws Exception {
+        String expected = "the correct mission to the campaign was successful";
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        createOnePlayerMissionPendingWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        PlayerMissionVO playerMissionVO = createPlayerMissionVO(missions.get(1), "REWORK");
+        ResponseMessage responseMessage = campaignService.correctMission(campaign.getId(), playerAccount, playerMissionVO);
+        assertEquals(expected, responseMessage.getMessage());
+    }
+    
+    @Test
+    public void testWhenTeacherCorrectMissionNotExistThatPlayerThenThrowsException() throws Exception {
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        createOnePlayerMissionPendingWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        PlayerMissionVO playerMissionVO = createPlayerMissionVO(missions.get(1), "REWORK");
+        playerMissionVO.setId(-1l);
+        
+        PlayerMissionNotFoundException assertThrows = assertThrows(PlayerMissionNotFoundException.class, () -> {
+        	campaignService.correctMission(campaign.getId(), playerAccount, playerMissionVO);
+        });
+        String expectedMessage = "Error not found player mission with id: -1";
+        
+        assertEquals(expectedMessage, assertThrows.getMessage());
+    }
+    
+    @Test
+    public void testWhenTeacherCorrectMissionWithCampaignNotExistThatPlayerThenThrowsException() throws Exception {
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        createOnePlayerMissionPendingWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        PlayerMissionVO playerMissionVO = createPlayerMissionVO(missions.get(1), "REWORK");
+        CampaignNotFoundException assertThrows = assertThrows(CampaignNotFoundException.class, () -> {
+        	campaignService.correctMission(-1l, playerAccount, playerMissionVO);
+        });
+        String expectedMessage = "Error not found campaign with id: -1";
+        
+        assertEquals(expectedMessage, assertThrows.getMessage());
+    }
+    
+    private PlayerMissionVO createPlayerMissionVO(MissionVO missionVO, String state) {
+    	PlayerMissionVO playerMissionVO = new PlayerMissionVO();
+    	playerMissionVO.setId(2l);
+    	playerMissionVO.setStory(missionVO.getStory());
+    	playerMissionVO.setComment("");
+    	playerMissionVO.setMissionTypeId(2l);
+    	playerMissionVO.setState(state);
+		return playerMissionVO;
+	}
+
+	private List<OptionMissionDTO> createOptions(){
     	OptionMissionDTO missionOption1 = new OptionMissionDTO();
     	OptionMissionDTO missionOption2 = new OptionMissionDTO();
     	missionOption1.setIsCorrect(true);
