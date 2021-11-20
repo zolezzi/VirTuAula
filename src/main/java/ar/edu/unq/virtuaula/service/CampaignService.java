@@ -116,21 +116,20 @@ public class CampaignService {
 
 	public ResponseMessage retry(Long campaignId, PlayerAccount playerAccount, List<MissionVO> missions) throws CampaignNotFoundException, PlayerMissionNotFoundException {
 		int life = playerAccount.getLife();
-    	Campaign campaignBD = campaignRepository.findById(campaignId)
+    	if(life <= 0){
+    		return new ResponseMessage("Has no lives to use");
+    	}
+		Campaign campaignBD = campaignRepository.findById(campaignId)
     			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
     	if(!campaignBD.containsMissions(missions.stream().map(mission -> mission.getId()).collect(Collectors.toList()))) {
     		throw new PlayerMissionNotFoundException("Error not found mission with campaign id: " + campaignId);
     	}
-    	completeState(missions, playerAccount.getId());
-        playerAccount.setExperience(playerAccount.getExperience() + RETRY_EXPERIENCE);
-        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
-        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
-        }
+    	completeStateAndSumExperience(missions, playerAccount);
         playerAccount.setLife(life - LIFE_VALUE_ONE);
-		return new ResponseMessage("the retry mission to the campaign was successful");
+		return new ResponseMessage("The retry mission to the campaign was successful");
 	}
-	
-    private Campaign mapperCampaign(CampaignDTO campaignDto) {
+
+	private Campaign mapperCampaign(CampaignDTO campaignDto) {
     	List<Mission> listMissions = convertMission(campaignDto.getMissions());
     	Campaign campaign = mapperUtil.getMapper().map(campaignDto, Campaign.class);
     	campaign.setMissions(listMissions);
@@ -219,5 +218,13 @@ public class CampaignService {
         	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
         }	
 	}
-
+	
+    private void completeStateAndSumExperience(List<MissionVO> missions, PlayerAccount playerAccount) {
+    	completeState(missions, playerAccount.getId());
+        playerAccount.setExperience(playerAccount.getExperience() + RETRY_EXPERIENCE);
+        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
+        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
+        }
+	}
+    
 }
