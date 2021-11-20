@@ -49,6 +49,8 @@ public class CampaignService {
     private final ManagementBufferService bufferService; 
     private final static int FULL_PROGRESS = 100;
     private final static String TELL_A_STORY_NAME = "Tell a story";
+    private final static Double RETRY_EXPERIENCE = 100d;
+    private final static int LIFE_VALUE_ONE = 1;
 
     public List<CampaignVO> getAllByNewGame(NewGame newGame) {
         List<Campaign> campaigns = newGame.getCampaigns();
@@ -98,6 +100,7 @@ public class CampaignService {
 		.orElseThrow(() -> new PlayerMissionNotFoundException("Error not found player mission with id: " + playerMissionVO.getId()));
 		playerMission.setComment(playerMissionVO.getComment());
 		playerMission.setState(State.valueOf(playerMissionVO.getState()));
+		playerMissionRepository.save(playerMission);
     	Campaign campaignBD = campaignRepository.findById(campaignId)
     			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
 		if(State.COMPLETED.toString().equals(playerMissionVO.getState())) {
@@ -109,6 +112,22 @@ public class CampaignService {
 
 	public List<String> getAllStates() {
 		return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).collect(toList());
+	}
+
+	public ResponseMessage retry(Long campaignId, PlayerAccount playerAccount, List<MissionVO> missions) throws CampaignNotFoundException, PlayerMissionNotFoundException {
+		int life = playerAccount.getLife();
+    	Campaign campaignBD = campaignRepository.findById(campaignId)
+    			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
+    	if(!campaignBD.containsMissions(missions.stream().map(mission -> mission.getId()).collect(Collectors.toList()))) {
+    		throw new PlayerMissionNotFoundException("Error not found mission with campaign id: " + campaignId);
+    	}
+    	completeState(missions, playerAccount.getId());
+        playerAccount.setExperience(playerAccount.getExperience() + RETRY_EXPERIENCE);
+        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
+        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
+        }
+        playerAccount.setLife(life - LIFE_VALUE_ONE);
+		return new ResponseMessage("the retry mission to the campaign was successful");
 	}
 	
     private Campaign mapperCampaign(CampaignDTO campaignDto) {

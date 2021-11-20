@@ -74,4 +74,11 @@ public class CampaignRestController {
     public List<String> getAllStates(){
         return campaignService.getAllStates();
     }
+    
+    @PostMapping("/campaigns/retry/{campaignId}/{accountId}")   
+    @ApiResponse(code = 200, message = "Successfully retry mission a campaign " , response = ResponseMessage.class)
+    @ApiOperation(value = "Post retry mission a campaign for player", notes = "Post retry mission a campaign for a player")
+    public ResponseMessage retry(@PathVariable("campaignId") Long campaignId, @PathVariable("accountId") Long accountId,  @RequestBody List<MissionVO> missions) throws Exception {
+    	return campaignService.retry(campaignId, accountService.findPlayerById(accountId), missions);
+    }
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -58,8 +59,16 @@ public class Campaign implements Serializable {
         return missions.isEmpty() ? 0 : validate(completed);
     }
 
+	public boolean containsMissions(List<Long> ids) {
+		boolean isConstains = this.missions.isEmpty() ? false : 
+			this.missions.stream().map(mission -> mission.getId())
+			.collect(Collectors.toList()).containsAll(ids);
+		return isConstains;
+	}
+	
     private double validate(double completed) {
         Assert.isTrue(this.maxNote >= completed, "The qualification exceed the max note.");
         return completed;
     }
+
 }
