@@ -272,17 +272,14 @@ public class VirtuaulaApplicationTests {
     
     protected Account createOnePlayerAccount() {
     	AccountType accountType= AccountTypeBuilder.accountTypeWithUsername("PLAYER").build();
-    	
     	Goal goal = GoalBuilder.goalWithName("10% des descuento en la cafeteria")
     			.withDescription("Te ganaste un 10% de descuento en la cafeteria de la escuela")
     			.build();
-    	
 		BufferExperience bufferExprience = BufferExperienceBuilder.bufferExperienceWithName("Buffer experience")
 				.withDescription("Buffer suma experiencia")
 				.withExperienceValue(10d)
 				.withOperator("+")
 				.build();
-		
 		BufferLife bufferlife = BufferLifeBuilder.bufferLifeWithName("Buffer life")
 				.withDescription("Buffer suma life")
 				.withLifeValue(1)

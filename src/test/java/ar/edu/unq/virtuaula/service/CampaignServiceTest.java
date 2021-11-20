@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -422,6 +423,78 @@ public class CampaignServiceTest extends VirtuaulaApplicationTests {
         	campaignService.correctMission(-1l, playerAccount, playerMissionVO);
         });
         String expectedMessage = "Error not found campaign with id: -1";
+        
+        assertEquals(expectedMessage, assertThrows.getMessage());
+    }
+    
+    @Test
+    public void testWhenRetryMissionWithMissionPendingThenReturnMessageSuccessful() throws Exception {
+        String expected = "The retry mission to the campaign was successful";
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        ResponseMessage responseMessage = campaignService.retry(campaign.getId(), account, missions);
+        assertEquals(expected, responseMessage.getMessage());
+    }
+    
+    @Test
+    public void testWhenRetryMissionWithAccountWithoutLifeThenReturnMessageHasNotLivesToUse() throws Exception {
+        String expected = "Has no lives to use";
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        campaignService.retry(campaign.getId(), account, missions);
+        campaignService.retry(campaign.getId(), account, missions);
+        campaignService.retry(campaign.getId(), account, missions);
+        ResponseMessage responseMessage = campaignService.retry(campaign.getId(), account, missions);
+        assertEquals(expected, responseMessage.getMessage());
+    }
+    
+    @Test
+    public void testWhenRetryMissionWithCampaignNotExistThatPlayerThenThrowsException() throws Exception {
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = createMissionVO(campaign.getMissions());
+        CampaignNotFoundException assertThrows = assertThrows(CampaignNotFoundException.class, () -> {
+        	campaignService.retry(-1L, account, missions);
+        });
+        String expectedMessage = "Error not found campaign with id: -1";
+        
+        assertEquals(expectedMessage, assertThrows.getMessage());
+    }
+    
+    @Test
+    public void testWhenRetryMissionWithMissionNotExistInCampaignThenThrowsException() throws Exception {
+        NewGame newGame = createOneNewGameWithTwoMissionType();
+        Campaign campaign = getFirstCampaign(newGame);
+        Mission mission = getFirstMission(campaign);
+        Mission mission2 = campaign.getMissions().get(1);
+        PlayerAccount playerAccount = (PlayerAccount) createOnePlayerAccount();
+        createOnePlayerMissionWithCampaignAndMissionAndPlayerAccount(campaign, mission, playerAccount);
+        PlayerAccount account = (PlayerAccount) createOnePlayerMissionUncompletedWithCampaignAndMissionAndPlayerAccount(campaign, mission2, playerAccount);
+        List<MissionVO> missions = new ArrayList<>();
+        MissionVO missionVO = new MissionVO();
+        missionVO.setId(10l);
+        missions.add(missionVO);
+        PlayerMissionNotFoundException assertThrows = assertThrows(PlayerMissionNotFoundException.class, () -> {
+        	campaignService.retry(campaign.getId(), account, missions);
+        });
+        String expectedMessage = "Error not found mission with campaign id: 1";
         
         assertEquals(expectedMessage, assertThrows.getMessage());
     }
