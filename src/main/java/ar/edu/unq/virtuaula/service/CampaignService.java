@@ -46,7 +46,7 @@ public class CampaignService {
     private final MissionTypeRepository missionTypeRepository;
     private final MapperUtil mapperUtil;
     private final LevelService levelService;
-    private final ManagementBufferService bufferService; 
+    private final ManagementBufferService bufferService;
     private final static int FULL_PROGRESS = 100;
     private final static String TELL_A_STORY_NAME = "Tell a story";
     private final static Double RETRY_EXPERIENCE = 100d;
@@ -56,33 +56,33 @@ public class CampaignService {
         List<Campaign> campaigns = newGame.getCampaigns();
         return transformToCampaignVO(campaigns, newGame.getId());
     }
-    
-	public List<CampaignVO> getAllByNewGameAndPlayer(NewGame newGame, PlayerAccount playerAccount) {
-		List<Campaign> campaigns = newGame.getCampaigns();
-		return transformToVO(campaigns, newGame.getId(), playerAccount);
-	}
+
+    public List<CampaignVO> getAllByNewGameAndPlayer(NewGame newGame, PlayerAccount playerAccount) {
+        List<Campaign> campaigns = newGame.getCampaigns();
+        return transformToVO(campaigns, newGame.getId(), playerAccount);
+    }
 
     public Campaign findById(Long campaignId) {
         return campaignRepository.findById(campaignId).get();
     }
 
     public CampaignVO completeMissions(NewGame newGame, Long campaignId, PlayerAccount playerAccount, List<MissionVO> missions) throws Exception {
-       	Date date = new Date();
-    	Campaign campaignBD = campaignRepository.findById(campaignId)
-    			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
+        Date date = new Date();
+        Campaign campaignBD = campaignRepository.findById(campaignId)
+                .orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
     	if(!newGame.containsCampaign(campaignBD.getId())) {
-    		throw new CampaignNotFoundException("Error not found campaign id: " + campaignId + " for new game id: " + newGame.getId());
-    	}
+            throw new CampaignNotFoundException("Error not found campaign id: " + campaignId + " for new game id: " + newGame.getId());
+        }
     	if(!date.before(campaignBD.getDeliveryDate())){
-    		throw new CampaignDateExpiredException("Expired that campaign id: " + campaignId + " for new game id: " + newGame.getId());
-    	}
+            throw new CampaignDateExpiredException("Expired that campaign id: " + campaignId + " for new game id: " + newGame.getId());
+        }
         completeState(missions, playerAccount.getId());
         CampaignVO campaignVO = createCampaignVO(campaignBD, playerAccount.getId());
         applyBuffers(campaignVO, playerAccount);
         return campaignVO;
     }
 
-	public CampaignDTO create(NewGame newGame, LeaderAccount leaderUser, CampaignDTO campaign) throws Exception {
+    public CampaignDTO create(NewGame newGame, LeaderAccount leaderUser, CampaignDTO campaign) throws Exception {
         Campaign newCampaign = mapperCampaign(campaign);
         if (!leaderUser.containsNewGame(newGame)) {
             throw new NewGameNotFoundException("Error not found new game with id: " + newGame.getId());
@@ -94,73 +94,73 @@ public class CampaignService {
         newCampaign = campaignRepository.save(newCampaign);
         return mapperUtil.getMapper().map(newCampaign, CampaignDTO.class);
     }
-    
-	public ResponseMessage correctMission(Long campaignId, PlayerAccount playerAccount, PlayerMissionVO playerMissionVO) throws Exception {
-		PlayerMission playerMission = playerMissionRepository.findById(playerMissionVO.getId())
-		.orElseThrow(() -> new PlayerMissionNotFoundException("Error not found player mission with id: " + playerMissionVO.getId()));
-		playerMission.setComment(playerMissionVO.getComment());
-		playerMission.setState(State.valueOf(playerMissionVO.getState()));
-		playerMissionRepository.save(playerMission);
-    	Campaign campaignBD = campaignRepository.findById(campaignId)
-    			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
+
+    public ResponseMessage correctMission(Long campaignId, PlayerAccount playerAccount, PlayerMissionVO playerMissionVO) throws Exception {
+        PlayerMission playerMission = playerMissionRepository.findById(playerMissionVO.getId())
+                .orElseThrow(() -> new PlayerMissionNotFoundException("Error not found player mission with id: " + playerMissionVO.getId()));
+        playerMission.setComment(playerMissionVO.getComment());
+        playerMission.setState(State.valueOf(playerMissionVO.getState()));
+        playerMissionRepository.save(playerMission);
+        Campaign campaignBD = campaignRepository.findById(campaignId)
+                .orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
 		if(State.COMPLETED.toString().equals(playerMissionVO.getState())) {
 			CampaignVO campaignVO = createCampaignVO(campaignBD, playerAccount.getId());
-	        applyBuffers(campaignVO, playerAccount);
-		}
-		return new ResponseMessage("the correct mission to the campaign was successful");
-	}
+            applyBuffers(campaignVO, playerAccount);
+        }
+        return new ResponseMessage("the correct mission to the campaign was successful");
+    }
 
-	public List<String> getAllStates() {
-		return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).collect(toList());
-	}
+    public List<String> getAllStates() {
+        return Arrays.asList(State.REWORK, State.COMPLETED).stream().map(state -> state.toString()).collect(toList());
+    }
 
-	public ResponseMessage retry(Long campaignId, PlayerAccount playerAccount, List<MissionVO> missions) throws CampaignNotFoundException, PlayerMissionNotFoundException {
-		int life = playerAccount.getLife();
+    public ResponseMessage retry(Long campaignId, PlayerAccount playerAccount, List<MissionVO> missions) throws CampaignNotFoundException, PlayerMissionNotFoundException {
+        int life = playerAccount.getLife();
     	if(life <= 0){
-    		return new ResponseMessage("Has no lives to use");
-    	}
-		Campaign campaignBD = campaignRepository.findById(campaignId)
-    			.orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
-    	if(!campaignBD.containsMissions(missions.stream().map(mission -> mission.getId()).collect(Collectors.toList()))) {
-    		throw new PlayerMissionNotFoundException("Error not found mission with campaign id: " + campaignId);
-    	}
-    	completeStateAndSumExperience(missions, playerAccount);
+            return new ResponseMessage("Has no lives to use");
+        }
+        Campaign campaignBD = campaignRepository.findById(campaignId)
+                .orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));
+        if (!campaignBD.containsMissions(missions.stream().map(mission -> mission.getId()).collect(Collectors.toList()))) {
+            throw new PlayerMissionNotFoundException("Error not found mission with campaign id: " + campaignId);
+        }
+        completeStateAndSumExperience(missions, playerAccount);
         playerAccount.setLife(life - LIFE_VALUE_ONE);
-		return new ResponseMessage("The retry mission to the campaign was successful");
-	}
+        return new ResponseMessage("The retry mission to the campaign was successful");
+    }
 
-	private Campaign mapperCampaign(CampaignDTO campaignDto) {
-    	List<Mission> listMissions = convertMission(campaignDto.getMissions());
-    	Campaign campaign = mapperUtil.getMapper().map(campaignDto, Campaign.class);
-    	campaign.setMissions(listMissions);
-    	return campaign;
-	}
+    private Campaign mapperCampaign(CampaignDTO campaignDto) {
+        List<Mission> listMissions = convertMission(campaignDto.getMissions());
+        Campaign campaign = mapperUtil.getMapper().map(campaignDto, Campaign.class);
+        campaign.setMissions(listMissions);
+        return campaign;
+    }
 
-	private List<Mission> convertMission(List<MissionDTO> listMissionDTOs) {
-		return listMissionDTOs.stream().map(missionDTO -> {
-			 Mission mission = mapperUtil.getMapper().map(missionDTO, Mission.class);
-			 mission.setMissionType(missionTypeRepository.findById(missionDTO.getMissionTypeId()).get());
-			 return mission;
-		}).collect(Collectors.toList());
-	}
+    private List<Mission> convertMission(List<MissionDTO> listMissionDTOs) {
+        return listMissionDTOs.stream().map(missionDTO -> {
+            Mission mission = mapperUtil.getMapper().map(missionDTO, Mission.class);
+            mission.setMissionType(missionTypeRepository.findById(missionDTO.getMissionTypeId()).get());
+            return mission;
+        }).collect(Collectors.toList());
+    }
 
-	private void createPlayerMissionForAllPlayer(Campaign newCampaign, LeaderAccount leader) {
-		leader.getPlayers().forEach(player -> createPlayerMissionForAllByCampaign(newCampaign, player));
-	}
+    private void createPlayerMissionForAllPlayer(Campaign newCampaign, LeaderAccount leader) {
+        leader.getPlayers().forEach(player -> createPlayerMissionForAllByCampaign(newCampaign, player));
+    }
 
-	private void createPlayerMissionForAllByCampaign(Campaign newCampaign, PlayerAccount player) {
-		List<PlayerMission> listPlayerMissions = newCampaign.getMissions().stream().map(mission -> {
-			PlayerMission playerMission = new PlayerMission();
-			playerMission.uncomplete();
-			playerMission.setMission(mission);
-			playerMission.setCampaign(newCampaign);
-			playerMission.setPlayerAccount(player);
-			return playerMission;
-		}).collect(toList());
-		player.getResultsMissions().addAll(listPlayerMissions);
-	}
-	
-	private List<CampaignVO> transformToCampaignVO(List<Campaign> campaigns, Long newGameId) {
+    private void createPlayerMissionForAllByCampaign(Campaign newCampaign, PlayerAccount player) {
+        List<PlayerMission> listPlayerMissions = newCampaign.getMissions().stream().map(mission -> {
+            PlayerMission playerMission = new PlayerMission();
+            playerMission.uncomplete();
+            playerMission.setMission(mission);
+            playerMission.setCampaign(newCampaign);
+            playerMission.setPlayerAccount(player);
+            return playerMission;
+        }).collect(toList());
+        player.getResultsMissions().addAll(listPlayerMissions);
+    }
+
+    private List<CampaignVO> transformToCampaignVO(List<Campaign> campaigns, Long newGameId) {
         return campaigns.stream().map(campaign -> {
             CampaignVO campaignVO = mapperUtil.getMapper().map(campaign, CampaignVO.class);
             campaignVO.setNote(null);
@@ -169,16 +169,17 @@ public class CampaignService {
         }).collect(toList());
     }
 
-	private List<CampaignVO> transformToVO(List<Campaign> campaigns, Long newGameId, PlayerAccount player) {
+    private List<CampaignVO> transformToVO(List<Campaign> campaigns, Long newGameId, PlayerAccount player) {
         return campaigns.stream().map(campaign -> {
             CampaignVO campaignVO = mapperUtil.getMapper().map(campaign, CampaignVO.class);
             List<PlayerMission> missionsBD = playerMissionRepository.findByCampaignAndPlayer(campaign.getId(), player.getId());
+            campaignVO.setState(obtaintPredominantState(missionsBD));
             campaignVO.setNote(null);
             int progress = campaign.progress(missionsBD);
             campaignVO.setProgress(progress);
             campaignVO.setNewGameId(newGameId);
             if (progress == FULL_PROGRESS) {
-            	campaignVO.setNote(campaign.qualification(missionsBD));
+                campaignVO.setNote(campaign.qualification(missionsBD));
             }
             return campaignVO;
         }).collect(toList());
@@ -187,25 +188,36 @@ public class CampaignService {
     private CampaignVO createCampaignVO(Campaign campaign, Long playerId) {
         CampaignVO campaignVO = mapperUtil.getMapper().map(campaign, CampaignVO.class);
         List<PlayerMission> missionsBD = playerMissionRepository.findByCampaignAndPlayer(campaign.getId(), playerId);
+        campaignVO.setState(obtaintPredominantState(missionsBD));
         campaignVO.setNote(null);
         int progress = campaign.progress(missionsBD);
         campaignVO.setProgress(progress);
         if (progress == FULL_PROGRESS) {
-        	campaignVO.setNote(campaign.qualification(missionsBD));
+            campaignVO.setNote(campaign.qualification(missionsBD));
         }
         return campaignVO;
     }
 
+    private State obtaintPredominantState(List<PlayerMission> missions) {
+        if (missions.stream().anyMatch(mission -> State.PENDING.equals(mission.getState()))) {
+            return State.PENDING;
+        } else if (missions.stream().anyMatch(mission -> State.UNCOMPLETED.equals(mission.getState()))) {
+            return State.UNCOMPLETED;
+        } else {
+            return State.COMPLETED;
+        }
+    }
+
     private void completeState(List<MissionVO> missions, Long playerId) {
-    	missions.stream().forEach(mission -> {
+        missions.stream().forEach(mission -> {
             PlayerMission playerMissionBD = playerMissionRepository.findByMissionIdAndPlayerId(mission.getId(), playerId)
-            		.orElseThrow(() -> new NoSuchElementException("Error not found mission with id: " + mission.getId()));
+                    .orElseThrow(() -> new NoSuchElementException("Error not found mission with id: " + mission.getId()));
             playerMissionBD.setAnswer(mission.getAnswerId());
-            if(TELL_A_STORY_NAME.equals(playerMissionBD.getMission().getMissionType().getName()) 
-            		&& State.UNCOMPLETED.equals(playerMissionBD.getState())) {
-            	playerMissionBD.pending();
-            }else {
-            	playerMissionBD.complete();
+            if (TELL_A_STORY_NAME.equals(playerMissionBD.getMission().getMissionType().getName())
+                    && State.UNCOMPLETED.equals(playerMissionBD.getState())) {
+                playerMissionBD.pending();
+            } else {
+                playerMissionBD.complete();
             }
             playerMissionBD.setStory(mission.getStory());
             playerMissionRepository.save(playerMissionBD);
@@ -214,17 +226,17 @@ public class CampaignService {
 
     private void applyBuffers(CampaignVO campaignVO, PlayerAccount playerAccount) {
         bufferService.applyBufferInPlayerAccount(playerAccount.getLevel(), playerAccount, campaignVO.getNote());
-        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
-        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
-        }	
-	}
-	
-    private void completeStateAndSumExperience(List<MissionVO> missions, PlayerAccount playerAccount) {
-    	completeState(missions, playerAccount.getId());
-        playerAccount.setExperience(playerAccount.getExperience() + RETRY_EXPERIENCE);
-        if(ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
-        	playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
+        if (ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
+            playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
         }
-	}
-    
+    }
+
+    private void completeStateAndSumExperience(List<MissionVO> missions, PlayerAccount playerAccount) {
+        completeState(missions, playerAccount.getId());
+        playerAccount.setExperience(playerAccount.getExperience() + RETRY_EXPERIENCE);
+        if (ExperienceUtil.isChangeLevel(playerAccount.getLevel().getMaxValue(), playerAccount.getExperience())) {
+            playerAccount.setLevel(levelService.getNextLevel(playerAccount.getLevel()));
+        }
+    }
+
 }
