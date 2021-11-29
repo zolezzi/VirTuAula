@@ -504,6 +504,7 @@ public class CampaignServiceTest extends VirtuaulaApplicationTests {
     	playerMissionVO.setId(2l);
     	playerMissionVO.setStory(missionVO.getStory());
     	playerMissionVO.setComment("");
+        playerMissionVO.setScore(10.0);
     	playerMissionVO.setMissionTypeId(2l);
     	playerMissionVO.setState(state);
 		return playerMissionVO;

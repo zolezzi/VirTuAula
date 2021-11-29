@@ -54,10 +54,10 @@ public class MissionService {
             missionVO.setStatement(mission.getStatement());
             missionVO.setScore(mission.getScore());
             missionVO.setMissionTypeId(mission.getMissionType().getId());
-            missionVO.setState(playerMission.get().getState().name());
             if (playerMission.isPresent()) {
                 missionVO.setAnswer(playerMission.get().getAnswer());
                 missionVO.setStory(playerMission.get().getStory());
+                missionVO.setState(playerMission.get().getState().name());
             } else {
                 missionVO.setAnswer(mission.getAnswer());
             }
