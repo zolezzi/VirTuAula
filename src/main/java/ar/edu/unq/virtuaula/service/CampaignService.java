@@ -100,6 +100,7 @@ public class CampaignService {
                 .orElseThrow(() -> new PlayerMissionNotFoundException("Error not found player mission with id: " + playerMissionVO.getId()));
         playerMission.setComment(playerMissionVO.getComment());
         playerMission.setState(State.valueOf(playerMissionVO.getState()));
+        playerMission.getMission().setScore(playerMissionVO.getScore());
         playerMissionRepository.save(playerMission);
         Campaign campaignBD = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new CampaignNotFoundException("Error not found campaign with id: " + campaignId));

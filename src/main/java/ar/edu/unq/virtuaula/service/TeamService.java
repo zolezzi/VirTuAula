@@ -68,6 +68,7 @@ public class TeamService {
     private List<PlayerAccountVO> transformToPlayerVO(NewGame newGame, List<PlayerAccount> players) {
         return players.stream().map(player -> {
             PlayerAccountVO playerVO = new PlayerAccountVO();
+            playerVO.setId(player.getId());
             playerVO.setFirstName(player.getFirstName());
             playerVO.setUsername(player.getUsername());
             playerVO.setExperience(player.getExperience());
